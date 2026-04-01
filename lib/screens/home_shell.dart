@@ -5,6 +5,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/widgets.dart' as pw;
 
@@ -204,24 +205,25 @@ class _HomeShellState extends State<HomeShell> {
                 ],
                 SizedBox(
                   height: 220,
-                  child: PageView(
-                    padEnds: false,
-                    controller: PageController(viewportFraction: 0.94),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12),
-                        child: _buildScheduleHeroCard(context, eventsForDay),
-                      ),
-                      _buildWeatherCard(context),
-                    ],
+                  child: ScrollConfiguration(
+                    behavior: const _DesktopFriendlyScrollBehavior(),
+                    child: PageView(
+                      padEnds: false,
+                      controller: PageController(viewportFraction: 0.94),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: _buildScheduleHeroCard(context, eventsForDay),
+                        ),
+                        _buildWeatherCard(context),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
                 _buildScheduleHeader(context),
                 const SizedBox(height: 16),
                 _buildDayStrip(context),
-                const SizedBox(height: 20),
-                _buildSelectedDateSummary(context, eventsForDay),
               ],
             ),
           ),
@@ -714,71 +716,32 @@ class _HomeShellState extends State<HomeShell> {
 
     return SizedBox(
       height: 104,
-      child: ListView.builder(
-        controller: _dayStripController,
-        scrollDirection: Axis.horizontal,
-        itemCount: itemCount,
-        itemBuilder: (context, index) {
-          final date = _dateForIndex(index);
-          final indicators = _indicatorColors(_eventsForDay(date));
+      child: ScrollConfiguration(
+        behavior: const _DesktopFriendlyScrollBehavior(),
+        child: ListView.builder(
+          controller: _dayStripController,
+          scrollDirection: Axis.horizontal,
+          itemCount: itemCount,
+          itemBuilder: (context, index) {
+            final date = _dateForIndex(index);
+            final indicators = _indicatorColors(_eventsForDay(date));
 
-          return Padding(
-            padding: EdgeInsets.only(
-              right: index == itemCount - 1 ? 0 : _dayTileSpacing,
-            ),
-            child: _DayChip(
-              date: date,
-              isSelected: _isSameDate(date, _selectedDate),
-              indicators: indicators,
-              onTap: () {
-                setState(() => _selectedDate = date);
-                _scrollDayStripToDate(date);
-              },
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSelectedDateSummary(
-    BuildContext context,
-    List<StudentEvent> eventsForDay,
-  ) {
-    final classCount = eventsForDay
-        .where((event) => event.type == StudentEventType.classSchedule)
-        .length;
-    final examCount = eventsForDay
-        .where((event) => event.type == StudentEventType.exam)
-        .length;
-    final taskCount = eventsForDay
-        .where((event) => event.type == StudentEventType.personalTask)
-        .length;
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _CountPill(label: 'Lịch học', count: classCount),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: _CountPill(
-              label: 'Lịch thi',
-              count: examCount,
-              accent: const Color(0xFFC62828),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: _CountPill(label: 'Việc riêng', count: taskCount),
-          ),
-        ],
+            return Padding(
+              padding: EdgeInsets.only(
+                right: index == itemCount - 1 ? 0 : _dayTileSpacing,
+              ),
+              child: _DayChip(
+                date: date,
+                isSelected: _isSameDate(date, _selectedDate),
+                indicators: indicators,
+                onTap: () {
+                  setState(() => _selectedDate = date);
+                  _scrollDayStripToDate(date);
+                },
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -2011,6 +1974,19 @@ class _HeroCountChip extends StatelessWidget {
   }
 }
 
+class _DesktopFriendlyScrollBehavior extends MaterialScrollBehavior {
+  const _DesktopFriendlyScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+    PointerDeviceKind.trackpad,
+    PointerDeviceKind.stylus,
+    PointerDeviceKind.unknown,
+  };
+}
+
 class _SyncActionCard extends StatelessWidget {
   const _SyncActionCard({
     required this.isSyncing,
@@ -2177,41 +2153,6 @@ class _MetricCard extends StatelessWidget {
             Text(label),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _CountPill extends StatelessWidget {
-  const _CountPill({required this.label, required this.count, this.accent});
-
-  final String label;
-  final int count;
-  final Color? accent;
-
-  @override
-  Widget build(BuildContext context) {
-    final color = accent ?? Theme.of(context).colorScheme.onSurface;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '$count',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(label),
-        ],
       ),
     );
   }

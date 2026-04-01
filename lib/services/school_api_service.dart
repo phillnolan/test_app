@@ -15,6 +15,7 @@ class SchoolApiService {
     : _client = client ?? buildPlatformHttpClient();
 
   final http.Client _client;
+  static const Duration _requestTimeout = Duration(minutes: 1);
 
   static const _baseHost = 'https://sinhvien1.tlu.edu.vn/education';
   static const List<int> _examStudentRouteIds = [14];
@@ -31,28 +32,33 @@ class SchoolApiService {
       'Authorization': 'Bearer $accessToken',
     };
 
-    final studentJson = await _getJson(
+    final studentFuture = _getJsonWithRetry(
       '$_baseHost/api/student/getstudentbylogin',
       headers,
     );
-    final marksJson = await _getJson(
+    final marksFuture = _getJsonWithRetry(
       '$_baseHost/api/studentsubjectmark/getListMarkDetailStudent',
       headers,
     );
-    final timetableJson = await _getJson(
+    final timetableFuture = _getJsonWithRetry(
       '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
       headers,
     );
+    final examsFuture = _fetchExamsWithRetry(headers);
+
+    final studentJson = await studentFuture;
     final curriculumProgramIds = _resolveCurriculumProgramIds(studentJson);
     final curriculumPayloads = <dynamic>[];
     for (final programId in curriculumProgramIds) {
-      final curriculumJson = await _getJson(
+      final curriculumJson = await _getJsonWithRetry(
         '$_baseHost/api/programsubject/tree/$programId/1/10000',
         headers,
       );
       curriculumPayloads.add(curriculumJson);
     }
-    final examsJson = await _fetchExamsWithRetry(headers);
+    final marksJson = await marksFuture;
+    final timetableJson = await timetableFuture;
+    final examsJson = await examsFuture;
 
     final profile = StudentProfile.fromApi(
       studentJson is Map<String, dynamic> ? studentJson : null,
@@ -106,7 +112,7 @@ class SchoolApiService {
             'client_secret': 'password',
           }),
         )
-        .timeout(const Duration(seconds: 20));
+        .timeout(_requestTimeout);
 
     final json = _decodeJson(_decodeBody(response));
     if (json is! Map<String, dynamic> ||
@@ -133,9 +139,10 @@ class SchoolApiService {
         semesterId++
       ) {
         try {
-          final result = await _getJson(
+          final result = await _getJsonWithRetry(
             '$_baseHost/api/semestersubjectexamroom/getListRoomByStudentByLoginUser/$routeId/$semesterId/1',
             headers,
+            attempts: 2,
           );
           for (final item in _normalizeList(result)) {
             final fingerprint = jsonEncode(item);
@@ -155,11 +162,33 @@ class SchoolApiService {
   Future<dynamic> _getJson(String url, Map<String, String> headers) async {
     final response = await _client
         .get(Uri.parse(url), headers: headers)
-        .timeout(const Duration(seconds: 20));
+        .timeout(_requestTimeout);
     if (response.statusCode >= 400) {
       throw SchoolApiException('Không tải được dữ liệu từ cổng trường.');
     }
     return _decodeJson(_decodeBody(response));
+  }
+
+  Future<dynamic> _getJsonWithRetry(
+    String url,
+    Map<String, String> headers, {
+    int attempts = 3,
+  }) async {
+    Object? lastError;
+    for (var attempt = 0; attempt < attempts; attempt++) {
+      try {
+        return await _getJson(url, headers);
+      } catch (error) {
+        lastError = error;
+        if (attempt < attempts - 1) {
+          await Future<void>.delayed(
+            Duration(milliseconds: 450 * (attempt + 1)),
+          );
+        }
+      }
+    }
+    throw lastError ??
+        SchoolApiException('Không tải được dữ liệu từ cổng trường.');
   }
 
   List<int> _resolveCurriculumProgramIds(dynamic studentJson) {
