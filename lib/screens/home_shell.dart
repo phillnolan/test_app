@@ -8,17 +8,22 @@ import 'package:flutter/material.dart';
 
 import '../models/event_attachment.dart';
 import '../models/grade_item.dart';
+import '../models/program_subject.dart';
 import '../models/school_sync_snapshot.dart';
 import '../models/student_event.dart';
 import '../models/student_profile.dart';
 import '../models/weather_forecast.dart';
+import 'grades_page.dart';
 import 'image_attachment_editor.dart';
 import '../services/attachment_opener.dart';
+import '../services/attachment_storage_service.dart';
 import '../services/auth_service.dart';
 import '../services/cloud_sync_service.dart';
 import '../services/local_cache_service.dart';
+import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
 import '../services/weather_service.dart';
+import '../services/widget_sync_service.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -35,9 +40,12 @@ class _HomeShellState extends State<HomeShell> {
 
   final SchoolApiService _schoolApiService = SchoolApiService();
   final LocalCacheService _localCacheService = LocalCacheService();
+  final AttachmentStorageService _attachmentStorageService =
+      AttachmentStorageService();
   final AuthService _authService = AuthService();
   final CloudSyncService _cloudSyncService = CloudSyncService();
   final WeatherService _weatherService = WeatherService();
+  final WidgetSyncService _widgetSyncService = WidgetSyncService();
   final ScrollController _dayStripController = ScrollController();
 
   late final DateTime _today;
@@ -46,6 +54,8 @@ class _HomeShellState extends State<HomeShell> {
   List<StudentEvent> _syncedEvents = const [];
   List<StudentEvent> _personalEvents = const [];
   List<GradeItem> _grades = const [];
+  List<ProgramSubject> _curriculumSubjects = const [];
+  List<Map<String, dynamic>> _curriculumRawItems = const [];
   StudentProfile? _profile;
   DateTime? _lastSyncedAt;
   WeatherForecast? _weatherForecast;
@@ -269,54 +279,18 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Widget _buildGradesPage(BuildContext context) {
-    final totalCredits = _grades.fold<int>(
-      0,
-      (sum, item) => sum + item.credits,
-    );
-    final gpa = totalCredits == 0
-        ? 0.0
-        : _grades.fold<double>(
-                0,
-                (sum, item) => sum + (item.mark4 * item.credits),
-              ) /
-              totalCredits;
-
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-      children: [
-        Text('Bảng điểm', style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 8),
-        Text(
-          'Dữ liệu được lấy từ cổng trường sau mỗi lần đồng bộ.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 16),
-        if (_grades.isEmpty)
-          _EmptyState(
-            icon: Icons.school_outlined,
-            title: 'Chưa có bảng điểm',
-            description:
-                'Hãy chuyển sang trang Đồng bộ để đăng nhập và tải dữ liệu mới nhất.',
-            actionLabel: 'Mở đồng bộ',
-            onAction: () => setState(() => _currentTab = 2),
-          )
-        else ...[
-          _GradesHeroCard(
-            gpa: gpa,
-            totalCredits: totalCredits,
-            gradeCount: _grades.length,
-          ),
-          const SizedBox(height: 16),
-          ..._grades.map(
-            (grade) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _GradeCard(grade: grade),
-            ),
-          ),
-        ],
-      ],
+    return GradesPage(
+      grades: _grades,
+      curriculumSubjects: _curriculumSubjects,
+      curriculumRawItems: _curriculumRawItems,
+      emptyState: _EmptyState(
+        icon: Icons.school_outlined,
+        title: 'Chưa có bảng điểm',
+        description:
+            'Hãy chuyển sang trang Đồng bộ để đăng nhập và tải dữ liệu mới nhất.',
+        actionLabel: 'Mở đồng bộ',
+        onAction: () => setState(() => _currentTab = 2),
+      ),
     );
   }
 
@@ -773,6 +747,8 @@ class _HomeShellState extends State<HomeShell> {
     setState(() {
       _profile = snapshot.profile;
       _grades = snapshot.grades;
+      _curriculumSubjects = snapshot.curriculumSubjects;
+      _curriculumRawItems = snapshot.curriculumRawItems;
       _syncedEvents = snapshot.events;
       _lastSyncedAt = snapshot.syncedAt;
       _selectedDate = DateTime(
@@ -784,6 +760,7 @@ class _HomeShellState extends State<HomeShell> {
       _currentTab = 0;
     });
 
+    unawaited(_refreshDeviceState());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _scrollDayStripToDate(_selectedDate);
@@ -809,22 +786,24 @@ class _HomeShellState extends State<HomeShell> {
       result.hour.minute,
     );
 
-    setState(() {
-      _personalEvents = [
-        ..._personalEvents,
-        StudentEvent(
-          id: 'task-${DateTime.now().microsecondsSinceEpoch}',
-          title: result.title,
-          subtitle: 'Việc cá nhân',
-          start: start,
-          end: start.add(const Duration(hours: 1)),
-          type: StudentEventType.personalTask,
-          color: const Color(0xFFDDF4E4),
-          note: result.note.isEmpty ? null : result.note,
-          attachments: result.attachments,
-        ),
-      ]..sort((a, b) => a.start.compareTo(b.start));
+    final updatedPersonalEvents = await _attachmentStorageService.persistEvents([
+      ..._personalEvents,
+      StudentEvent(
+        id: 'task-${DateTime.now().microsecondsSinceEpoch}',
+        title: result.title,
+        subtitle: 'Việc cá nhân',
+        start: start,
+        end: start.add(const Duration(hours: 1)),
+        type: StudentEventType.personalTask,
+        color: const Color(0xFFDDF4E4),
+        note: result.note.isEmpty ? null : result.note,
+        attachments: result.attachments,
+      ),
+    ]);
 
+    setState(() {
+      _personalEvents = updatedPersonalEvents
+        ..sort((a, b) => a.start.compareTo(b.start));
       _selectedDate = DateTime(
         result.date.year,
         result.date.month,
@@ -834,6 +813,7 @@ class _HomeShellState extends State<HomeShell> {
 
     _scrollDayStripToDate(_selectedDate);
     await _persistLocalCache();
+    await _refreshDeviceState();
     unawaited(_syncCurrentStateToCloud());
   }
 
@@ -854,13 +834,14 @@ class _HomeShellState extends State<HomeShell> {
             .toList();
       });
       await _persistLocalCache();
+      await _refreshDeviceState();
       unawaited(_syncCurrentStateToCloud());
       return;
     }
 
     final trimmed = result.note.trim();
-    setState(() {
-      _personalEvents = _personalEvents.map((item) {
+    final updatedPersonalEvents = await _attachmentStorageService.persistEvents(
+      _personalEvents.map((item) {
         if (item.id != event.id) return item;
         return item.copyWith(
           title: item.type == StudentEventType.personalTask
@@ -869,17 +850,23 @@ class _HomeShellState extends State<HomeShell> {
           note: trimmed.isEmpty ? null : trimmed,
           attachments: result.attachments,
         );
-      }).toList();
-
-      _syncedEvents = _syncedEvents.map((item) {
+      }).toList(),
+    );
+    final updatedSyncedEvents = await _attachmentStorageService.persistEvents(
+      _syncedEvents.map((item) {
         if (item.id != event.id) return item;
         return item.copyWith(
           note: trimmed.isEmpty ? null : trimmed,
           attachments: result.attachments,
         );
-      }).toList();
+      }).toList(),
+    );
+    setState(() {
+      _personalEvents = updatedPersonalEvents;
+      _syncedEvents = updatedSyncedEvents;
     });
     await _persistLocalCache();
+    await _refreshDeviceState();
     unawaited(_syncCurrentStateToCloud());
   }
 
@@ -911,6 +898,7 @@ class _HomeShellState extends State<HomeShell> {
           .toList();
     });
     await _persistLocalCache();
+    await _refreshDeviceState();
     unawaited(_syncCurrentStateToCloud());
   }
 
@@ -922,13 +910,19 @@ class _HomeShellState extends State<HomeShell> {
       }).toList();
     });
     unawaited(_persistLocalCache());
+    unawaited(_refreshDeviceState());
     unawaited(_syncCurrentStateToCloud());
   }
 
   Future<void> _openAttachment(EventAttachment attachment) async {
-    final bytes = attachment.bytesBase64 == null
-        ? await _cloudSyncService.downloadAttachmentBytes(attachment)
-        : base64Decode(attachment.bytesBase64!);
+    final localBytes = await _attachmentStorageService.readAttachmentBytes(
+      attachment,
+    );
+    final bytes =
+        localBytes ??
+        (attachment.bytesBase64 == null
+            ? await _cloudSyncService.downloadAttachmentBytes(attachment)
+            : base64Decode(attachment.bytesBase64!));
     final opened = await openAttachmentFile(
       fileName: attachment.name,
       localPath: kIsWeb ? null : attachment.path,
@@ -960,6 +954,14 @@ class _HomeShellState extends State<HomeShell> {
 
   Future<void> _persistLocalCache() {
     return _localCacheService.save(_buildCurrentPayload());
+  }
+
+  Future<void> _refreshDeviceState() async {
+    await NotificationService.instance.rescheduleForEvents(_allEvents);
+    await _widgetSyncService.updateTodayWidget(
+      profile: _profile,
+      events: _allEvents,
+    );
   }
 
   Future<void> _restoreAndSyncCloudState() async {
@@ -1018,6 +1020,8 @@ class _HomeShellState extends State<HomeShell> {
     return LocalCachePayload(
       profile: _profile,
       grades: _grades,
+      curriculumSubjects: _curriculumSubjects,
+      curriculumRawItems: _curriculumRawItems,
       syncedEvents: syncedEvents ?? _syncedEvents,
       personalEvents: personalEvents ?? _personalEvents,
       lastSyncedAt: _lastSyncedAt,
@@ -1031,6 +1035,8 @@ class _HomeShellState extends State<HomeShell> {
     setState(() {
       _profile = payload.profile;
       _grades = payload.grades;
+      _curriculumSubjects = payload.curriculumSubjects;
+      _curriculumRawItems = payload.curriculumRawItems;
       _syncedEvents = payload.syncedEvents;
       _personalEvents = payload.personalEvents;
       _lastSyncedAt = payload.lastSyncedAt;
@@ -1046,6 +1052,7 @@ class _HomeShellState extends State<HomeShell> {
         _currentTab = 0;
       }
     });
+    unawaited(_refreshDeviceState());
   }
 
   bool _shouldUseRemotePayload(
@@ -1853,116 +1860,6 @@ class _AttachmentSection extends StatelessWidget {
     if (attachment.isPdf) return Icons.picture_as_pdf_outlined;
     if (attachment.isImage) return Icons.image_outlined;
     return Icons.attach_file_outlined;
-  }
-}
-
-class _GradesHeroCard extends StatelessWidget {
-  const _GradesHeroCard({
-    required this.gpa,
-    required this.totalCredits,
-    required this.gradeCount,
-  });
-
-  final double gpa;
-  final int totalCredits;
-  final int gradeCount;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Tổng quan kết quả',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            gpa.toStringAsFixed(2),
-            style: Theme.of(context).textTheme.displaySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '$gradeCount môn đã có điểm • $totalCredits tín chỉ',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onPrimaryContainer,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _GradeCard extends StatelessWidget {
-  const _GradeCard({required this.grade});
-
-  final GradeItem grade;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  grade.subjectName,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  '${grade.subjectCode} • ${grade.credits} tín chỉ',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                grade.mark10.toStringAsFixed(1),
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-              ),
-              Text(
-                'Hệ 4: ${grade.mark4.toStringAsFixed(1)} • ${grade.letter}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
   }
 }
 

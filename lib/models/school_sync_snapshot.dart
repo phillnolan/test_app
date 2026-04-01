@@ -1,4 +1,5 @@
 import 'grade_item.dart';
+import 'program_subject.dart';
 import 'student_event.dart';
 import 'student_profile.dart';
 
@@ -6,12 +7,16 @@ class SchoolSyncSnapshot {
   const SchoolSyncSnapshot({
     required this.profile,
     required this.grades,
+    required this.curriculumSubjects,
+    required this.curriculumRawItems,
     required this.events,
     required this.syncedAt,
   });
 
   final StudentProfile profile;
   final List<GradeItem> grades;
+  final List<ProgramSubject> curriculumSubjects;
+  final List<Map<String, dynamic>> curriculumRawItems;
   final List<StudentEvent> events;
   final DateTime syncedAt;
 
@@ -19,6 +24,10 @@ class SchoolSyncSnapshot {
     return {
       'profile': profile.toJson(),
       'grades': grades.map((item) => item.toJson()).toList(),
+      'curriculumSubjects': curriculumSubjects
+          .map((item) => item.toJson())
+          .toList(),
+      'curriculumRawItems': curriculumRawItems,
       'events': events.map((item) => item.toJson()).toList(),
       'syncedAt': syncedAt.toIso8601String(),
     };
@@ -37,6 +46,20 @@ class SchoolSyncSnapshot {
             (item) => GradeItem.fromJson(
               item.map((key, value) => MapEntry(key.toString(), value)),
             ),
+          )
+          .toList(),
+      curriculumSubjects: ((json['curriculumSubjects'] as List?) ?? const [])
+          .whereType<Map>()
+          .map(
+            (item) => ProgramSubject.fromJson(
+              item.map((key, value) => MapEntry(key.toString(), value)),
+            ),
+          )
+          .toList(),
+      curriculumRawItems: ((json['curriculumRawItems'] as List?) ?? const [])
+          .whereType<Map>()
+          .map(
+            (item) => item.map((key, value) => MapEntry(key.toString(), value)),
           )
           .toList(),
       events: ((json['events'] as List?) ?? const [])

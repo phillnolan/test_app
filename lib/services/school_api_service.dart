@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/grade_item.dart';
+import '../models/program_subject.dart';
 import '../models/school_sync_snapshot.dart';
 import '../models/student_event.dart';
 import '../models/student_profile.dart';
@@ -16,9 +17,10 @@ class SchoolApiService {
   final http.Client _client;
 
   static const _baseHost = 'https://sinhvien1.tlu.edu.vn/education';
+  static const int _curriculumProgramId = 165;
   static const List<int> _examStudentRouteIds = [14];
-  static const int _examSemesterStart = 65;
-  static const int _examSemesterEnd = 67;
+  static const int _examSemesterStart = 66;
+  static const int _examSemesterEnd = 66;
 
   Future<SchoolSyncSnapshot> sync({
     required String username,
@@ -42,6 +44,10 @@ class SchoolApiService {
       '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
       headers,
     );
+    final curriculumJson = await _getJson(
+      '$_baseHost/api/programsubject/tree/$_curriculumProgramId/1/10000',
+      headers,
+    );
     final examsJson = await _fetchExamsWithRetry(headers);
 
     final profile = StudentProfile.fromApi(
@@ -50,6 +56,11 @@ class SchoolApiService {
     );
 
     final grades = _parseGrades(marksJson);
+    final curriculumRawItems = _normalizeList(curriculumJson)
+        .whereType<Map<String, dynamic>>()
+        .map((item) => Map<String, dynamic>.from(item))
+        .toList();
+    final curriculumSubjects = _parseCurriculum(curriculumJson);
     final timetableEvents = _parseTimetable(timetableJson);
     final examEvents = _parseExams(examsJson);
     final events = [...timetableEvents, ...examEvents]
@@ -58,6 +69,8 @@ class SchoolApiService {
     return SchoolSyncSnapshot(
       profile: profile,
       grades: grades,
+      curriculumSubjects: curriculumSubjects,
+      curriculumRawItems: curriculumRawItems,
       events: events,
       syncedAt: DateTime.now(),
     );
@@ -149,6 +162,27 @@ class SchoolApiService {
     return _normalizeList(
       data,
     ).whereType<Map<String, dynamic>>().map(GradeItem.fromApi).toList();
+  }
+
+  List<ProgramSubject> _parseCurriculum(dynamic data) {
+    final seen = <String>{};
+    return _normalizeList(data)
+        .whereType<Map<String, dynamic>>()
+        .map(ProgramSubject.fromApi)
+        .where(
+          (item) => item.subjectCode.isNotEmpty || item.subjectName.isNotEmpty,
+        )
+        .where(
+          (item) => seen.add(
+            item.subjectCode.isEmpty ? item.subjectName : item.subjectCode,
+          ),
+        )
+        .toList()
+      ..sort((a, b) {
+        final semesterCompare = a.semesterIndex.compareTo(b.semesterIndex);
+        if (semesterCompare != 0) return semesterCompare;
+        return a.subjectName.compareTo(b.subjectName);
+      });
   }
 
   List<StudentEvent> _parseTimetable(dynamic data) {

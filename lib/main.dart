@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'firebase_options.dart';
+import 'services/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,5 +14,6 @@ Future<void> main() async {
   } catch (_) {
     // Allow the app to run without Firebase on unsupported platforms.
   }
+  await NotificationService.instance.initialize();
   runApp(const StudentPlannerApp());
 }

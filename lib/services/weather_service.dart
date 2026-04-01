@@ -10,17 +10,30 @@ class WeatherService {
 
   final http.Client _client;
 
-  static const _forecastUrl =
-      'https://api.open-meteo.com/v1/forecast'
-      '?latitude=21.0285'
-      '&longitude=105.8542'
-      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max'
-      '&forecast_days=7'
-      '&timezone=Asia%2FBangkok';
-
   Future<WeatherForecast> fetchForecast() async {
+    return fetchForecastForCoordinates(
+      latitude: 21.0285,
+      longitude: 105.8542,
+      locationLabel: 'Hà Nội',
+    );
+  }
+
+  Future<WeatherForecast> fetchForecastForCoordinates({
+    required double latitude,
+    required double longitude,
+    required String locationLabel,
+  }) async {
     final response = await _client
-        .get(Uri.parse(_forecastUrl))
+        .get(
+          Uri.parse(
+            'https://api.open-meteo.com/v1/forecast'
+            '?latitude=$latitude'
+            '&longitude=$longitude'
+            '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max'
+            '&forecast_days=7'
+            '&timezone=Asia%2FBangkok',
+          ),
+        )
         .timeout(const Duration(seconds: 20));
     if (response.statusCode >= 400) {
       throw const WeatherException('Không tải được dự báo thời tiết.');
@@ -75,7 +88,7 @@ class WeatherService {
     }
 
     return WeatherForecast(
-      locationLabel: 'Hà Nội',
+      locationLabel: locationLabel,
       days: days,
       fetchedAt: DateTime.now(),
     );

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/grade_item.dart';
+import '../models/program_subject.dart';
 import '../models/student_event.dart';
 import '../models/student_profile.dart';
 
@@ -10,6 +11,8 @@ class LocalCachePayload {
   const LocalCachePayload({
     this.profile,
     this.grades = const [],
+    this.curriculumSubjects = const [],
+    this.curriculumRawItems = const [],
     this.syncedEvents = const [],
     this.personalEvents = const [],
     this.lastSyncedAt,
@@ -17,6 +20,8 @@ class LocalCachePayload {
 
   final StudentProfile? profile;
   final List<GradeItem> grades;
+  final List<ProgramSubject> curriculumSubjects;
+  final List<Map<String, dynamic>> curriculumRawItems;
   final List<StudentEvent> syncedEvents;
   final List<StudentEvent> personalEvents;
   final DateTime? lastSyncedAt;
@@ -25,6 +30,10 @@ class LocalCachePayload {
     return {
       'profile': profile?.toJson(),
       'grades': grades.map((item) => item.toJson()).toList(),
+      'curriculumSubjects': curriculumSubjects
+          .map((item) => item.toJson())
+          .toList(),
+      'curriculumRawItems': curriculumRawItems,
       'syncedEvents': syncedEvents.map((item) => item.toJson()).toList(),
       'personalEvents': personalEvents.map((item) => item.toJson()).toList(),
       'lastSyncedAt': lastSyncedAt?.toIso8601String(),
@@ -46,6 +55,20 @@ class LocalCachePayload {
             (item) => GradeItem.fromJson(
               item.map((key, value) => MapEntry(key.toString(), value)),
             ),
+          )
+          .toList(),
+      curriculumSubjects: ((json['curriculumSubjects'] as List?) ?? const [])
+          .whereType<Map>()
+          .map(
+            (item) => ProgramSubject.fromJson(
+              item.map((key, value) => MapEntry(key.toString(), value)),
+            ),
+          )
+          .toList(),
+      curriculumRawItems: ((json['curriculumRawItems'] as List?) ?? const [])
+          .whereType<Map>()
+          .map(
+            (item) => item.map((key, value) => MapEntry(key.toString(), value)),
           )
           .toList(),
       syncedEvents: ((json['syncedEvents'] as List?) ?? const [])
