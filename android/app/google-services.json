@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "129525875772",
+    "project_id": "sinhvien-a9d4e",
+    "storage_bucket": "sinhvien-a9d4e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129525875772:android:a6d7efe08320c8253eef39",
+        "android_client_info": {
+          "package_name": "com.example.sinhvien_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129525875772-1fqth973namif6688qmt0k8m9kckms97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwatBYWJbcVLEHE2SxMyB77YwYQXslhF8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129525875772-1fqth973namif6688qmt0k8m9kckms97.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

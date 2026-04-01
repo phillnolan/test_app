@@ -1,0 +1,20 @@
+name = "sinhvien-worker"
+main = "src/index.ts"
+compatibility_date = "2026-04-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "sinhvien-db"
+database_id = "6ea543c2-b23a-4558-89bd-2368c7c93e1e"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "31068b0b4a114537b650b2f6be0e5185"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "note-app"
+
+[vars]
+APP_ENV = "development"
+FIREBASE_PROJECT_ID = "sinhvien-a9d4e"
