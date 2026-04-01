@@ -17,7 +17,6 @@ class SchoolApiService {
   final http.Client _client;
 
   static const _baseHost = 'https://sinhvien1.tlu.edu.vn/education';
-  static const int _curriculumProgramId = 165;
   static const List<int> _examStudentRouteIds = [14];
   static const int _examSemesterStart = 66;
   static const int _examSemesterEnd = 66;
@@ -44,10 +43,15 @@ class SchoolApiService {
       '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
       headers,
     );
-    final curriculumJson = await _getJson(
-      '$_baseHost/api/programsubject/tree/$_curriculumProgramId/1/10000',
-      headers,
-    );
+    final curriculumProgramIds = _resolveCurriculumProgramIds(studentJson);
+    final curriculumPayloads = <dynamic>[];
+    for (final programId in curriculumProgramIds) {
+      final curriculumJson = await _getJson(
+        '$_baseHost/api/programsubject/tree/$programId/1/10000',
+        headers,
+      );
+      curriculumPayloads.add(curriculumJson);
+    }
     final examsJson = await _fetchExamsWithRetry(headers);
 
     final profile = StudentProfile.fromApi(
@@ -56,11 +60,11 @@ class SchoolApiService {
     );
 
     final grades = _parseGrades(marksJson);
-    final curriculumRawItems = _normalizeList(curriculumJson)
+    final curriculumRawItems = _flattenApiList(curriculumPayloads)
         .whereType<Map<String, dynamic>>()
         .map((item) => Map<String, dynamic>.from(item))
         .toList();
-    final curriculumSubjects = _parseCurriculum(curriculumJson);
+    final curriculumSubjects = _parseCurriculum(curriculumPayloads);
     final timetableEvents = _parseTimetable(timetableJson);
     final examEvents = _parseExams(examsJson);
     final events = [...timetableEvents, ...examEvents]
@@ -158,6 +162,31 @@ class SchoolApiService {
     return _decodeJson(_decodeBody(response));
   }
 
+  List<int> _resolveCurriculumProgramIds(dynamic studentJson) {
+    if (studentJson is! Map<String, dynamic>) {
+      throw SchoolApiException(
+        'Không lấy được chương trình đào tạo từ tài khoản sinh viên.',
+      );
+    }
+
+    final ids = <int>{};
+
+    final programs = _normalizeList(studentJson['programs']);
+    for (final item in programs.whereType<Map<String, dynamic>>()) {
+      final parsed = int.tryParse('${item['program']?['id'] ?? ''}');
+      if (parsed != null && parsed > 0) {
+        ids.add(parsed);
+      }
+    }
+
+    if (ids.isEmpty) {
+      throw SchoolApiException(
+        'Tài khoản này chưa có thông tin chương trình đào tạo hợp lệ.',
+      );
+    }
+    return ids.toList()..sort();
+  }
+
   List<GradeItem> _parseGrades(dynamic data) {
     return _normalizeList(
       data,
@@ -166,7 +195,7 @@ class SchoolApiService {
 
   List<ProgramSubject> _parseCurriculum(dynamic data) {
     final seen = <String>{};
-    return _normalizeList(data)
+    return _flattenApiList(data)
         .whereType<Map<String, dynamic>>()
         .map(ProgramSubject.fromApi)
         .where(
@@ -473,6 +502,17 @@ class SchoolApiService {
       return data['data'] as List<dynamic>;
     }
     return const [];
+  }
+
+  List<dynamic> _flattenApiList(dynamic data) {
+    if (data is List) {
+      final flattened = <dynamic>[];
+      for (final item in data) {
+        flattened.addAll(_normalizeList(item));
+      }
+      return flattened;
+    }
+    return _normalizeList(data);
   }
 
   String? _firstNonEmptyString(List<dynamic> values) {

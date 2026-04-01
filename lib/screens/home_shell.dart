@@ -5,6 +5,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../models/event_attachment.dart';
 import '../models/grade_item.dart';
@@ -19,6 +21,8 @@ import '../services/attachment_opener.dart';
 import '../services/attachment_storage_service.dart';
 import '../services/auth_service.dart';
 import '../services/cloud_sync_service.dart';
+import '../services/file_bytes_reader_stub.dart'
+    if (dart.library.io) '../services/file_bytes_reader_io.dart';
 import '../services/local_cache_service.dart';
 import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
@@ -194,25 +198,24 @@ class _HomeShellState extends State<HomeShell> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  _profile == null
-                      ? 'Lịch học tập'
-                      : 'Xin chào, ${_profile!.displayName}',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Theo dõi lịch học, lịch thi và việc cá nhân trong một dòng thời gian gọn gàng.',
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-                const SizedBox(height: 16),
                 if (_showSyncReminder) ...[
                   _buildSyncReminder(context),
                   const SizedBox(height: 16),
                 ],
-                _buildWeatherCard(context),
+                SizedBox(
+                  height: 220,
+                  child: PageView(
+                    padEnds: false,
+                    controller: PageController(viewportFraction: 0.94),
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: _buildScheduleHeroCard(context, eventsForDay),
+                      ),
+                      _buildWeatherCard(context),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 16),
                 _buildScheduleHeader(context),
                 const SizedBox(height: 16),
@@ -294,6 +297,101 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
+  Widget _buildScheduleHeroCard(
+    BuildContext context,
+    List<StudentEvent> eventsForDay,
+  ) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final classCount = eventsForDay
+        .where((event) => event.type == StudentEventType.classSchedule)
+        .length;
+    final examCount = eventsForDay
+        .where((event) => event.type == StudentEventType.exam)
+        .length;
+    final taskCount = eventsForDay
+        .where((event) => event.type == StudentEventType.personalTask)
+        .length;
+    final upcomingEvent = eventsForDay.cast<StudentEvent?>().firstWhere(
+      (event) => event!.start.isAfter(DateTime.now()),
+      orElse: () => eventsForDay.isEmpty ? null : eventsForDay.first,
+    );
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            colorScheme.primaryContainer,
+            colorScheme.secondaryContainer.withValues(alpha: 0.9),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _profile?.displayName ?? 'Lịch học tập',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: colorScheme.onPrimaryContainer,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _formatFullDate(_selectedDate),
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+              color: colorScheme.onPrimaryContainer.withValues(alpha: 0.86),
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              _HeroCountChip(label: 'Lịch học', count: classCount),
+              _HeroCountChip(label: 'Lịch thi', count: examCount),
+              _HeroCountChip(label: 'Việc riêng', count: taskCount),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                upcomingEvent == null
+                    ? 'Hôm nay chưa có sự kiện nào được lên lịch.'
+                    : 'Tiếp theo: ${_formatTime(upcomingEvent.start)} • ${upcomingEvent.title}',
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.9),
+                ),
+              ),
+            ),
+          ),
+          if (_lastSyncedAt != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              'Đồng bộ gần nhất: ${_formatSyncTimestamp(_lastSyncedAt!)}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.72),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildWeatherCard(BuildContext context) {
     final forecast = _weatherForecast?.dayForDate(_selectedDate);
     final colorScheme = Theme.of(context).colorScheme;
@@ -350,8 +448,10 @@ class _HomeShellState extends State<HomeShell> {
         _weatherService.descriptionForCode(forecast.weatherCode);
     final weatherIcon = _weatherService.iconForCode(forecast.weatherCode);
 
+    final visibleSuggestions = suggestions.take(2).toList();
+
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: colorScheme.secondaryContainer.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(28),
@@ -362,8 +462,8 @@ class _HomeShellState extends State<HomeShell> {
         children: [
           Row(
             children: [
-              Icon(weatherIcon, size: 28, color: colorScheme.primary),
-              const SizedBox(width: 10),
+              Icon(weatherIcon, size: 26, color: colorScheme.primary),
+              const SizedBox(width: 8),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,12 +485,13 @@ class _HomeShellState extends State<HomeShell> {
               ),
               IconButton(
                 tooltip: 'Tải lại',
+                visualDensity: VisualDensity.compact,
                 onPressed: _loadWeatherForecast,
                 icon: const Icon(Icons.refresh),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -404,16 +505,14 @@ class _HomeShellState extends State<HomeShell> {
                 icon: Icons.umbrella_outlined,
                 label: 'Mưa ${forecast.precipitationProbabilityMax}%',
               ),
-              _WeatherMetricChip(
-                icon: Icons.air,
-                label: 'Gió ${forecast.windSpeedMax.round()} km/h',
-              ),
             ],
           ),
-          const SizedBox(height: 12),
-          ...suggestions.map(
+          if (visibleSuggestions.isNotEmpty) ...[
+            const SizedBox(height: 10),
+          ],
+          ...visibleSuggestions.map(
             (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.only(bottom: 4),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -423,7 +522,14 @@ class _HomeShellState extends State<HomeShell> {
                     color: colorScheme.primary,
                   ),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(item)),
+                  Expanded(
+                    child: Text(
+                      item,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -744,12 +850,19 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   void _applySnapshot(SchoolSyncSnapshot snapshot) {
+    final isDifferentStudent =
+        _profile?.username.trim().isNotEmpty == true &&
+        _profile!.username.trim() != snapshot.profile.username.trim();
+
     setState(() {
       _profile = snapshot.profile;
       _grades = snapshot.grades;
       _curriculumSubjects = snapshot.curriculumSubjects;
       _curriculumRawItems = snapshot.curriculumRawItems;
       _syncedEvents = snapshot.events;
+      if (isDifferentStudent) {
+        _personalEvents = const [];
+      }
       _lastSyncedAt = snapshot.syncedAt;
       _selectedDate = DateTime(
         snapshot.syncedAt.year,
@@ -1236,6 +1349,15 @@ class _HomeShellState extends State<HomeShell> {
       'tháng 12',
     ];
     return '${weekdays[date.weekday - 1]}, ${date.day} ${months[date.month - 1]}';
+  }
+
+  String _formatTime(DateTime value) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    return '${twoDigits(value.hour)}:${twoDigits(value.minute)}';
+  }
+
+  String _formatSyncTimestamp(DateTime value) {
+    return '${_formatTime(value)} ${value.day}/${value.month}/${value.year}';
   }
 
   bool _isSameDate(DateTime left, DateTime right) {
@@ -1860,6 +1982,32 @@ class _AttachmentSection extends StatelessWidget {
     if (attachment.isPdf) return Icons.picture_as_pdf_outlined;
     if (attachment.isImage) return Icons.image_outlined;
     return Icons.attach_file_outlined;
+  }
+}
+
+class _HeroCountChip extends StatelessWidget {
+  const _HeroCountChip({required this.label, required this.count});
+
+  final String label;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surface.withValues(alpha: 0.4),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        '$label $count',
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          color: colorScheme.onPrimaryContainer,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
   }
 }
 
@@ -2550,6 +2698,7 @@ class _EnhancedNoteEditorSheet extends StatefulWidget {
 }
 
 class _EnhancedNoteEditorSheetState extends State<_EnhancedNoteEditorSheet> {
+  final ImagePicker _imagePicker = ImagePicker();
   late final TextEditingController _titleController;
   late final TextEditingController _controller;
   late List<EventAttachment> _attachments;
@@ -2610,6 +2759,8 @@ class _EnhancedNoteEditorSheetState extends State<_EnhancedNoteEditorSheet> {
           _AttachmentEditorSection(
             attachments: _attachments,
             onAddFiles: _pickAttachments,
+            onCapturePhoto: _capturePhotoAttachment,
+            onScanDocument: _scanDocumentAttachment,
             onEdit: _editAttachment,
             onRemove: _removeAttachment,
           ),
@@ -2711,6 +2862,143 @@ class _EnhancedNoteEditorSheetState extends State<_EnhancedNoteEditorSheet> {
     }
   }
 
+  Future<void> _capturePhotoAttachment() async {
+    await _captureOrScanAttachment(scanMode: false);
+  }
+
+  Future<void> _scanDocumentAttachment() async {
+    await _captureOrScanAttachment(scanMode: true);
+  }
+
+  Future<void> _captureOrScanAttachment({required bool scanMode}) async {
+    try {
+      final file = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 92,
+      );
+      if (file == null) return;
+
+      final attachment = await _attachmentFromXFile(file);
+      if (!mounted) return;
+      if (attachment == null) {
+        _showAttachmentFailure('Không thể đọc ảnh vừa chụp.');
+        return;
+      }
+
+      EventAttachment resultAttachment = attachment;
+      if (scanMode || attachment.isImage) {
+        final edited = await Navigator.of(context).push<EventAttachment>(
+          MaterialPageRoute(
+            builder: (context) => ImageAttachmentEditor(attachment: attachment),
+          ),
+        );
+        if (edited == null || !mounted) return;
+        resultAttachment = edited;
+      }
+
+      if (scanMode) {
+        final saveAsPdf = await _askScanOutputMode();
+        if (saveAsPdf == null || !mounted) return;
+        if (saveAsPdf) {
+          resultAttachment = await _convertImageAttachmentToPdf(
+            resultAttachment,
+          );
+        }
+      }
+
+      setState(() {
+        _attachments = [..._attachments, resultAttachment];
+      });
+    } catch (_) {
+      _showAttachmentFailure(
+        scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
+      );
+    }
+  }
+
+  Future<EventAttachment?> _attachmentFromXFile(XFile file) async {
+    final bytes = await file.readAsBytes();
+    if (bytes.isEmpty) return null;
+    final fileName = file.name.isEmpty
+        ? 'camera_${DateTime.now().millisecondsSinceEpoch}.jpg'
+        : file.name;
+    return EventAttachment(
+      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$fileName',
+      name: fileName,
+      path: kIsWeb ? '' : file.path,
+      bytesBase64: kIsWeb || file.path.isEmpty ? base64Encode(bytes) : null,
+    );
+  }
+
+  Future<bool?> _askScanOutputMode() async {
+    return showModalBottomSheet<bool>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Lưu tài liệu dưới dạng',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: const Icon(Icons.image_outlined),
+                title: const Text('Ảnh'),
+                onTap: () => Navigator.of(context).pop(false),
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined),
+                title: const Text('PDF'),
+                onTap: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<EventAttachment> _convertImageAttachmentToPdf(
+    EventAttachment attachment,
+  ) async {
+    final bytes = attachment.bytesBase64 != null
+        ? base64Decode(attachment.bytesBase64!)
+        : await readBytesFromPath(attachment.path);
+    if (bytes == null || bytes.isEmpty) return attachment;
+
+    final document = pw.Document();
+    final image = pw.MemoryImage(bytes);
+    document.addPage(
+      pw.Page(
+        build: (_) => pw.Center(
+          child: pw.Image(image, fit: pw.BoxFit.contain),
+        ),
+      ),
+    );
+    final pdfBytes = await document.save();
+    final baseName = attachment.name.replaceAll(RegExp(r'\.[^.]+$'), '');
+    return EventAttachment(
+      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$baseName-pdf',
+      name: '$baseName.pdf',
+      path: '',
+      bytesBase64: base64Encode(pdfBytes),
+    );
+  }
+
+  void _showAttachmentFailure(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   void _removeAttachment(String attachmentId) {
     setState(() {
       _attachments = _attachments
@@ -2746,6 +3034,7 @@ class _EnhancedTaskEditorSheet extends StatefulWidget {
 }
 
 class _EnhancedTaskEditorSheetState extends State<_EnhancedTaskEditorSheet> {
+  final ImagePicker _imagePicker = ImagePicker();
   late DateTime _date;
   TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
   final TextEditingController _titleController = TextEditingController();
@@ -2849,6 +3138,8 @@ class _EnhancedTaskEditorSheetState extends State<_EnhancedTaskEditorSheet> {
           _AttachmentEditorSection(
             attachments: _attachments,
             onAddFiles: _pickAttachments,
+            onCapturePhoto: _capturePhotoAttachment,
+            onScanDocument: _scanDocumentAttachment,
             onEdit: _editAttachment,
             onRemove: _removeAttachment,
           ),
@@ -2917,6 +3208,143 @@ class _EnhancedTaskEditorSheetState extends State<_EnhancedTaskEditorSheet> {
     }
   }
 
+  Future<void> _capturePhotoAttachment() async {
+    await _captureOrScanAttachment(scanMode: false);
+  }
+
+  Future<void> _scanDocumentAttachment() async {
+    await _captureOrScanAttachment(scanMode: true);
+  }
+
+  Future<void> _captureOrScanAttachment({required bool scanMode}) async {
+    try {
+      final file = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 92,
+      );
+      if (file == null) return;
+
+      final attachment = await _attachmentFromXFile(file);
+      if (!mounted) return;
+      if (attachment == null) {
+        _showAttachmentFailure('Không thể đọc ảnh vừa chụp.');
+        return;
+      }
+
+      EventAttachment resultAttachment = attachment;
+      if (scanMode || attachment.isImage) {
+        final edited = await Navigator.of(context).push<EventAttachment>(
+          MaterialPageRoute(
+            builder: (context) => ImageAttachmentEditor(attachment: attachment),
+          ),
+        );
+        if (edited == null || !mounted) return;
+        resultAttachment = edited;
+      }
+
+      if (scanMode) {
+        final saveAsPdf = await _askScanOutputMode();
+        if (saveAsPdf == null || !mounted) return;
+        if (saveAsPdf) {
+          resultAttachment = await _convertImageAttachmentToPdf(
+            resultAttachment,
+          );
+        }
+      }
+
+      setState(() {
+        _attachments = [..._attachments, resultAttachment];
+      });
+    } catch (_) {
+      _showAttachmentFailure(
+        scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
+      );
+    }
+  }
+
+  Future<EventAttachment?> _attachmentFromXFile(XFile file) async {
+    final bytes = await file.readAsBytes();
+    if (bytes.isEmpty) return null;
+    final fileName = file.name.isEmpty
+        ? 'camera_${DateTime.now().millisecondsSinceEpoch}.jpg'
+        : file.name;
+    return EventAttachment(
+      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$fileName',
+      name: fileName,
+      path: kIsWeb ? '' : file.path,
+      bytesBase64: kIsWeb || file.path.isEmpty ? base64Encode(bytes) : null,
+    );
+  }
+
+  Future<bool?> _askScanOutputMode() async {
+    return showModalBottomSheet<bool>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Lưu tài liệu dưới dạng',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                leading: const Icon(Icons.image_outlined),
+                title: const Text('Ảnh'),
+                onTap: () => Navigator.of(context).pop(false),
+              ),
+              ListTile(
+                leading: const Icon(Icons.picture_as_pdf_outlined),
+                title: const Text('PDF'),
+                onTap: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<EventAttachment> _convertImageAttachmentToPdf(
+    EventAttachment attachment,
+  ) async {
+    final bytes = attachment.bytesBase64 != null
+        ? base64Decode(attachment.bytesBase64!)
+        : await readBytesFromPath(attachment.path);
+    if (bytes == null || bytes.isEmpty) return attachment;
+
+    final document = pw.Document();
+    final image = pw.MemoryImage(bytes);
+    document.addPage(
+      pw.Page(
+        build: (_) => pw.Center(
+          child: pw.Image(image, fit: pw.BoxFit.contain),
+        ),
+      ),
+    );
+    final pdfBytes = await document.save();
+    final baseName = attachment.name.replaceAll(RegExp(r'\.[^.]+$'), '');
+    return EventAttachment(
+      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$baseName-pdf',
+      name: '$baseName.pdf',
+      path: '',
+      bytesBase64: base64Encode(pdfBytes),
+    );
+  }
+
+  void _showAttachmentFailure(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   void _removeAttachment(String attachmentId) {
     setState(() {
       _attachments = _attachments
@@ -2945,12 +3373,16 @@ class _AttachmentEditorSection extends StatelessWidget {
   const _AttachmentEditorSection({
     required this.attachments,
     required this.onAddFiles,
+    required this.onCapturePhoto,
+    required this.onScanDocument,
     required this.onEdit,
     required this.onRemove,
   });
 
   final List<EventAttachment> attachments;
   final Future<void> Function() onAddFiles;
+  final Future<void> Function() onCapturePhoto;
+  final Future<void> Function() onScanDocument;
   final Future<void> Function(EventAttachment attachment) onEdit;
   final ValueChanged<String> onRemove;
 
@@ -2959,10 +3391,26 @@ class _AttachmentEditorSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        OutlinedButton.icon(
-          onPressed: onAddFiles,
-          icon: const Icon(Icons.attach_file),
-          label: const Text('Đính kèm tệp'),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            OutlinedButton.icon(
+              onPressed: onAddFiles,
+              icon: const Icon(Icons.attach_file),
+              label: const Text('Tệp'),
+            ),
+            OutlinedButton.icon(
+              onPressed: onCapturePhoto,
+              icon: const Icon(Icons.photo_camera_outlined),
+              label: const Text('Chụp ảnh'),
+            ),
+            OutlinedButton.icon(
+              onPressed: onScanDocument,
+              icon: const Icon(Icons.document_scanner_outlined),
+              label: const Text('Quét tài liệu'),
+            ),
+          ],
         ),
         if (attachments.isNotEmpty) ...[
           const SizedBox(height: 10),
