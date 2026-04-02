@@ -1,10 +1,9 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
 import '../models/event_attachment.dart';
 import '../models/grade_item.dart';
@@ -13,7 +12,10 @@ import '../models/school_sync_snapshot.dart';
 import '../models/student_event.dart';
 import '../models/student_profile.dart';
 import '../models/weather_forecast.dart';
+import 'account_page.dart';
 import 'grades_page.dart';
+import 'schedule_page.dart';
+import 'sync_page.dart';
 import '../services/attachment_opener.dart';
 import '../services/attachment_storage_service.dart';
 import '../services/auth_service.dart';
@@ -23,6 +25,7 @@ import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
 import '../services/weather_service.dart';
 import '../services/widget_sync_service.dart';
+import '../widgets/home/home_common_widgets.dart';
 import '../widgets/home/home_dialogs.dart';
 import '../widgets/home/home_editors.dart';
 import '../widgets/home/home_sheet_models.dart';
@@ -137,10 +140,10 @@ class _HomeShellState extends State<HomeShell> {
   @override
   Widget build(BuildContext context) {
     final pages = <Widget>[
-      _buildSchedulePage(context),
+      _buildSchedulePage(),
       _buildGradesPage(context),
-      _buildSyncPage(context),
-      _buildAccountPage(context),
+      _buildSyncPage(),
+      _buildAccountPage(),
     ];
 
     return Scaffold(
@@ -185,98 +188,44 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
-  Widget _buildSchedulePage(BuildContext context) {
+  Widget _buildSchedulePage() {
     final eventsForDay = _eventsForDay(_selectedDate);
 
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (_showSyncReminder) ...[
-                  _buildSyncReminder(context),
-                  const SizedBox(height: 16),
-                ],
-                SizedBox(
-                  height: 220,
-                  child: ScrollConfiguration(
-                    behavior: const _DesktopFriendlyScrollBehavior(),
-                    child: PageView(
-                      padEnds: false,
-                      controller: PageController(viewportFraction: 0.94),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 12),
-                          child: _buildScheduleHeroCard(context, eventsForDay),
-                        ),
-                        _buildWeatherCard(context),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _buildScheduleHeader(context),
-                const SizedBox(height: 16),
-                _buildDayStrip(context),
-              ],
-            ),
-          ),
-        ),
-        if (_isLoadingLocalCache)
-          const SliverFillRemaining(
-            hasScrollBody: false,
-            child: Center(child: CircularProgressIndicator()),
-          )
-        else if (eventsForDay.isEmpty)
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              child: _EmptyState(
-                icon: _profile == null
-                    ? Icons.sync_rounded
-                    : Icons.event_available_outlined,
-                title: _profile == null
-                    ? 'Chưa có dữ liệu từ cổng trường'
-                    : 'Ngày này chưa có sự kiện',
-                description: _profile == null
-                    ? 'Mở trang Đồng bộ để đăng nhập và tải lịch học, lịch thi, bảng điểm.'
-                    : 'Bạn có thể thêm việc cá nhân hoặc chọn ngày khác để xem lịch.',
-                actionLabel: _profile == null ? 'Mở đồng bộ' : 'Thêm việc',
-                onAction: _profile == null
-                    ? () => setState(() => _currentTab = 2)
-                    : _showAddTaskSheet,
-              ),
-            ),
-          )
-        else
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-            sliver: SliverList.builder(
-              itemCount: eventsForDay.length,
-              itemBuilder: (context, index) {
-                final event = eventsForDay[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: _EventCard(
-                    event: event,
-                    onEditNote: () => _showEditNoteSheet(event),
-                    onDelete: event.type == StudentEventType.personalTask
-                        ? () => _confirmDeletePersonalEvent(event)
-                        : null,
-                    onOpenAttachment: _openAttachment,
-                    onToggleDone: event.type == StudentEventType.personalTask
-                        ? () => _toggleDone(event.id)
-                        : null,
-                  ),
-                );
-              },
-            ),
-          ),
-      ],
+    return SchedulePage(
+      eventsForDay: eventsForDay,
+      selectedDate: _selectedDate,
+      profile: _profile,
+      lastSyncedAt: _lastSyncedAt,
+      weatherForecast: _weatherForecast,
+      weatherService: _weatherService,
+      isLoadingLocalCache: _isLoadingLocalCache,
+      isLoadingWeather: _isLoadingWeather,
+      showSyncReminder: _showSyncReminder,
+      dayStripController: _dayStripController,
+      dayStripItemCount: _pastDayRange + _futureDayRange + 1,
+      dayTileSpacing: _dayTileSpacing,
+      dateForIndex: _dateForIndex,
+      indicatorsForDate: (date) => _indicatorColors(_eventsForDay(date)),
+      isSameDate: _isSameDate,
+      formatFullDate: _formatFullDate,
+      formatTime: _formatTime,
+      formatSyncTimestamp: _formatSyncTimestamp,
+      onHideSyncReminder: () {
+        if (!mounted) return;
+        setState(() => _showSyncReminder = false);
+      },
+      onOpenMonthPicker: _openMonthPicker,
+      onOpenSyncTab: () => setState(() => _currentTab = 2),
+      onAddTask: _showAddTaskSheet,
+      onSelectDate: (date) {
+        setState(() => _selectedDate = date);
+        _scrollDayStripToDate(date);
+      },
+      onEditEvent: _showEditNoteSheet,
+      onDeleteEvent: _confirmDeletePersonalEvent,
+      onOpenAttachment: _openAttachment,
+      onToggleDone: _toggleDone,
+      onReloadWeather: _loadWeatherForecast,
     );
   }
 
@@ -285,7 +234,7 @@ class _HomeShellState extends State<HomeShell> {
       grades: _grades,
       curriculumSubjects: _curriculumSubjects,
       curriculumRawItems: _curriculumRawItems,
-      emptyState: _EmptyState(
+      emptyState: EmptyStateCard(
         icon: Icons.school_outlined,
         title: 'Chưa có bảng điểm',
         description:
@@ -296,449 +245,25 @@ class _HomeShellState extends State<HomeShell> {
     );
   }
 
-  Widget _buildScheduleHeroCard(
-    BuildContext context,
-    List<StudentEvent> eventsForDay,
-  ) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final classCount = eventsForDay
-        .where((event) => event.type == StudentEventType.classSchedule)
-        .length;
-    final examCount = eventsForDay
-        .where((event) => event.type == StudentEventType.exam)
-        .length;
-    final taskCount = eventsForDay
-        .where((event) => event.type == StudentEventType.personalTask)
-        .length;
-    final upcomingEvent = eventsForDay.cast<StudentEvent?>().firstWhere(
-      (event) => event!.start.isAfter(DateTime.now()),
-      orElse: () => eventsForDay.isEmpty ? null : eventsForDay.first,
-    );
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            colorScheme.primaryContainer,
-            colorScheme.secondaryContainer.withValues(alpha: 0.9),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _profile?.displayName ?? 'Lịch học tập',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: colorScheme.onPrimaryContainer,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            _formatFullDate(_selectedDate),
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: colorScheme.onPrimaryContainer.withValues(alpha: 0.86),
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _HeroCountChip(label: 'Lịch học', count: classCount),
-              _HeroCountChip(label: 'Lịch thi', count: examCount),
-              _HeroCountChip(label: 'Việc riêng', count: taskCount),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                upcomingEvent == null
-                    ? 'Hôm nay chưa có sự kiện nào được lên lịch.'
-                    : 'Tiếp theo: ${_formatTime(upcomingEvent.start)} • ${upcomingEvent.title}',
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onPrimaryContainer.withValues(alpha: 0.9),
-                ),
-              ),
-            ),
-          ),
-          if (_lastSyncedAt != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              'Đồng bộ gần nhất: ${_formatSyncTimestamp(_lastSyncedAt!)}',
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: colorScheme.onPrimaryContainer.withValues(alpha: 0.72),
-              ),
-            ),
-          ],
-        ],
-      ),
+  Widget _buildSyncPage() {
+    return SyncPage(
+      isSyncing: _isSyncing,
+      onSync: _openSyncDialog,
+      lastSyncedAt: _lastSyncedAt,
+      profile: _profile,
+      syncedEventCount: _syncedEvents.length,
+      gradeCount: _grades.length,
+      personalEventCount: _personalEvents.length,
     );
   }
 
-  Widget _buildWeatherCard(BuildContext context) {
-    final forecast = _weatherForecast?.dayForDate(_selectedDate);
-    final colorScheme = Theme.of(context).colorScheme;
-
-    if (_isLoadingWeather) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: colorScheme.outlineVariant),
-        ),
-        child: const Row(
-          children: [
-            SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            SizedBox(width: 12),
-            Expanded(child: Text('Đang tải dự báo thời tiết...')),
-          ],
-        ),
-      );
-    }
-
-    if (forecast == null) {
-      return Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: colorScheme.outlineVariant),
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.cloud_off_outlined),
-            const SizedBox(width: 12),
-            const Expanded(
-              child: Text('Chưa tải được dự báo thời tiết cho ngày này.'),
-            ),
-            IconButton(
-              tooltip: 'Tải lại',
-              onPressed: _loadWeatherForecast,
-              icon: const Icon(Icons.refresh),
-            ),
-          ],
-        ),
-      );
-    }
-
-    final suggestions = _weatherService.suggestionsForDay(forecast);
-    final weatherDescription = _weatherService.descriptionForCode(
-      forecast.weatherCode,
-    );
-    final weatherIcon = _weatherService.iconForCode(forecast.weatherCode);
-
-    final visibleSuggestions = suggestions.take(2).toList();
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colorScheme.secondaryContainer.withValues(alpha: 0.55),
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(weatherIcon, size: 26, color: colorScheme.primary),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Thời tiết ${_weatherForecast?.locationLabel ?? 'Hà Nội'}',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    Text(
-                      weatherDescription,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                tooltip: 'Tải lại',
-                visualDensity: VisualDensity.compact,
-                onPressed: _loadWeatherForecast,
-                icon: const Icon(Icons.refresh),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              _WeatherMetricChip(
-                icon: Icons.thermostat_outlined,
-                label:
-                    '${forecast.temperatureMin.round()}° - ${forecast.temperatureMax.round()}°',
-              ),
-              _WeatherMetricChip(
-                icon: Icons.umbrella_outlined,
-                label: 'Mưa ${forecast.precipitationProbabilityMax}%',
-              ),
-            ],
-          ),
-          if (visibleSuggestions.isNotEmpty) ...[const SizedBox(height: 10)],
-          ...visibleSuggestions.map(
-            (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 18,
-                    color: colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      item,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSyncPage(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-      children: [
-        Text(
-          'Đồng bộ dữ liệu',
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Đồng bộ chỉ dùng để lấy dữ liệu thật từ cổng trường. Không cần đăng nhập tài khoản ứng dụng để đồng bộ.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _SyncActionCard(
-          isSyncing: _isSyncing,
-          onSync: _openSyncDialog,
-          lastSyncedAt: _lastSyncedAt,
-        ),
-        const SizedBox(height: 16),
-        if (_profile != null)
-          _ProfileCard(profile: _profile!)
-        else
-          const _PlaceholderInfoCard(
-            icon: Icons.account_circle_outlined,
-            title: 'Chưa đăng nhập',
-            description:
-                'Sau khi đồng bộ lần đầu, thông tin sinh viên từ cổng trường sẽ hiển thị tại đây.',
-          ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: [
-            _MetricCard(
-              icon: Icons.event_note_outlined,
-              label: 'Sự kiện',
-              value: _syncedEvents.length.toString(),
-            ),
-            _MetricCard(
-              icon: Icons.school_outlined,
-              label: 'Môn có điểm',
-              value: _grades.length.toString(),
-            ),
-            _MetricCard(
-              icon: Icons.task_alt_outlined,
-              label: 'Việc cá nhân',
-              value: _personalEvents.length.toString(),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAccountPage(BuildContext context) {
-    final user = _signedInUser;
-
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-      children: [
-        Text('Tài khoản', style: Theme.of(context).textTheme.headlineMedium),
-        const SizedBox(height: 8),
-        Text(
-          'Đăng nhập là tùy chọn. Tài khoản chỉ dùng để đồng bộ ghi chú, tệp đính kèm và dữ liệu đã lưu lên cloud.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 16),
-        if (!_authService.isAvailable)
-          const _PlaceholderInfoCard(
-            icon: Icons.cloud_off_outlined,
-            title: 'Firebase chưa sẵn sàng',
-            description:
-                'App chưa khởi tạo Firebase. Hãy kiểm tra cấu hình Firebase nếu muốn đăng nhập.',
-          )
-        else if (user == null)
-          _AuthEntryCard(
-            onEmailAuth: _openEmailAuthSheet,
-            onGoogleAuth: _signInWithGoogle,
-          )
-        else
-          _SignedInCard(user: user, onSignOut: _signOut),
-        const SizedBox(height: 16),
-        const _PlaceholderInfoCard(
-          icon: Icons.offline_bolt_outlined,
-          title: 'Chế độ offline',
-          description:
-              'Dữ liệu đồng bộ, ghi chú và việc cá nhân hiện đã được lưu lại trên điện thoại để bạn mở app lần sau vẫn xem được.',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSyncReminder(BuildContext context) {
-    return Dismissible(
-      key: const ValueKey('sync-reminder'),
-      direction: DismissDirection.up,
-      onDismissed: (_) {
-        if (!mounted) return;
-        setState(() => _showSyncReminder = false);
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        padding: const EdgeInsets.fromLTRB(16, 14, 10, 14),
-        child: Row(
-          children: [
-            Icon(
-              Icons.info_outline,
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                'Hãy thường xuyên đồng bộ để đảm bảo dữ liệu luôn mới nhất.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSecondaryContainer,
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: () => setState(() => _showSyncReminder = false),
-              visualDensity: VisualDensity.compact,
-              icon: Icon(
-                Icons.close,
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScheduleHeader(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Ngày đã chọn',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                _formatFullDate(_selectedDate),
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ],
-          ),
-        ),
-        IconButton.filledTonal(
-          tooltip: 'Chọn ngày',
-          onPressed: _openMonthPicker,
-          icon: const Icon(Icons.calendar_month_outlined),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDayStrip(BuildContext context) {
-    final itemCount = _pastDayRange + _futureDayRange + 1;
-
-    return SizedBox(
-      height: 104,
-      child: ScrollConfiguration(
-        behavior: const _DesktopFriendlyScrollBehavior(),
-        child: ListView.builder(
-          controller: _dayStripController,
-          scrollDirection: Axis.horizontal,
-          itemCount: itemCount,
-          itemBuilder: (context, index) {
-            final date = _dateForIndex(index);
-            final indicators = _indicatorColors(_eventsForDay(date));
-
-            return Padding(
-              padding: EdgeInsets.only(
-                right: index == itemCount - 1 ? 0 : _dayTileSpacing,
-              ),
-              child: _DayChip(
-                date: date,
-                isSelected: _isSameDate(date, _selectedDate),
-                indicators: indicators,
-                onTap: () {
-                  setState(() => _selectedDate = date);
-                  _scrollDayStripToDate(date);
-                },
-              ),
-            );
-          },
-        ),
-      ),
+  Widget _buildAccountPage() {
+    return AccountPage(
+      isAuthAvailable: _authService.isAvailable,
+      user: _signedInUser,
+      onEmailAuth: _openEmailAuthSheet,
+      onGoogleAuth: _signInWithGoogle,
+      onSignOut: _signOut,
     );
   }
 
@@ -784,7 +309,7 @@ class _HomeShellState extends State<HomeShell> {
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đồng bộ dữ liệu thành công.')),
+        const SnackBar(content: Text('Đồng bộ thành công.')),
       );
       _applySnapshot(snapshot);
       await _persistLocalCache();
@@ -798,7 +323,9 @@ class _HomeShellState extends State<HomeShell> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Có lỗi xảy ra khi đồng bộ dữ liệu. Vui lòng thử lại.'),
+          content: Text(
+            'Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.',
+          ),
         ),
       );
     } finally {
@@ -955,7 +482,7 @@ class _HomeShellState extends State<HomeShell> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'),
+            child: const Text('Hủy'), 
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
@@ -1007,7 +534,9 @@ class _HomeShellState extends State<HomeShell> {
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Không tìm thấy tệp đính kèm để mở.')),
+      const SnackBar(
+        content: Text('Không thể mở tệp đính kèm. Vui lòng thử lại.'),
+      ),
     );
   }
 
@@ -1192,7 +721,9 @@ class _HomeShellState extends State<HomeShell> {
       }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đăng nhập tài khoản thành công.')),
+        const SnackBar(
+          content: Text('Đăng nhập thành công.'),
+        ),
       );
     } on FirebaseAuthException catch (error) {
       if (!mounted) return;
@@ -1206,13 +737,15 @@ class _HomeShellState extends State<HomeShell> {
     try {
       await _authService.signInWithGoogle();
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Đã đăng nhập Google.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã đăng nhập Google.')),
+      );
     } on FirebaseAuthException catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message ?? 'Không thể đăng nhập Google.')),
+        SnackBar(
+          content: Text(error.message ?? 'Không thể đăng nhập Google.'),
+        ),
       );
     } catch (_) {
       if (!mounted) return;
@@ -1226,7 +759,9 @@ class _HomeShellState extends State<HomeShell> {
     await _authService.signOut();
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Đã đăng xuất tài khoản ứng dụng.')),
+      const SnackBar(
+        content: Text('Đã đăng xuất tài khoản ứng dụng.'),
+      ),
     );
   }
 
@@ -1291,11 +826,11 @@ class _HomeShellState extends State<HomeShell> {
     const weekdays = [
       'Thứ Hai',
       'Thứ Ba',
-      'Thứ Tư',
+      'Thứ Tứ',
       'Thứ Năm',
       'Thứ Sáu',
       'Thứ Bảy',
-      'Chủ nhật',
+      'Chủ Nhật',
     ];
     const months = [
       'tháng 1',
@@ -1327,763 +862,5 @@ class _HomeShellState extends State<HomeShell> {
     return left.year == right.year &&
         left.month == right.month &&
         left.day == right.day;
-  }
-}
-
-class _DayChip extends StatelessWidget {
-  const _DayChip({
-    required this.date,
-    required this.isSelected,
-    required this.indicators,
-    required this.onTap,
-  });
-
-  final DateTime date;
-  final bool isSelected;
-  final List<Color> indicators;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    const labels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
-    final colorScheme = Theme.of(context).colorScheme;
-    final background = isSelected
-        ? colorScheme.primaryContainer
-        : colorScheme.surfaceContainerLow;
-    final foreground = isSelected
-        ? colorScheme.onPrimaryContainer
-        : colorScheme.onSurface;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(28),
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        width: 72,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(
-            color: isSelected
-                ? colorScheme.primary.withValues(alpha: 0.18)
-                : colorScheme.outlineVariant,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              labels[date.weekday - 1],
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: foreground.withValues(alpha: 0.8),
-              ),
-            ),
-            Text(
-              '${date.day}',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: foreground,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: indicators.isEmpty
-                  ? const [SizedBox(height: 8, width: 8)]
-                  : indicators
-                        .map(
-                          (color) => Container(
-                            width: 6,
-                            height: 6,
-                            margin: const EdgeInsets.symmetric(horizontal: 2),
-                            decoration: BoxDecoration(
-                              color: color,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        )
-                        .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EventCard extends StatelessWidget {
-  const _EventCard({
-    required this.event,
-    required this.onEditNote,
-    this.onDelete,
-    required this.onOpenAttachment,
-    this.onToggleDone,
-  });
-
-  final StudentEvent event;
-  final VoidCallback onEditNote;
-  final VoidCallback? onDelete;
-  final ValueChanged<EventAttachment> onOpenAttachment;
-  final VoidCallback? onToggleDone;
-
-  @override
-  Widget build(BuildContext context) {
-    final isTask = event.type == StudentEventType.personalTask;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _EventTypeBadge(event: event),
-          const SizedBox(height: 12),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Text(
-                  event.title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    decoration: event.isDone
-                        ? TextDecoration.lineThrough
-                        : null,
-                  ),
-                ),
-              ),
-              if (isTask)
-                Checkbox(
-                  value: event.isDone,
-                  onChanged: (_) => onToggleDone?.call(),
-                ),
-              if (isTask)
-                IconButton(
-                  tooltip: 'Xóa ghi chú cá nhân',
-                  onPressed: onDelete,
-                  icon: const Icon(Icons.delete_outline),
-                ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          _LabeledValueRow(label: 'Thời gian', value: _eventTimeRange(event)),
-          if ((event.subtitle ?? '').isNotEmpty &&
-              !_isRedundantSubtitle(event.subtitle!, event.type)) ...[
-            const SizedBox(height: 8),
-            _LabeledValueRow(
-              label: event.type == StudentEventType.exam
-                  ? 'Ca thi'
-                  : 'Giảng viên',
-              value: event.subtitle!,
-            ),
-          ],
-          if ((event.location ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _LabeledValueRow(
-              label: event.type == StudentEventType.exam
-                  ? 'Phòng thi'
-                  : 'Phòng học',
-              value: event.location!,
-            ),
-          ],
-          if ((event.referenceCode ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _LabeledValueRow(label: 'Số báo danh', value: event.referenceCode!),
-          ],
-          if ((event.note ?? '').isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _LabeledValueRow(
-              label: event.type == StudentEventType.exam
-                  ? 'Đợt thi'
-                  : 'Ghi chú',
-              value: event.note!,
-              maxLines: 2,
-            ),
-          ],
-          if (event.attachments.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            _AttachmentSection(
-              attachments: event.attachments,
-              onOpenAttachment: onOpenAttachment,
-            ),
-          ],
-          const SizedBox(height: 14),
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton.icon(
-              onPressed: onEditNote,
-              icon: const Icon(Icons.edit_note),
-              label: Text(isTask ? 'Sửa ghi chú' : 'Ghi chú'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  bool _isRedundantSubtitle(String subtitle, StudentEventType type) {
-    if (type != StudentEventType.classSchedule) return false;
-    return subtitle.trim().toLowerCase() == 'lịch học';
-  }
-
-  String _eventTimeRange(StudentEvent event) {
-    String twoDigits(int value) => value.toString().padLeft(2, '0');
-    return '${twoDigits(event.start.hour)}:${twoDigits(event.start.minute)} - '
-        '${twoDigits(event.end.hour)}:${twoDigits(event.end.minute)}';
-  }
-}
-
-class _EventTypeBadge extends StatelessWidget {
-  const _EventTypeBadge({required this.event});
-
-  final StudentEvent event;
-
-  @override
-  Widget build(BuildContext context) {
-    final (label, color) = switch (event.type) {
-      StudentEventType.exam => ('Lịch thi', const Color(0xFFC62828)),
-      StudentEventType.classSchedule => ('Lịch học', const Color(0xFF3559A8)),
-      StudentEventType.personalTask => (
-        'Việc cá nhân',
-        const Color(0xFF2E7D32),
-      ),
-    };
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LabeledValueRow extends StatelessWidget {
-  const _LabeledValueRow({
-    required this.label,
-    required this.value,
-    this.maxLines,
-  });
-
-  final String label;
-  final String value;
-  final int? maxLines;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 84,
-          child: Text(
-            label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            maxLines: maxLines,
-            overflow: maxLines == null ? null : TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _AttachmentSection extends StatelessWidget {
-  const _AttachmentSection({
-    required this.attachments,
-    required this.onOpenAttachment,
-  });
-
-  final List<EventAttachment> attachments;
-  final ValueChanged<EventAttachment> onOpenAttachment;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 84,
-          child: Text(
-            'Tệp đính kèm',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: attachments
-                .map(
-                  (attachment) => ActionChip(
-                    avatar: Icon(_attachmentIcon(attachment), size: 18),
-                    label: Text(attachment.name),
-                    onPressed: () => onOpenAttachment(attachment),
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  IconData _attachmentIcon(EventAttachment attachment) {
-    if (attachment.isPdf) return Icons.picture_as_pdf_outlined;
-    if (attachment.isImage) return Icons.image_outlined;
-    return Icons.attach_file_outlined;
-  }
-}
-
-class _HeroCountChip extends StatelessWidget {
-  const _HeroCountChip({required this.label, required this.count});
-
-  final String label;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: colorScheme.surface.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        '$label $count',
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-          color: colorScheme.onPrimaryContainer,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
-class _DesktopFriendlyScrollBehavior extends MaterialScrollBehavior {
-  const _DesktopFriendlyScrollBehavior();
-
-  @override
-  Set<PointerDeviceKind> get dragDevices => {
-    PointerDeviceKind.touch,
-    PointerDeviceKind.mouse,
-    PointerDeviceKind.trackpad,
-    PointerDeviceKind.stylus,
-    PointerDeviceKind.unknown,
-  };
-}
-
-class _SyncActionCard extends StatelessWidget {
-  const _SyncActionCard({
-    required this.isSyncing,
-    required this.onSync,
-    required this.lastSyncedAt,
-  });
-
-  final bool isSyncing;
-  final VoidCallback onSync;
-  final DateTime? lastSyncedAt;
-
-  @override
-  Widget build(BuildContext context) {
-    final label = isSyncing ? 'Đang đồng bộ...' : 'Đồng bộ ngay';
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(32),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Cập nhật dữ liệu',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            lastSyncedAt == null
-                ? 'Bạn chưa đồng bộ lần nào.'
-                : 'Lần gần nhất: ${_formatTimestamp(lastSyncedAt!)}',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 18),
-          FilledButton.icon(
-            onPressed: isSyncing ? null : onSync,
-            icon: isSyncing
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.sync),
-            label: Text(label),
-          ),
-        ],
-      ),
-    );
-  }
-
-  static String _formatTimestamp(DateTime value) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return '${twoDigits(value.hour)}:${twoDigits(value.minute)} '
-        '${value.day}/${value.month}/${value.year}';
-  }
-}
-
-class _ProfileCard extends StatelessWidget {
-  const _ProfileCard({required this.profile});
-
-  final StudentProfile profile;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            profile.displayName,
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 12),
-          _ProfileLine(label: 'Tài khoản', value: profile.username),
-          if ((profile.studentCode ?? '').isNotEmpty)
-            _ProfileLine(label: 'Mã sinh viên', value: profile.studentCode!),
-          if ((profile.className ?? '').isNotEmpty)
-            _ProfileLine(label: 'Lớp', value: profile.className!),
-        ],
-      ),
-    );
-  }
-}
-
-class _ProfileLine extends StatelessWidget {
-  const _ProfileLine({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 96,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Expanded(child: Text(value)),
-        ],
-      ),
-    );
-  }
-}
-
-class _MetricCard extends StatelessWidget {
-  const _MetricCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-  });
-
-  final IconData icon;
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 160,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 12),
-            Text(
-              value,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 4),
-            Text(label),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _PlaceholderInfoCard extends StatelessWidget {
-  const _PlaceholderInfoCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(description),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _AuthEntryCard extends StatelessWidget {
-  const _AuthEntryCard({required this.onEmailAuth, required this.onGoogleAuth});
-
-  final Future<void> Function() onEmailAuth;
-  final Future<void> Function() onGoogleAuth;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Đăng nhập để lưu cloud',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Tài khoản ứng dụng được dùng để lưu ghi chú, tệp đính kèm và dữ liệu đồng bộ lên Firebase/Cloudflare.',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: onGoogleAuth,
-            icon: const Icon(Icons.account_circle_outlined),
-            label: const Text('Đăng nhập Google'),
-          ),
-          const SizedBox(height: 10),
-          OutlinedButton.icon(
-            onPressed: onEmailAuth,
-            icon: const Icon(Icons.mail_outline),
-            label: const Text('Email và mật khẩu'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SignedInCard extends StatelessWidget {
-  const _SignedInCard({required this.user, required this.onSignOut});
-
-  final User user;
-  final Future<void> Function() onSignOut;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            user.displayName?.trim().isNotEmpty == true
-                ? user.displayName!
-                : (user.email ?? 'Tài khoản ứng dụng'),
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            user.email ?? 'Đã đăng nhập',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 16),
-          FilledButton.tonalIcon(
-            onPressed: onSignOut,
-            icon: const Icon(Icons.logout),
-            label: const Text('Đăng xuất'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.actionLabel,
-    required this.onAction,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-  final String actionLabel;
-  final VoidCallback onAction;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainerLow,
-          borderRadius: BorderRadius.circular(32),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 48, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            Text(description, textAlign: TextAlign.center),
-            const SizedBox(height: 16),
-            FilledButton(onPressed: onAction, child: Text(actionLabel)),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _WeatherMetricChip extends StatelessWidget {
-  const _WeatherMetricChip({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.9),
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [Icon(icon, size: 16), const SizedBox(width: 6), Text(label)],
-      ),
-    );
   }
 }
