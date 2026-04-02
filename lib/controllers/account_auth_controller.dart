@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../services/auth_service.dart';
-import '../widgets/home/home_dialogs.dart';
-import '../widgets/home/home_sheet_models.dart';
+import '../../../services/auth_service.dart';
+import '../views/home/widgets/home_dialogs.dart';
+import '../views/home/widgets/home_sheet_models.dart';
 
 class AccountAuthController {
   AccountAuthController({AuthService? authService})

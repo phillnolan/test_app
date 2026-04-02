@@ -1,0 +1,52 @@
+{
+  "repository_type": "monorepo",
+  "project_name": "sinhvien-app",
+  "scan_date": "2026-04-02T14:13:05+07:00",
+  "parts": [
+    {
+      "part_id": "mobile-app",
+      "name": "Sinh Vien Flutter App",
+      "project_type_id": "mobile",
+      "root_path": ".",
+      "primary_language": "Dart",
+      "entry_point": "lib/main.dart",
+      "tech_stack": [
+        "Flutter",
+        "Firebase Auth",
+        "SharedPreferences",
+        "Flutter Local Notifications"
+      ]
+    },
+    {
+      "part_id": "worker-api",
+      "name": "Cloudflare Worker API",
+      "project_type_id": "backend",
+      "root_path": "cloudflare-worker",
+      "primary_language": "TypeScript",
+      "entry_point": "cloudflare-worker/src/index.ts",
+      "tech_stack": [
+        "Cloudflare Worker",
+        "D1",
+        "KV",
+        "R2",
+        "jose"
+      ]
+    }
+  ],
+  "integration_points": [
+    {
+      "from_part": "mobile-app",
+      "to_part": "worker-api",
+      "type": "REST + Firebase ID token",
+      "path": "lib/services/cloud_sync_service.dart",
+      "description": "Đồng bộ note, task, snapshot và attachment."
+    },
+    {
+      "from_part": "mobile-app",
+      "to_part": "TLU education API",
+      "type": "REST",
+      "path": "lib/services/school_api_service.dart",
+      "description": "Đồng bộ profile, bảng điểm, lịch học, lịch thi, chương trình đào tạo."
+    }
+  ]
+}
