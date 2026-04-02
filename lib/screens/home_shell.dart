@@ -1,10 +1,11 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../controllers/account_auth_controller.dart';
 import '../models/event_attachment.dart';
 import '../models/grade_item.dart';
 import '../models/program_subject.dart';
@@ -18,13 +19,13 @@ import 'schedule_page.dart';
 import 'sync_page.dart';
 import '../services/attachment_opener.dart';
 import '../services/attachment_storage_service.dart';
-import '../services/auth_service.dart';
 import '../services/cloud_sync_service.dart';
 import '../services/local_cache_service.dart';
 import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
 import '../services/weather_service.dart';
 import '../services/widget_sync_service.dart';
+import '../utils/home_calendar_utils.dart';
 import '../widgets/home/home_common_widgets.dart';
 import '../widgets/home/home_dialogs.dart';
 import '../widgets/home/home_editors.dart';
@@ -47,7 +48,7 @@ class _HomeShellState extends State<HomeShell> {
   final LocalCacheService _localCacheService = LocalCacheService();
   final AttachmentStorageService _attachmentStorageService =
       AttachmentStorageService();
-  final AuthService _authService = AuthService();
+  final AccountAuthController _accountAuthController = AccountAuthController();
   final CloudSyncService _cloudSyncService = CloudSyncService();
   final WeatherService _weatherService = WeatherService();
   final WidgetSyncService _widgetSyncService = WidgetSyncService();
@@ -89,9 +90,9 @@ class _HomeShellState extends State<HomeShell> {
 
     _loadLocalCache();
     _loadWeatherForecast();
-    if (_authService.isAvailable) {
-      _signedInUser = _authService.currentUser;
-      _authSubscription = _authService.authStateChanges().listen((user) {
+    if (_accountAuthController.isAvailable) {
+      _signedInUser = _accountAuthController.currentUser;
+      _authSubscription = _accountAuthController.listenAuthState((user) {
         if (!mounted) return;
         setState(() => _signedInUser = user);
         if (user != null) {
@@ -189,7 +190,10 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Widget _buildSchedulePage() {
-    final eventsForDay = _eventsForDay(_selectedDate);
+    final eventsForDay = HomeCalendarUtils.eventsForDay(
+      _allEvents,
+      _selectedDate,
+    );
 
     return SchedulePage(
       eventsForDay: eventsForDay,
@@ -204,12 +208,18 @@ class _HomeShellState extends State<HomeShell> {
       dayStripController: _dayStripController,
       dayStripItemCount: _pastDayRange + _futureDayRange + 1,
       dayTileSpacing: _dayTileSpacing,
-      dateForIndex: _dateForIndex,
-      indicatorsForDate: (date) => _indicatorColors(_eventsForDay(date)),
-      isSameDate: _isSameDate,
-      formatFullDate: _formatFullDate,
-      formatTime: _formatTime,
-      formatSyncTimestamp: _formatSyncTimestamp,
+      dateForIndex: (index) => HomeCalendarUtils.dateForIndex(
+        today: _today,
+        pastDayRange: _pastDayRange,
+        index: index,
+      ),
+      indicatorsForDate: (date) => HomeCalendarUtils.indicatorColors(
+        HomeCalendarUtils.eventsForDay(_allEvents, date),
+      ),
+      isSameDate: HomeCalendarUtils.isSameDate,
+      formatFullDate: HomeCalendarUtils.formatFullDate,
+      formatTime: HomeCalendarUtils.formatTime,
+      formatSyncTimestamp: HomeCalendarUtils.formatSyncTimestamp,
       onHideSyncReminder: () {
         if (!mounted) return;
         setState(() => _showSyncReminder = false);
@@ -259,11 +269,11 @@ class _HomeShellState extends State<HomeShell> {
 
   Widget _buildAccountPage() {
     return AccountPage(
-      isAuthAvailable: _authService.isAvailable,
+      isAuthAvailable: _accountAuthController.isAvailable,
       user: _signedInUser,
-      onEmailAuth: _openEmailAuthSheet,
-      onGoogleAuth: _signInWithGoogle,
-      onSignOut: _signOut,
+      onEmailAuth: () => _accountAuthController.openEmailAuthSheet(context),
+      onGoogleAuth: () => _accountAuthController.signInWithGoogle(context),
+      onSignOut: () => _accountAuthController.signOut(context),
     );
   }
 
@@ -274,7 +284,9 @@ class _HomeShellState extends State<HomeShell> {
         initialDate: _selectedDate,
         firstDate: _today.subtract(const Duration(days: _pastDayRange)),
         lastDate: _today.add(const Duration(days: _futureDayRange)),
-        eventLevelForDate: _eventLevelForDate,
+        eventLevelForDate: (date) => HomeCalendarUtils.eventLevelForEvents(
+          HomeCalendarUtils.eventsForDay(_allEvents, date),
+        ),
       ),
     );
 
@@ -308,9 +320,9 @@ class _HomeShellState extends State<HomeShell> {
       );
 
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đồng bộ thành công.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Đồng bộ thành công.')));
       _applySnapshot(snapshot);
       await _persistLocalCache();
       unawaited(_syncCurrentStateToCloud());
@@ -323,9 +335,7 @@ class _HomeShellState extends State<HomeShell> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text(
-            'Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.',
-          ),
+          content: Text('Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.'),
         ),
       );
     } finally {
@@ -482,7 +492,7 @@ class _HomeShellState extends State<HomeShell> {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'), 
+            child: const Text('Hủy'),
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
@@ -698,115 +708,14 @@ class _HomeShellState extends State<HomeShell> {
     return updatedEvents;
   }
 
-  Future<void> _openEmailAuthSheet() async {
-    final result = await showModalBottomSheet<EmailAuthResult>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => const EmailAuthSheet(),
-    );
-    if (result == null) return;
-
-    try {
-      if (result.mode == EmailAuthMode.signIn) {
-        await _authService.signInWithEmail(
-          email: result.email,
-          password: result.password,
-        );
-      } else {
-        await _authService.registerWithEmail(
-          email: result.email,
-          password: result.password,
-        );
-      }
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đăng nhập thành công.'),
-        ),
-      );
-    } on FirebaseAuthException catch (error) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message ?? 'Không thể đăng nhập.')),
-      );
-    }
-  }
-
-  Future<void> _signInWithGoogle() async {
-    try {
-      await _authService.signInWithGoogle();
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đã đăng nhập Google.')),
-      );
-    } on FirebaseAuthException catch (error) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Không thể đăng nhập Google.'),
-        ),
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không thể đăng nhập Google.')),
-      );
-    }
-  }
-
-  Future<void> _signOut() async {
-    await _authService.signOut();
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Đã đăng xuất tài khoản ứng dụng.'),
-      ),
-    );
-  }
-
-  List<StudentEvent> _eventsForDay(DateTime date) {
-    return _allEvents.where((event) => _isSameDate(event.start, date)).toList();
-  }
-
-  List<Color> _indicatorColors(List<StudentEvent> events) {
-    if (events.isEmpty) return const [];
-
-    final colors = <Color>{};
-    for (final event in events) {
-      if (event.type == StudentEventType.exam) {
-        colors.add(const Color(0xFFC62828));
-      } else {
-        colors.add(const Color(0xFF9AA0A6));
-      }
-    }
-    return colors.take(2).toList();
-  }
-
-  CalendarEventLevel _eventLevelForDate(DateTime date) {
-    final events = _eventsForDay(date);
-    if (events.any((event) => event.type == StudentEventType.exam)) {
-      return CalendarEventLevel.important;
-    }
-    if (events.isNotEmpty) {
-      return CalendarEventLevel.normal;
-    }
-    return CalendarEventLevel.none;
-  }
-
-  DateTime _dateForIndex(int index) {
-    final offset = index - _pastDayRange;
-    return _today.add(Duration(days: offset));
-  }
-
-  int _indexForDate(DateTime date) {
-    final normalized = DateTime(date.year, date.month, date.day);
-    return normalized.difference(_today).inDays + _pastDayRange;
-  }
-
   void _jumpDayStripToDate(DateTime date) {
     if (!_dayStripController.hasClients) return;
-    final offset = _indexForDate(date) * (_dayTileWidth + _dayTileSpacing);
+    final offset = HomeCalendarUtils.stripOffsetForDate(
+      today: _today,
+      pastDayRange: _pastDayRange,
+      date: date,
+      itemExtent: _dayTileWidth + _dayTileSpacing,
+    );
     _dayStripController.jumpTo(
       offset.clamp(0.0, _dayStripController.position.maxScrollExtent),
     );
@@ -814,53 +723,16 @@ class _HomeShellState extends State<HomeShell> {
 
   void _scrollDayStripToDate(DateTime date) {
     if (!_dayStripController.hasClients) return;
-    final offset = _indexForDate(date) * (_dayTileWidth + _dayTileSpacing);
+    final offset = HomeCalendarUtils.stripOffsetForDate(
+      today: _today,
+      pastDayRange: _pastDayRange,
+      date: date,
+      itemExtent: _dayTileWidth + _dayTileSpacing,
+    );
     _dayStripController.animateTo(
       offset.clamp(0.0, _dayStripController.position.maxScrollExtent),
       duration: const Duration(milliseconds: 260),
       curve: Curves.easeOutCubic,
     );
-  }
-
-  String _formatFullDate(DateTime date) {
-    const weekdays = [
-      'Thứ Hai',
-      'Thứ Ba',
-      'Thứ Tứ',
-      'Thứ Năm',
-      'Thứ Sáu',
-      'Thứ Bảy',
-      'Chủ Nhật',
-    ];
-    const months = [
-      'tháng 1',
-      'tháng 2',
-      'tháng 3',
-      'tháng 4',
-      'tháng 5',
-      'tháng 6',
-      'tháng 7',
-      'tháng 8',
-      'tháng 9',
-      'tháng 10',
-      'tháng 11',
-      'tháng 12',
-    ];
-    return '${weekdays[date.weekday - 1]}, ${date.day} ${months[date.month - 1]}';
-  }
-
-  String _formatTime(DateTime value) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    return '${twoDigits(value.hour)}:${twoDigits(value.minute)}';
-  }
-
-  String _formatSyncTimestamp(DateTime value) {
-    return '${_formatTime(value)} ${value.day}/${value.month}/${value.year}';
-  }
-
-  bool _isSameDate(DateTime left, DateTime right) {
-    return left.year == right.year &&
-        left.month == right.month &&
-        left.day == right.day;
   }
 }
