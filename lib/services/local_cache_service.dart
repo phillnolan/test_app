@@ -26,6 +26,32 @@ class LocalCachePayload {
   final List<StudentEvent> personalEvents;
   final DateTime? lastSyncedAt;
 
+  bool get hasData =>
+      profile != null ||
+      grades.isNotEmpty ||
+      syncedEvents.isNotEmpty ||
+      personalEvents.isNotEmpty;
+
+  LocalCachePayload copyWith({
+    StudentProfile? profile,
+    List<GradeItem>? grades,
+    List<ProgramSubject>? curriculumSubjects,
+    List<Map<String, dynamic>>? curriculumRawItems,
+    List<StudentEvent>? syncedEvents,
+    List<StudentEvent>? personalEvents,
+    DateTime? lastSyncedAt,
+  }) {
+    return LocalCachePayload(
+      profile: profile ?? this.profile,
+      grades: grades ?? this.grades,
+      curriculumSubjects: curriculumSubjects ?? this.curriculumSubjects,
+      curriculumRawItems: curriculumRawItems ?? this.curriculumRawItems,
+      syncedEvents: syncedEvents ?? this.syncedEvents,
+      personalEvents: personalEvents ?? this.personalEvents,
+      lastSyncedAt: lastSyncedAt ?? this.lastSyncedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'profile': profile?.toJson(),
