@@ -1,13 +1,10 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 import '../models/event_attachment.dart';
 import '../models/grade_item.dart';
@@ -17,18 +14,18 @@ import '../models/student_event.dart';
 import '../models/student_profile.dart';
 import '../models/weather_forecast.dart';
 import 'grades_page.dart';
-import 'image_attachment_editor.dart';
 import '../services/attachment_opener.dart';
 import '../services/attachment_storage_service.dart';
 import '../services/auth_service.dart';
 import '../services/cloud_sync_service.dart';
-import '../services/file_bytes_reader_stub.dart'
-    if (dart.library.io) '../services/file_bytes_reader_io.dart';
 import '../services/local_cache_service.dart';
 import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
 import '../services/weather_service.dart';
 import '../services/widget_sync_service.dart';
+import '../widgets/home/home_dialogs.dart';
+import '../widgets/home/home_editors.dart';
+import '../widgets/home/home_sheet_models.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -446,8 +443,9 @@ class _HomeShellState extends State<HomeShell> {
     }
 
     final suggestions = _weatherService.suggestionsForDay(forecast);
-    final weatherDescription =
-        _weatherService.descriptionForCode(forecast.weatherCode);
+    final weatherDescription = _weatherService.descriptionForCode(
+      forecast.weatherCode,
+    );
     final weatherIcon = _weatherService.iconForCode(forecast.weatherCode);
 
     final visibleSuggestions = suggestions.take(2).toList();
@@ -509,9 +507,7 @@ class _HomeShellState extends State<HomeShell> {
               ),
             ],
           ),
-          if (visibleSuggestions.isNotEmpty) ...[
-            const SizedBox(height: 10),
-          ],
+          if (visibleSuggestions.isNotEmpty) ...[const SizedBox(height: 10)],
           ...visibleSuggestions.map(
             (item) => Padding(
               padding: const EdgeInsets.only(bottom: 4),
@@ -749,7 +745,7 @@ class _HomeShellState extends State<HomeShell> {
   Future<void> _openMonthPicker() async {
     final picked = await showDialog<DateTime>(
       context: context,
-      builder: (context) => _MonthPickerDialog(
+      builder: (context) => MonthPickerDialog(
         initialDate: _selectedDate,
         firstDate: _today.subtract(const Duration(days: _pastDayRange)),
         lastDate: _today.add(const Duration(days: _futureDayRange)),
@@ -765,9 +761,9 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _openSyncDialog() async {
-    final credentials = await showDialog<_CredentialsResult>(
+    final credentials = await showDialog<CredentialsResult>(
       context: context,
-      builder: (context) => const _SyncCredentialsDialog(),
+      builder: (context) => const SyncCredentialsDialog(),
     );
 
     if (credentials == null || !mounted) return;
@@ -844,12 +840,11 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _showAddTaskSheet() async {
-    final result = await showModalBottomSheet<_TaskEditorResult>(
+    final result = await showModalBottomSheet<TaskEditorResult>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) =>
-          _EnhancedTaskEditorSheet(initialDate: _selectedDate),
+      builder: (context) => EnhancedTaskEditorSheet(initialDate: _selectedDate),
     );
 
     if (result == null || !mounted) return;
@@ -862,20 +857,21 @@ class _HomeShellState extends State<HomeShell> {
       result.hour.minute,
     );
 
-    final updatedPersonalEvents = await _attachmentStorageService.persistEvents([
-      ..._personalEvents,
-      StudentEvent(
-        id: 'task-${DateTime.now().microsecondsSinceEpoch}',
-        title: result.title,
-        subtitle: 'Việc cá nhân',
-        start: start,
-        end: start.add(const Duration(hours: 1)),
-        type: StudentEventType.personalTask,
-        color: const Color(0xFFDDF4E4),
-        note: result.note.isEmpty ? null : result.note,
-        attachments: result.attachments,
-      ),
-    ]);
+    final updatedPersonalEvents = await _attachmentStorageService
+        .persistEvents([
+          ..._personalEvents,
+          StudentEvent(
+            id: 'task-${DateTime.now().microsecondsSinceEpoch}',
+            title: result.title,
+            subtitle: 'Việc cá nhân',
+            start: start,
+            end: start.add(const Duration(hours: 1)),
+            type: StudentEventType.personalTask,
+            color: const Color(0xFFDDF4E4),
+            note: result.note.isEmpty ? null : result.note,
+            attachments: result.attachments,
+          ),
+        ]);
 
     setState(() {
       _personalEvents = updatedPersonalEvents
@@ -894,11 +890,11 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _showEditNoteSheet(StudentEvent event) async {
-    final result = await showModalBottomSheet<_NoteEditorResult>(
+    final result = await showModalBottomSheet<NoteEditorResult>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) => _EnhancedNoteEditorSheet(event: event),
+      builder: (context) => EnhancedNoteEditorSheet(event: event),
     );
 
     if (result == null || !mounted) return;
@@ -953,7 +949,9 @@ class _HomeShellState extends State<HomeShell> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Xóa ghi chú cá nhân?'),
-        content: Text('Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và cloud.'),
+        content: Text(
+          'Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và cloud.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -1063,7 +1061,9 @@ class _HomeShellState extends State<HomeShell> {
     if (_signedInUser == null || !_cloudSyncService.isConfigured) return;
 
     final updatedSyncedEvents = await _uploadMissingAttachments(_syncedEvents);
-    final updatedPersonalEvents = await _uploadMissingAttachments(_personalEvents);
+    final updatedPersonalEvents = await _uploadMissingAttachments(
+      _personalEvents,
+    );
 
     if (!mounted) return;
     setState(() {
@@ -1170,16 +1170,16 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   Future<void> _openEmailAuthSheet() async {
-    final result = await showModalBottomSheet<_EmailAuthResult>(
+    final result = await showModalBottomSheet<EmailAuthResult>(
       context: context,
       isScrollControlled: true,
       showDragHandle: true,
-      builder: (context) => const _EmailAuthSheet(),
+      builder: (context) => const EmailAuthSheet(),
     );
     if (result == null) return;
 
     try {
-      if (result.mode == _EmailAuthMode.signIn) {
+      if (result.mode == EmailAuthMode.signIn) {
         await _authService.signInWithEmail(
           email: result.email,
           password: result.password,
@@ -1248,15 +1248,15 @@ class _HomeShellState extends State<HomeShell> {
     return colors.take(2).toList();
   }
 
-  _CalendarEventLevel _eventLevelForDate(DateTime date) {
+  CalendarEventLevel _eventLevelForDate(DateTime date) {
     final events = _eventsForDay(date);
     if (events.any((event) => event.type == StudentEventType.exam)) {
-      return _CalendarEventLevel.important;
+      return CalendarEventLevel.important;
     }
     if (events.isNotEmpty) {
-      return _CalendarEventLevel.normal;
+      return CalendarEventLevel.normal;
     }
-    return _CalendarEventLevel.none;
+    return CalendarEventLevel.none;
   }
 
   DateTime _dateForIndex(int index) {
@@ -1327,285 +1327,6 @@ class _HomeShellState extends State<HomeShell> {
     return left.year == right.year &&
         left.month == right.month &&
         left.day == right.day;
-  }
-}
-
-enum _CalendarEventLevel { none, normal, important }
-
-class _MonthPickerDialog extends StatefulWidget {
-  const _MonthPickerDialog({
-    required this.initialDate,
-    required this.firstDate,
-    required this.lastDate,
-    required this.eventLevelForDate,
-  });
-
-  final DateTime initialDate;
-  final DateTime firstDate;
-  final DateTime lastDate;
-  final _CalendarEventLevel Function(DateTime date) eventLevelForDate;
-
-  @override
-  State<_MonthPickerDialog> createState() => _MonthPickerDialogState();
-}
-
-class _MonthPickerDialogState extends State<_MonthPickerDialog> {
-  late DateTime _displayedMonth;
-
-  @override
-  void initState() {
-    super.initState();
-    _displayedMonth = DateTime(
-      widget.initialDate.year,
-      widget.initialDate.month,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final firstOfMonth = DateTime(
-      _displayedMonth.year,
-      _displayedMonth.month,
-      1,
-    );
-    final firstAllowedMonth = DateTime(
-      widget.firstDate.year,
-      widget.firstDate.month,
-    );
-    final lastAllowedMonth = DateTime(
-      widget.lastDate.year,
-      widget.lastDate.month,
-    );
-    final daysInMonth = DateUtils.getDaysInMonth(
-      _displayedMonth.year,
-      _displayedMonth.month,
-    );
-    final leadingEmptyCount = firstOfMonth.weekday - 1;
-    final totalCells = leadingEmptyCount + daysInMonth;
-    final canGoPrevious = _displayedMonth.isAfter(firstAllowedMonth);
-    final canGoNext = _displayedMonth.isBefore(lastAllowedMonth);
-
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Text(
-                  _monthLabel(_displayedMonth),
-                  style: Theme.of(
-                    context,
-                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                const Spacer(),
-                IconButton(
-                  onPressed: canGoPrevious ? _goToPreviousMonth : null,
-                  icon: const Icon(Icons.chevron_left),
-                ),
-                IconButton(
-                  onPressed: canGoNext ? _goToNextMonth : null,
-                  icon: const Icon(Icons.chevron_right),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            const Row(
-              children: [
-                _WeekdayCell(label: 'T2'),
-                _WeekdayCell(label: 'T3'),
-                _WeekdayCell(label: 'T4'),
-                _WeekdayCell(label: 'T5'),
-                _WeekdayCell(label: 'T6'),
-                _WeekdayCell(label: 'T7'),
-                _WeekdayCell(label: 'CN'),
-              ],
-            ),
-            const SizedBox(height: 8),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: totalCells,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 7,
-                childAspectRatio: 0.88,
-              ),
-              itemBuilder: (context, index) {
-                if (index < leadingEmptyCount) {
-                  return const SizedBox.shrink();
-                }
-
-                final day = index - leadingEmptyCount + 1;
-                final date = DateTime(
-                  _displayedMonth.year,
-                  _displayedMonth.month,
-                  day,
-                );
-                final isSelected = DateUtils.isSameDay(
-                  date,
-                  widget.initialDate,
-                );
-                final isOutOfRange =
-                    date.isBefore(
-                      DateTime(
-                        widget.firstDate.year,
-                        widget.firstDate.month,
-                        widget.firstDate.day,
-                      ),
-                    ) ||
-                    date.isAfter(
-                      DateTime(
-                        widget.lastDate.year,
-                        widget.lastDate.month,
-                        widget.lastDate.day,
-                      ),
-                    );
-
-                return _MonthDayCell(
-                  date: date,
-                  isSelected: isSelected,
-                  isDisabled: isOutOfRange,
-                  eventLevel: widget.eventLevelForDate(date),
-                  onTap: isOutOfRange
-                      ? null
-                      : () => Navigator.of(context).pop(date),
-                );
-              },
-            ),
-            const SizedBox(height: 12),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Đóng'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _goToPreviousMonth() {
-    setState(() {
-      _displayedMonth = DateTime(
-        _displayedMonth.year,
-        _displayedMonth.month - 1,
-      );
-    });
-  }
-
-  void _goToNextMonth() {
-    setState(() {
-      _displayedMonth = DateTime(
-        _displayedMonth.year,
-        _displayedMonth.month + 1,
-      );
-    });
-  }
-
-  String _monthLabel(DateTime date) {
-    return 'Tháng ${date.month}/${date.year}';
-  }
-}
-
-class _WeekdayCell extends StatelessWidget {
-  const _WeekdayCell({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(
-        child: Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MonthDayCell extends StatelessWidget {
-  const _MonthDayCell({
-    required this.date,
-    required this.isSelected,
-    required this.isDisabled,
-    required this.eventLevel,
-    this.onTap,
-  });
-
-  final DateTime date;
-  final bool isSelected;
-  final bool isDisabled;
-  final _CalendarEventLevel eventLevel;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final foreground = isDisabled
-        ? colorScheme.onSurface.withValues(alpha: 0.28)
-        : isSelected
-        ? colorScheme.onPrimaryContainer
-        : colorScheme.onSurface;
-    final background = isSelected ? colorScheme.primaryContainer : null;
-
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        margin: const EdgeInsets.all(2),
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(18),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '${date.day}',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: foreground,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 4),
-            _MonthEventDot(level: eventLevel),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MonthEventDot extends StatelessWidget {
-  const _MonthEventDot({required this.level});
-
-  final _CalendarEventLevel level;
-
-  @override
-  Widget build(BuildContext context) {
-    if (level == _CalendarEventLevel.none) {
-      return const SizedBox(height: 6);
-    }
-
-    final color = switch (level) {
-      _CalendarEventLevel.important => const Color(0xFFC62828),
-      _CalendarEventLevel.normal => const Color(0xFF9AA0A6),
-      _CalendarEventLevel.none => Colors.transparent,
-    };
-
-    return Container(
-      width: 6,
-      height: 6,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-    );
   }
 }
 
@@ -2361,1186 +2082,8 @@ class _WeatherMetricChip extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16),
-          const SizedBox(width: 6),
-          Text(label),
-        ],
+        children: [Icon(icon, size: 16), const SizedBox(width: 6), Text(label)],
       ),
     );
   }
-}
-
-class _SyncCredentialsDialog extends StatefulWidget {
-  const _SyncCredentialsDialog();
-
-  @override
-  State<_SyncCredentialsDialog> createState() => _SyncCredentialsDialogState();
-}
-
-class _SyncCredentialsDialogState extends State<_SyncCredentialsDialog> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscurePassword = true;
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Đăng nhập để đồng bộ'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _usernameController,
-            decoration: const InputDecoration(
-              labelText: 'Tên đăng nhập',
-              prefixIcon: Icon(Icons.person_outline),
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              labelText: 'Mật khẩu',
-              prefixIcon: const Icon(Icons.lock_outline),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
-        ),
-        FilledButton(
-          onPressed: () {
-            final username = _usernameController.text.trim();
-            final password = _passwordController.text;
-            if (username.isEmpty || password.isEmpty) return;
-            Navigator.of(
-              context,
-            ).pop(_CredentialsResult(username: username, password: password));
-          },
-          child: const Text('Đồng bộ'),
-        ),
-      ],
-    );
-  }
-}
-
-class _NoteEditorSheet extends StatefulWidget {
-  const _NoteEditorSheet({required this.event});
-
-  final StudentEvent event;
-
-  @override
-  State<_NoteEditorSheet> createState() => _NoteEditorSheetState();
-}
-
-class _NoteEditorSheetState extends State<_NoteEditorSheet> {
-  late final TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.event.note ?? '');
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Ghi chú', style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _controller,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: 'Nhập ghi chú cho sự kiện này',
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () => Navigator.of(context).pop(_controller.text),
-              child: const Text('Lưu'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TaskEditorSheet extends StatefulWidget {
-  const _TaskEditorSheet({required this.initialDate});
-
-  final DateTime initialDate;
-
-  @override
-  State<_TaskEditorSheet> createState() => _TaskEditorSheetState();
-}
-
-class _TaskEditorSheetState extends State<_TaskEditorSheet> {
-  late DateTime _date;
-  TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _date = widget.initialDate;
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _noteController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Thêm việc cá nhân',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _titleController,
-            decoration: const InputDecoration(
-              labelText: 'Tiêu đề',
-              hintText: 'Ví dụ: Ôn thi giữa kỳ',
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      locale: const Locale('vi', 'VN'),
-                      initialDate: _date,
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2035),
-                    );
-                    if (picked == null) return;
-                    setState(() {
-                      _date = DateTime(picked.year, picked.month, picked.day);
-                    });
-                  },
-                  icon: const Icon(Icons.calendar_today_outlined),
-                  label: Text('${_date.day}/${_date.month}/${_date.year}'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showTimePicker(
-                      context: context,
-                      initialTime: _time,
-                    );
-                    if (picked == null) return;
-                    setState(() => _time = picked);
-                  },
-                  icon: const Icon(Icons.access_time),
-                  label: Text(
-                    '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _noteController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Ghi chú',
-              hintText: 'Những điều quan trọng cần nhớ',
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                final title = _titleController.text.trim();
-                if (title.isEmpty) return;
-                Navigator.of(context).pop(
-                  _TaskEditorResult(
-                    title: title,
-                    note: _noteController.text.trim(),
-                    date: _date,
-                    hour: _time,
-                  ),
-                );
-              },
-              child: const Text('Tạo việc'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _EnhancedNoteEditorSheet extends StatefulWidget {
-  const _EnhancedNoteEditorSheet({required this.event});
-
-  final StudentEvent event;
-
-  @override
-  State<_EnhancedNoteEditorSheet> createState() =>
-      _EnhancedNoteEditorSheetState();
-}
-
-class _EnhancedNoteEditorSheetState extends State<_EnhancedNoteEditorSheet> {
-  final ImagePicker _imagePicker = ImagePicker();
-  late final TextEditingController _titleController;
-  late final TextEditingController _controller;
-  late List<EventAttachment> _attachments;
-  String? _titleErrorText;
-
-  @override
-  void initState() {
-    super.initState();
-    _titleController = TextEditingController(text: widget.event.title);
-    _controller = TextEditingController(text: widget.event.note ?? '');
-    _attachments = List<EventAttachment>.from(widget.event.attachments);
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Ghi chú', style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          if (widget.event.type == StudentEventType.personalTask) ...[
-            TextField(
-              controller: _titleController,
-              onChanged: (_) {
-                if (_titleErrorText != null &&
-                    _titleController.text.trim().isNotEmpty) {
-                  setState(() => _titleErrorText = null);
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'Tiêu đề',
-                hintText: 'Nhập tiêu đề ghi chú',
-                errorText: _titleErrorText,
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
-          TextField(
-            controller: _controller,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: 'Nhập ghi chú cho sự kiện này',
-            ),
-          ),
-          const SizedBox(height: 12),
-          _AttachmentEditorSection(
-            attachments: _attachments,
-            onAddFiles: _pickAttachments,
-            onCapturePhoto: _capturePhotoAttachment,
-            onScanDocument: _scanDocumentAttachment,
-            onEdit: _editAttachment,
-            onRemove: _removeAttachment,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              if (widget.event.type == StudentEventType.personalTask)
-                TextButton.icon(
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Xóa ghi chú cá nhân?'),
-                        content: const Text(
-                          'Ghi chú này sẽ bị xóa khỏi thiết bị và cloud.',
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Hủy'),
-                          ),
-                          FilledButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Xóa'),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed != true || !context.mounted) return;
-                    Navigator.of(
-                      context,
-                    ).pop(const _NoteEditorResult(deleteEvent: true));
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                  label: const Text('Xóa ghi chú cá nhân'),
-                ),
-              const Spacer(),
-              FilledButton(
-                onPressed: () {
-                  final title = _titleController.text.trim();
-                  if (widget.event.type == StudentEventType.personalTask &&
-                      title.isEmpty) {
-                    setState(() {
-                      _titleErrorText = 'Không được để trống tiêu đề';
-                    });
-                    return;
-                  }
-                  Navigator.of(context).pop(
-                    _NoteEditorResult(
-                      title: widget.event.type == StudentEventType.personalTask
-                          ? title
-                          : null,
-                      note: _controller.text,
-                      attachments: _attachments,
-                    ),
-                  );
-                },
-                child: const Text('Lưu'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickAttachments() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.any,
-        withData: kIsWeb,
-      );
-      if (result == null) return;
-
-      final additions = result.files
-          .map(
-            (file) => EventAttachment(
-              id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-${file.name}',
-              name: file.name,
-              path: file.path ?? '',
-              bytesBase64: file.bytes == null ? null : base64Encode(file.bytes!),
-            ),
-          )
-          .where((attachment) =>
-              attachment.path.isNotEmpty || attachment.bytesBase64 != null)
-          .toList();
-
-      if (additions.isEmpty) return;
-
-      setState(() {
-        _attachments = [..._attachments, ...additions];
-      });
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không thể mở bộ chọn tệp.')),
-      );
-    }
-  }
-
-  Future<void> _capturePhotoAttachment() async {
-    await _captureOrScanAttachment(scanMode: false);
-  }
-
-  Future<void> _scanDocumentAttachment() async {
-    await _captureOrScanAttachment(scanMode: true);
-  }
-
-  Future<void> _captureOrScanAttachment({required bool scanMode}) async {
-    try {
-      final file = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 92,
-      );
-      if (file == null) return;
-
-      final attachment = await _attachmentFromXFile(file);
-      if (!mounted) return;
-      if (attachment == null) {
-        _showAttachmentFailure('Không thể đọc ảnh vừa chụp.');
-        return;
-      }
-
-      EventAttachment resultAttachment = attachment;
-      if (scanMode || attachment.isImage) {
-        final edited = await Navigator.of(context).push<EventAttachment>(
-          MaterialPageRoute(
-            builder: (context) => ImageAttachmentEditor(attachment: attachment),
-          ),
-        );
-        if (edited == null || !mounted) return;
-        resultAttachment = edited;
-      }
-
-      if (scanMode) {
-        final saveAsPdf = await _askScanOutputMode();
-        if (saveAsPdf == null || !mounted) return;
-        if (saveAsPdf) {
-          resultAttachment = await _convertImageAttachmentToPdf(
-            resultAttachment,
-          );
-        }
-      }
-
-      setState(() {
-        _attachments = [..._attachments, resultAttachment];
-      });
-    } catch (_) {
-      _showAttachmentFailure(
-        scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
-      );
-    }
-  }
-
-  Future<EventAttachment?> _attachmentFromXFile(XFile file) async {
-    final bytes = await file.readAsBytes();
-    if (bytes.isEmpty) return null;
-    final fileName = file.name.isEmpty
-        ? 'camera_${DateTime.now().millisecondsSinceEpoch}.jpg'
-        : file.name;
-    return EventAttachment(
-      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$fileName',
-      name: fileName,
-      path: kIsWeb ? '' : file.path,
-      bytesBase64: kIsWeb || file.path.isEmpty ? base64Encode(bytes) : null,
-    );
-  }
-
-  Future<bool?> _askScanOutputMode() async {
-    return showModalBottomSheet<bool>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Lưu tài liệu dưới dạng',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: const Icon(Icons.image_outlined),
-                title: const Text('Ảnh'),
-                onTap: () => Navigator.of(context).pop(false),
-              ),
-              ListTile(
-                leading: const Icon(Icons.picture_as_pdf_outlined),
-                title: const Text('PDF'),
-                onTap: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<EventAttachment> _convertImageAttachmentToPdf(
-    EventAttachment attachment,
-  ) async {
-    final bytes = attachment.bytesBase64 != null
-        ? base64Decode(attachment.bytesBase64!)
-        : await readBytesFromPath(attachment.path);
-    if (bytes == null || bytes.isEmpty) return attachment;
-
-    final document = pw.Document();
-    final image = pw.MemoryImage(bytes);
-    document.addPage(
-      pw.Page(
-        build: (_) => pw.Center(
-          child: pw.Image(image, fit: pw.BoxFit.contain),
-        ),
-      ),
-    );
-    final pdfBytes = await document.save();
-    final baseName = attachment.name.replaceAll(RegExp(r'\.[^.]+$'), '');
-    return EventAttachment(
-      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$baseName-pdf',
-      name: '$baseName.pdf',
-      path: '',
-      bytesBase64: base64Encode(pdfBytes),
-    );
-  }
-
-  void _showAttachmentFailure(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void _removeAttachment(String attachmentId) {
-    setState(() {
-      _attachments = _attachments
-          .where((attachment) => attachment.id != attachmentId)
-          .toList();
-    });
-  }
-
-  Future<void> _editAttachment(EventAttachment attachment) async {
-    if (!attachment.isImage) return;
-    final edited = await Navigator.of(context).push<EventAttachment>(
-      MaterialPageRoute(
-        builder: (context) => ImageAttachmentEditor(attachment: attachment),
-      ),
-    );
-    if (edited == null || !mounted) return;
-    setState(() {
-      _attachments = _attachments
-          .map((item) => item.id == attachment.id ? edited : item)
-          .toList();
-    });
-  }
-}
-
-class _EnhancedTaskEditorSheet extends StatefulWidget {
-  const _EnhancedTaskEditorSheet({required this.initialDate});
-
-  final DateTime initialDate;
-
-  @override
-  State<_EnhancedTaskEditorSheet> createState() =>
-      _EnhancedTaskEditorSheetState();
-}
-
-class _EnhancedTaskEditorSheetState extends State<_EnhancedTaskEditorSheet> {
-  final ImagePicker _imagePicker = ImagePicker();
-  late DateTime _date;
-  TimeOfDay _time = const TimeOfDay(hour: 8, minute: 0);
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _noteController = TextEditingController();
-  List<EventAttachment> _attachments = const [];
-  String? _titleErrorText;
-
-  @override
-  void initState() {
-    super.initState();
-    _date = widget.initialDate;
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _noteController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Thêm việc cá nhân',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _titleController,
-            onChanged: (_) {
-              if (_titleErrorText != null &&
-                  _titleController.text.trim().isNotEmpty) {
-                setState(() => _titleErrorText = null);
-              }
-            },
-            decoration: InputDecoration(
-              labelText: 'Tiêu đề',
-              hintText: 'Ví dụ: Ôn thi giữa kỳ',
-              errorText: _titleErrorText,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      locale: const Locale('vi', 'VN'),
-                      initialDate: _date,
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2035),
-                    );
-                    if (picked == null) return;
-                    setState(() {
-                      _date = DateTime(picked.year, picked.month, picked.day);
-                    });
-                  },
-                  icon: const Icon(Icons.calendar_today_outlined),
-                  label: Text('${_date.day}/${_date.month}/${_date.year}'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showTimePicker(
-                      context: context,
-                      initialTime: _time,
-                    );
-                    if (picked == null) return;
-                    setState(() => _time = picked);
-                  },
-                  icon: const Icon(Icons.access_time),
-                  label: Text(
-                    '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _noteController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Ghi chú',
-              hintText: 'Những điều quan trọng cần nhớ',
-            ),
-          ),
-          const SizedBox(height: 12),
-          _AttachmentEditorSection(
-            attachments: _attachments,
-            onAddFiles: _pickAttachments,
-            onCapturePhoto: _capturePhotoAttachment,
-            onScanDocument: _scanDocumentAttachment,
-            onEdit: _editAttachment,
-            onRemove: _removeAttachment,
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                final title = _titleController.text.trim();
-                if (title.isEmpty) {
-                  setState(() {
-                    _titleErrorText = 'Không được để trống tiêu đề';
-                  });
-                  return;
-                }
-                Navigator.of(context).pop(
-                  _TaskEditorResult(
-                    title: title,
-                    note: _noteController.text.trim(),
-                    date: _date,
-                    hour: _time,
-                    attachments: _attachments,
-                  ),
-                );
-              },
-              child: const Text('Tạo việc'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Future<void> _pickAttachments() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.any,
-        withData: kIsWeb,
-      );
-      if (result == null) return;
-
-      final additions = result.files
-          .map(
-            (file) => EventAttachment(
-              id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-${file.name}',
-              name: file.name,
-              path: file.path ?? '',
-              bytesBase64: file.bytes == null ? null : base64Encode(file.bytes!),
-            ),
-          )
-          .where((attachment) =>
-              attachment.path.isNotEmpty || attachment.bytesBase64 != null)
-          .toList();
-
-      if (additions.isEmpty) return;
-
-      setState(() {
-        _attachments = [..._attachments, ...additions];
-      });
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không thể mở bộ chọn tệp.')),
-      );
-    }
-  }
-
-  Future<void> _capturePhotoAttachment() async {
-    await _captureOrScanAttachment(scanMode: false);
-  }
-
-  Future<void> _scanDocumentAttachment() async {
-    await _captureOrScanAttachment(scanMode: true);
-  }
-
-  Future<void> _captureOrScanAttachment({required bool scanMode}) async {
-    try {
-      final file = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 92,
-      );
-      if (file == null) return;
-
-      final attachment = await _attachmentFromXFile(file);
-      if (!mounted) return;
-      if (attachment == null) {
-        _showAttachmentFailure('Không thể đọc ảnh vừa chụp.');
-        return;
-      }
-
-      EventAttachment resultAttachment = attachment;
-      if (scanMode || attachment.isImage) {
-        final edited = await Navigator.of(context).push<EventAttachment>(
-          MaterialPageRoute(
-            builder: (context) => ImageAttachmentEditor(attachment: attachment),
-          ),
-        );
-        if (edited == null || !mounted) return;
-        resultAttachment = edited;
-      }
-
-      if (scanMode) {
-        final saveAsPdf = await _askScanOutputMode();
-        if (saveAsPdf == null || !mounted) return;
-        if (saveAsPdf) {
-          resultAttachment = await _convertImageAttachmentToPdf(
-            resultAttachment,
-          );
-        }
-      }
-
-      setState(() {
-        _attachments = [..._attachments, resultAttachment];
-      });
-    } catch (_) {
-      _showAttachmentFailure(
-        scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
-      );
-    }
-  }
-
-  Future<EventAttachment?> _attachmentFromXFile(XFile file) async {
-    final bytes = await file.readAsBytes();
-    if (bytes.isEmpty) return null;
-    final fileName = file.name.isEmpty
-        ? 'camera_${DateTime.now().millisecondsSinceEpoch}.jpg'
-        : file.name;
-    return EventAttachment(
-      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$fileName',
-      name: fileName,
-      path: kIsWeb ? '' : file.path,
-      bytesBase64: kIsWeb || file.path.isEmpty ? base64Encode(bytes) : null,
-    );
-  }
-
-  Future<bool?> _askScanOutputMode() async {
-    return showModalBottomSheet<bool>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Lưu tài liệu dưới dạng',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: const Icon(Icons.image_outlined),
-                title: const Text('Ảnh'),
-                onTap: () => Navigator.of(context).pop(false),
-              ),
-              ListTile(
-                leading: const Icon(Icons.picture_as_pdf_outlined),
-                title: const Text('PDF'),
-                onTap: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<EventAttachment> _convertImageAttachmentToPdf(
-    EventAttachment attachment,
-  ) async {
-    final bytes = attachment.bytesBase64 != null
-        ? base64Decode(attachment.bytesBase64!)
-        : await readBytesFromPath(attachment.path);
-    if (bytes == null || bytes.isEmpty) return attachment;
-
-    final document = pw.Document();
-    final image = pw.MemoryImage(bytes);
-    document.addPage(
-      pw.Page(
-        build: (_) => pw.Center(
-          child: pw.Image(image, fit: pw.BoxFit.contain),
-        ),
-      ),
-    );
-    final pdfBytes = await document.save();
-    final baseName = attachment.name.replaceAll(RegExp(r'\.[^.]+$'), '');
-    return EventAttachment(
-      id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$baseName-pdf',
-      name: '$baseName.pdf',
-      path: '',
-      bytesBase64: base64Encode(pdfBytes),
-    );
-  }
-
-  void _showAttachmentFailure(String message) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  void _removeAttachment(String attachmentId) {
-    setState(() {
-      _attachments = _attachments
-          .where((attachment) => attachment.id != attachmentId)
-          .toList();
-    });
-  }
-
-  Future<void> _editAttachment(EventAttachment attachment) async {
-    if (!attachment.isImage) return;
-    final edited = await Navigator.of(context).push<EventAttachment>(
-      MaterialPageRoute(
-        builder: (context) => ImageAttachmentEditor(attachment: attachment),
-      ),
-    );
-    if (edited == null || !mounted) return;
-    setState(() {
-      _attachments = _attachments
-          .map((item) => item.id == attachment.id ? edited : item)
-          .toList();
-    });
-  }
-}
-
-class _AttachmentEditorSection extends StatelessWidget {
-  const _AttachmentEditorSection({
-    required this.attachments,
-    required this.onAddFiles,
-    required this.onCapturePhoto,
-    required this.onScanDocument,
-    required this.onEdit,
-    required this.onRemove,
-  });
-
-  final List<EventAttachment> attachments;
-  final Future<void> Function() onAddFiles;
-  final Future<void> Function() onCapturePhoto;
-  final Future<void> Function() onScanDocument;
-  final Future<void> Function(EventAttachment attachment) onEdit;
-  final ValueChanged<String> onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            OutlinedButton.icon(
-              onPressed: onAddFiles,
-              icon: const Icon(Icons.attach_file),
-              label: const Text('Tệp'),
-            ),
-            OutlinedButton.icon(
-              onPressed: onCapturePhoto,
-              icon: const Icon(Icons.photo_camera_outlined),
-              label: const Text('Chụp ảnh'),
-            ),
-            OutlinedButton.icon(
-              onPressed: onScanDocument,
-              icon: const Icon(Icons.document_scanner_outlined),
-              label: const Text('Quét tài liệu'),
-            ),
-          ],
-        ),
-        if (attachments.isNotEmpty) ...[
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: attachments
-                .map(
-                  (attachment) => InputChip(
-                    avatar: Icon(
-                      attachment.isPdf
-                          ? Icons.picture_as_pdf_outlined
-                          : attachment.isImage
-                          ? Icons.image_outlined
-                          : Icons.description_outlined,
-                      size: 18,
-                    ),
-                    label: Text(attachment.name),
-                    onPressed: attachment.isImage
-                        ? () => onEdit(attachment)
-                        : null,
-                    tooltip: attachment.isImage
-                        ? 'Chỉnh sửa ảnh'
-                        : attachment.name,
-                    onDeleted: () => onRemove(attachment.id),
-                  ),
-                )
-                .toList(),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
-enum _EmailAuthMode { signIn, register }
-
-class _EmailAuthSheet extends StatefulWidget {
-  const _EmailAuthSheet();
-
-  @override
-  State<_EmailAuthSheet> createState() => _EmailAuthSheetState();
-}
-
-class _EmailAuthSheetState extends State<_EmailAuthSheet> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  _EmailAuthMode _mode = _EmailAuthMode.signIn;
-  bool _obscurePassword = true;
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            _mode == _EmailAuthMode.signIn
-                ? 'Đăng nhập email'
-                : 'Tạo tài khoản',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
-          SegmentedButton<_EmailAuthMode>(
-            segments: const [
-              ButtonSegment(
-                value: _EmailAuthMode.signIn,
-                label: Text('Đăng nhập'),
-              ),
-              ButtonSegment(
-                value: _EmailAuthMode.register,
-                label: Text('Đăng ký'),
-              ),
-            ],
-            selected: {_mode},
-            onSelectionChanged: (selection) {
-              setState(() => _mode = selection.first);
-            },
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              prefixIcon: Icon(Icons.mail_outline),
-            ),
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              labelText: 'Mật khẩu',
-              prefixIcon: const Icon(Icons.lock_outline),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                final email = _emailController.text.trim();
-                final password = _passwordController.text;
-                if (email.isEmpty || password.isEmpty) return;
-                Navigator.of(context).pop(
-                  _EmailAuthResult(
-                    mode: _mode,
-                    email: email,
-                    password: password,
-                  ),
-                );
-              },
-              child: Text(
-                _mode == _EmailAuthMode.signIn ? 'Đăng nhập' : 'Tạo tài khoản',
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CredentialsResult {
-  const _CredentialsResult({required this.username, required this.password});
-
-  final String username;
-  final String password;
-}
-
-class _TaskEditorResult {
-  const _TaskEditorResult({
-    required this.title,
-    required this.note,
-    required this.date,
-    required this.hour,
-    this.attachments = const [],
-  });
-
-  final String title;
-  final String note;
-  final DateTime date;
-  final TimeOfDay hour;
-  final List<EventAttachment> attachments;
-}
-
-class _NoteEditorResult {
-  const _NoteEditorResult({
-    this.title,
-    this.note = '',
-    this.attachments = const [],
-    this.deleteEvent = false,
-  });
-
-  final String? title;
-  final String note;
-  final List<EventAttachment> attachments;
-  final bool deleteEvent;
-}
-
-class _EmailAuthResult {
-  const _EmailAuthResult({
-    required this.mode,
-    required this.email,
-    required this.password,
-  });
-
-  final _EmailAuthMode mode;
-  final String email;
-  final String password;
 }
