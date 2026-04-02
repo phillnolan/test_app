@@ -17,10 +17,8 @@ import '../services/school_api_service.dart';
 import '../services/weather_service.dart';
 import '../services/widget_sync_service.dart';
 import '../utils/home_calendar_utils.dart';
-import '../views/home/widgets/home_dialogs.dart';
-import '../views/home/widgets/home_editors.dart';
-import '../views/home/widgets/home_sheet_models.dart';
 import 'account_auth_controller.dart';
+import 'home_flow_models.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController({
@@ -134,9 +132,9 @@ class HomeController extends ChangeNotifier {
   }
 
   void selectDate(DateTime date) {
-    _selectedDate = date;
+    _selectedDate = _normalizedDate(date);
     notifyListeners();
-    _scrollDayStripToDate(date);
+    _scrollDayStripToDate(_selectedDate);
   }
 
   DateTime dateForIndex(int index) {
@@ -170,37 +168,7 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> openMonthPicker(BuildContext context) async {
-    final picked = await showDialog<DateTime>(
-      context: context,
-      builder: (context) => MonthPickerDialog(
-        initialDate: _selectedDate,
-        firstDate: _today.subtract(const Duration(days: pastDayRange)),
-        lastDate: _today.add(const Duration(days: futureDayRange)),
-        eventLevelForDate: (date) => HomeCalendarUtils.eventLevelForEvents(
-          HomeCalendarUtils.eventsForDay(allEvents, date),
-        ),
-      ),
-    );
-
-    if (picked == null || !context.mounted || _isDisposed) return;
-
-    _selectedDate = DateTime(picked.year, picked.month, picked.day);
-    notifyListeners();
-    _scrollDayStripToDate(_selectedDate);
-  }
-
-  Future<void> openSyncDialog(BuildContext context) async {
-    final credentials = await showDialog<CredentialsResult>(
-      context: context,
-      builder: (context) => const SyncCredentialsDialog(),
-    );
-
-    if (credentials == null || !context.mounted || _isDisposed) return;
-
-    await Future<void>.delayed(const Duration(milliseconds: 80));
-    if (!context.mounted || _isDisposed) return;
-
+  Future<HomeActionResult> syncSchoolData(CredentialsResult credentials) async {
     _isSyncing = true;
     notifyListeners();
 
@@ -212,7 +180,10 @@ class HomeController extends ChangeNotifier {
       final nextPayload = await _persistPayload(
         _payloadFromSnapshot(snapshot, _payload),
       );
-      if (!context.mounted || _isDisposed) return;
+
+      if (_isDisposed) {
+        return const HomeActionResult.success();
+      }
 
       _payload = nextPayload;
       _selectedDate = _normalizedDate(snapshot.syncedAt);
@@ -225,20 +196,13 @@ class HomeController extends ChangeNotifier {
         if (_isDisposed) return;
         _scrollDayStripToDate(_selectedDate);
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Đồng bộ thành công.')));
+
+      return const HomeActionResult.success('Đồng bộ thành công.');
     } on SchoolApiException catch (error) {
-      if (!context.mounted || _isDisposed) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(error.message)));
+      return HomeActionResult.failure(error.message);
     } catch (_) {
-      if (!context.mounted || _isDisposed) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.'),
-        ),
+      return const HomeActionResult.failure(
+        'Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.',
       );
     } finally {
       if (!_isDisposed) {
@@ -248,16 +212,7 @@ class HomeController extends ChangeNotifier {
     }
   }
 
-  Future<void> addTask(BuildContext context) async {
-    final result = await showModalBottomSheet<TaskEditorResult>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => EnhancedTaskEditorSheet(initialDate: _selectedDate),
-    );
-
-    if (result == null || !context.mounted || _isDisposed) return;
-
+  Future<void> addTask(TaskEditorResult result) async {
     final start = DateTime(
       result.date.year,
       result.date.month,
@@ -285,7 +240,7 @@ class HomeController extends ChangeNotifier {
     _payload = await _persistPayload(
       _payload.copyWith(personalEvents: updatedPersonalEvents),
     );
-    if (!context.mounted || _isDisposed) return;
+    if (_isDisposed) return;
 
     _selectedDate = _normalizedDate(result.date);
     _isLoadingLocalCache = false;
@@ -293,27 +248,9 @@ class HomeController extends ChangeNotifier {
     _scrollDayStripToDate(_selectedDate);
   }
 
-  Future<void> editEvent(BuildContext context, StudentEvent event) async {
-    final result = await showModalBottomSheet<NoteEditorResult>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => EnhancedNoteEditorSheet(event: event),
-    );
-
-    if (result == null || !context.mounted || _isDisposed) return;
-
-    if (result.deleteEvent && event.type == StudentEventType.personalTask) {
-      _payload = await _persistPayload(
-        _payload.copyWith(
-          personalEvents: _payload.personalEvents
-              .where((item) => item.id != event.id)
-              .toList(),
-        ),
-      );
-      if (_isDisposed) return;
-      _isLoadingLocalCache = false;
-      notifyListeners();
+  Future<void> editEvent(StudentEvent event, NoteEditorResult result) async {
+    if (result.deleteEvent) {
+      await deletePersonalEvent(event);
       return;
     }
 
@@ -347,37 +284,13 @@ class HomeController extends ChangeNotifier {
       ),
     );
     if (_isDisposed) return;
+
     _isLoadingLocalCache = false;
     notifyListeners();
   }
 
-  Future<void> deletePersonalEvent(
-    BuildContext context,
-    StudentEvent event,
-  ) async {
+  Future<void> deletePersonalEvent(StudentEvent event) async {
     if (event.type != StudentEventType.personalTask) return;
-
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Xóa ghi chú cá nhân?'),
-        content: Text(
-          'Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và cloud.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Xóa'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed != true || !context.mounted || _isDisposed) return;
 
     _payload = await _persistPayload(
       _payload.copyWith(
@@ -387,6 +300,7 @@ class HomeController extends ChangeNotifier {
       ),
     );
     if (_isDisposed) return;
+
     _isLoadingLocalCache = false;
     notifyListeners();
   }
@@ -401,46 +315,51 @@ class HomeController extends ChangeNotifier {
       ),
     );
     if (_isDisposed) return;
+
     _isLoadingLocalCache = false;
     notifyListeners();
   }
 
-  Future<void> openAttachment(
-    BuildContext context,
+  Future<AttachmentOpenResult> openAttachment(
     EventAttachment attachment,
   ) async {
-    final localBytes = await _attachmentStorageService.readAttachmentBytes(
-      attachment,
-    );
-    final bytes =
-        localBytes ??
-        (attachment.bytesBase64 == null
-            ? await _cloudSyncService.downloadAttachmentBytes(attachment)
-            : base64Decode(attachment.bytesBase64!));
-    final opened = await openAttachmentFile(
-      fileName: attachment.name,
-      localPath: kIsWeb ? null : attachment.path,
-      bytes: bytes,
-    );
+    try {
+      final localBytes = await _attachmentStorageService.readAttachmentBytes(
+        attachment,
+      );
+      final bytes =
+          localBytes ??
+          (attachment.bytesBase64 == null
+              ? await _cloudSyncService.downloadAttachmentBytes(attachment)
+              : base64Decode(attachment.bytesBase64!));
+      final opened = await openAttachmentFile(
+        fileName: attachment.name,
+        localPath: kIsWeb ? null : attachment.path,
+        bytes: bytes,
+      );
+      if (opened) {
+        return const AttachmentOpenResult(didOpen: true);
+      }
+    } catch (_) {
+      // Fall through to a friendly failure result below.
+    }
 
-    if (opened || !context.mounted || _isDisposed) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Không thể mở tệp đính kèm. Vui lòng thử lại.'),
-      ),
+    return const AttachmentOpenResult(
+      didOpen: false,
+      message: 'Không thể mở tệp đính kèm. Vui lòng thử lại.',
     );
   }
 
-  Future<void> emailAuth(BuildContext context) {
-    return _accountAuthController.openEmailAuthSheet(context);
+  Future<HomeActionResult> emailAuth(EmailAuthResult result) {
+    return _accountAuthController.submitEmailAuth(result);
   }
 
-  Future<void> googleAuth(BuildContext context) {
-    return _accountAuthController.signInWithGoogle(context);
+  Future<HomeActionResult> googleAuth() {
+    return _accountAuthController.signInWithGoogle();
   }
 
-  Future<void> signOut(BuildContext context) {
-    return _accountAuthController.signOut(context);
+  Future<HomeActionResult> signOut() {
+    return _accountAuthController.signOut();
   }
 
   Future<void> _loadLocalCache() async {
@@ -498,11 +417,21 @@ class HomeController extends ChangeNotifier {
   Future<void> _refreshDeviceState(LocalCachePayload payload) async {
     final events = [...payload.syncedEvents, ...payload.personalEvents]
       ..sort((a, b) => a.start.compareTo(b.start));
-    await NotificationService.instance.rescheduleForEvents(events);
-    await _widgetSyncService.updateTodayWidget(
-      profile: payload.profile,
-      events: events,
-    );
+
+    try {
+      await NotificationService.instance.rescheduleForEvents(events);
+    } catch (_) {
+      // Notifications are best-effort on unsupported platforms.
+    }
+
+    try {
+      await _widgetSyncService.updateTodayWidget(
+        profile: payload.profile,
+        events: events,
+      );
+    } catch (_) {
+      // Widget sync is also best-effort.
+    }
   }
 
   Future<LocalCachePayload> _syncPayloadToCloud(

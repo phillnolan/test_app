@@ -116,7 +116,7 @@ Luồng vào app hiện tại là:
 Vai trò:
 
 - bọc `AuthService`
-- xử lý đăng nhập email
+- xử lý đăng nhập email từ dữ liệu view đã chuẩn hóa
 - xử lý đăng nhập Google
 - xử lý đăng xuất
 - lắng nghe auth state
@@ -125,6 +125,7 @@ Lý do tồn tại:
 
 - tách auth flow khỏi view
 - tránh để `AccountPage` gọi trực tiếp vào Firebase/AuthService
+- không tự mở sheet hay `SnackBar`; view giữ toàn bộ phản hồi UI ngắn hạn
 
 ### `home_controller.dart`
 
@@ -158,6 +159,7 @@ State chính đang nằm ở đây:
 
 - `home_controller.dart` là cầu nối chính giữa `views/home/*` và `services/*`
 - thay vì tách thêm `view model` hay `application layer`, controller này ôm luôn state + flow để cấu trúc bớt rối
+- controller chỉ nhận input typed từ view và trả kết quả typed cho các flow cần phản hồi UI
 
 ## Phần `models`
 
@@ -212,6 +214,7 @@ Vai trò:
 File này nên giữ mỏng:
 
 - chỉ build UI
+- mở dialog, sheet, picker và `SnackBar`
 - không chứa logic sync/cache/business nặng
 
 ### `image_attachment_editor.dart`

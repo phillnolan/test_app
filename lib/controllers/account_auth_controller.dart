@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import '../../../services/auth_service.dart';
-import '../views/home/widgets/home_dialogs.dart';
-import '../views/home/widgets/home_sheet_models.dart';
+import '../services/auth_service.dart';
+import 'home_flow_models.dart';
 
 class AccountAuthController {
   AccountAuthController({AuthService? authService})
@@ -21,17 +20,7 @@ class AccountAuthController {
     return _authService.authStateChanges().listen(onChanged);
   }
 
-  Future<void> openEmailAuthSheet(BuildContext context) async {
-    final result = await showModalBottomSheet<EmailAuthResult>(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (context) => const EmailAuthSheet(),
-    );
-    if (result == null || !context.mounted) {
-      return;
-    }
-
+  Future<HomeActionResult> submitEmailAuth(EmailAuthResult result) async {
     try {
       if (result.mode == EmailAuthMode.signIn) {
         await _authService.signInWithEmail(
@@ -45,55 +34,27 @@ class AccountAuthController {
         );
       }
 
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đăng nhập tài khoản thành công.')),
-      );
+      return const HomeActionResult.success('Đăng nhập tài khoản thành công.');
     } on FirebaseAuthException catch (error) {
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message ?? 'Không thể đăng nhập.')),
-      );
+      return HomeActionResult.failure(error.message ?? 'Không thể đăng nhập.');
     }
   }
 
-  Future<void> signInWithGoogle(BuildContext context) async {
+  Future<HomeActionResult> signInWithGoogle() async {
     try {
       await _authService.signInWithGoogle();
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Đã đăng nhập Google.')));
+      return const HomeActionResult.success('Đã đăng nhập Google.');
     } on FirebaseAuthException catch (error) {
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(error.message ?? 'Không thể đăng nhập Google.')),
+      return HomeActionResult.failure(
+        error.message ?? 'Không thể đăng nhập Google.',
       );
     } catch (_) {
-      if (!context.mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Không thể đăng nhập Google.')),
-      );
+      return const HomeActionResult.failure('Không thể đăng nhập Google.');
     }
   }
 
-  Future<void> signOut(BuildContext context) async {
+  Future<HomeActionResult> signOut() async {
     await _authService.signOut();
-    if (!context.mounted) {
-      return;
-    }
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Đã đăng xuất.')));
+    return const HomeActionResult.success('Đã đăng xuất.');
   }
 }
