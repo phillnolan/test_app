@@ -36,7 +36,7 @@ class HomeController extends ChangeNotifier {
        _attachmentStorageService =
            attachmentStorageService ?? AttachmentStorageService(),
        _cloudSyncService = cloudSyncService ?? CloudSyncService(),
-       weatherService = weatherService ?? WeatherService(),
+       _weatherService = weatherService ?? WeatherService(),
        _widgetSyncService = widgetSyncService ?? WidgetSyncService() {
     final now = DateTime.now();
     _today = DateTime(now.year, now.month, now.day);
@@ -54,8 +54,7 @@ class HomeController extends ChangeNotifier {
   final AttachmentStorageService _attachmentStorageService;
   final CloudSyncService _cloudSyncService;
   final WidgetSyncService _widgetSyncService;
-
-  final WeatherService weatherService;
+  final WeatherService _weatherService;
   final ScrollController dayStripController = ScrollController();
 
   late final DateTime _today;
@@ -79,6 +78,23 @@ class HomeController extends ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
   LocalCachePayload get payload => _payload;
   WeatherForecast? get weatherForecast => _weatherForecast;
+  WeatherPresentation? get selectedDayWeather {
+    final forecast = _weatherForecast?.dayForDate(_selectedDate);
+    if (forecast == null) return null;
+
+    return WeatherPresentation(
+      locationLabel: _weatherForecast?.locationLabel ?? 'Ha Noi',
+      icon: _weatherService.iconForCode(forecast.weatherCode),
+      description: _weatherService.descriptionForCode(forecast.weatherCode),
+      temperatureMin: forecast.temperatureMin.round(),
+      temperatureMax: forecast.temperatureMax.round(),
+      precipitationProbabilityMax: forecast.precipitationProbabilityMax,
+      temperatureRangeLabel:
+          '${forecast.temperatureMin.round()}° - ${forecast.temperatureMax.round()}°',
+      precipitationLabel: 'Mua ${forecast.precipitationProbabilityMax}%',
+      suggestions: _weatherService.suggestionsForDay(forecast).take(2).toList(),
+    );
+  }
   bool get isSyncing => _isSyncing;
   bool get isLoadingLocalCache => _isLoadingLocalCache;
   bool get isLoadingWeather => _isLoadingWeather;
@@ -156,7 +172,7 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      _weatherForecast = await weatherService.fetchForecast();
+      _weatherForecast = await _weatherService.fetchForecast();
     } on WeatherException {
       _weatherForecast = null;
     } catch (_) {

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../models/event_attachment.dart';
 import '../../../../models/student_event.dart';
 import '../../../../models/student_profile.dart';
-import '../../../../models/weather_forecast.dart';
-import '../../../../services/weather_service.dart';
+import '../../../../controllers/home_flow_models.dart';
 import '../widgets/home_common_widgets.dart';
 
 class SchedulePage extends StatelessWidget {
@@ -14,8 +13,7 @@ class SchedulePage extends StatelessWidget {
     required this.selectedDate,
     required this.profile,
     required this.lastSyncedAt,
-    required this.weatherForecast,
-    required this.weatherService,
+    required this.weatherPresentation,
     required this.isLoadingLocalCache,
     required this.isLoadingWeather,
     required this.showSyncReminder,
@@ -44,8 +42,7 @@ class SchedulePage extends StatelessWidget {
   final DateTime selectedDate;
   final StudentProfile? profile;
   final DateTime? lastSyncedAt;
-  final WeatherForecast? weatherForecast;
-  final WeatherService weatherService;
+  final WeatherPresentation? weatherPresentation;
   final bool isLoadingLocalCache;
   final bool isLoadingWeather;
   final bool showSyncReminder;
@@ -104,9 +101,7 @@ class SchedulePage extends StatelessWidget {
                           ),
                         ),
                         _WeatherCard(
-                          selectedDate: selectedDate,
-                          weatherForecast: weatherForecast,
-                          weatherService: weatherService,
+                          weatherPresentation: weatherPresentation,
                           isLoadingWeather: isLoadingWeather,
                           onReloadWeather: onReloadWeather,
                         ),
@@ -323,22 +318,17 @@ class _ScheduleHeroCard extends StatelessWidget {
 
 class _WeatherCard extends StatelessWidget {
   const _WeatherCard({
-    required this.selectedDate,
-    required this.weatherForecast,
-    required this.weatherService,
+    required this.weatherPresentation,
     required this.isLoadingWeather,
     required this.onReloadWeather,
   });
 
-  final DateTime selectedDate;
-  final WeatherForecast? weatherForecast;
-  final WeatherService weatherService;
+  final WeatherPresentation? weatherPresentation;
   final bool isLoadingWeather;
   final VoidCallback onReloadWeather;
 
   @override
   Widget build(BuildContext context) {
-    final forecast = weatherForecast?.dayForDate(selectedDate);
     final colorScheme = Theme.of(context).colorScheme;
 
     if (isLoadingWeather) {
@@ -363,7 +353,7 @@ class _WeatherCard extends StatelessWidget {
       );
     }
 
-    if (forecast == null) {
+    if (weatherPresentation == null) {
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -388,14 +378,13 @@ class _WeatherCard extends StatelessWidget {
       );
     }
 
-    final suggestions = weatherService
-        .suggestionsForDay(forecast)
-        .take(2)
-        .toList();
-    final weatherDescription = weatherService.descriptionForCode(
-      forecast.weatherCode,
+    final suggestions = weatherPresentation!.suggestions;
+    final forecast = _WeatherMetricForecast.fromPresentation(
+      weatherPresentation!,
     );
-    final weatherIcon = weatherService.iconForCode(forecast.weatherCode);
+    final dynamic weatherForecast = _WeatherLocationLabel(
+      weatherPresentation!.locationLabel,
+    );
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -409,7 +398,11 @@ class _WeatherCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(weatherIcon, size: 26, color: colorScheme.primary),
+              Icon(
+                weatherPresentation!.icon,
+                size: 26,
+                color: colorScheme.primary,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Column(
@@ -422,7 +415,7 @@ class _WeatherCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      weatherDescription,
+                      weatherPresentation!.description,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -966,4 +959,32 @@ class _WeatherMetricChip extends StatelessWidget {
       ),
     );
   }
+}
+
+class _WeatherLocationLabel {
+  const _WeatherLocationLabel(this.locationLabel);
+
+  final String locationLabel;
+}
+
+class _WeatherMetricForecast {
+  const _WeatherMetricForecast({
+    required this.temperatureMin,
+    required this.temperatureMax,
+    required this.precipitationProbabilityMax,
+  });
+
+  factory _WeatherMetricForecast.fromPresentation(
+    WeatherPresentation presentation,
+  ) {
+    return _WeatherMetricForecast(
+      temperatureMin: presentation.temperatureMin,
+      temperatureMax: presentation.temperatureMax,
+      precipitationProbabilityMax: presentation.precipitationProbabilityMax,
+    );
+  }
+
+  final int temperatureMin;
+  final int temperatureMax;
+  final int precipitationProbabilityMax;
 }
