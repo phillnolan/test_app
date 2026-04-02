@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/grade_item.dart';
-import '../../../../models/program_subject.dart';
+import '../../../controllers/grades_controller.dart';
+import '../../../models/program_subject.dart';
 
 class CurriculumDialogButton extends StatelessWidget {
   const CurriculumDialogButton({
     super.key,
-    required this.curriculumSubjects,
-    required this.grades,
+    required this.controller,
     required this.curriculumRawItems,
     this.foregroundColor,
     this.backgroundColor,
   });
 
-  final List<ProgramSubject> curriculumSubjects;
-  final List<GradeItem> grades;
+  final GradesController controller;
   final List<Map<String, dynamic>> curriculumRawItems;
   final Color? foregroundColor;
   final Color? backgroundColor;
@@ -22,19 +20,18 @@ class CurriculumDialogButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton.filledTonal(
-      tooltip: 'Chương trình đào tạo',
+      tooltip: 'Chuong trinh dao tao',
       style: IconButton.styleFrom(
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor,
       ),
-      onPressed: curriculumSubjects.isEmpty
+      onPressed: controller.curriculumSubjects.isEmpty
           ? null
           : () {
               showDialog<void>(
                 context: context,
                 builder: (context) => CurriculumSubjectsDialog(
-                  curriculumSubjects: curriculumSubjects,
-                  grades: grades,
+                  controller: controller,
                   curriculumRawItems: curriculumRawItems,
                 ),
               );
@@ -47,13 +44,11 @@ class CurriculumDialogButton extends StatelessWidget {
 class CurriculumSubjectsDialog extends StatefulWidget {
   const CurriculumSubjectsDialog({
     super.key,
-    required this.curriculumSubjects,
-    required this.grades,
+    required this.controller,
     required this.curriculumRawItems,
   });
 
-  final List<ProgramSubject> curriculumSubjects;
-  final List<GradeItem> grades;
+  final GradesController controller;
   final List<Map<String, dynamic>> curriculumRawItems;
 
   @override
@@ -62,113 +57,102 @@ class CurriculumSubjectsDialog extends StatefulWidget {
 }
 
 class _CurriculumSubjectsDialogState extends State<CurriculumSubjectsDialog> {
-  late final List<ProgramSubject> _subjects;
-  late final Set<String> _passedCodes;
-  late final Map<String, GradeItem> _gradeByCode;
-  late final Map<String, List<ProgramSubject>> _groupedSubjects;
-  late String _selectedGroup;
-
-  @override
-  void initState() {
-    super.initState();
-    _subjects = _dedupedSubjects(widget.curriculumSubjects);
-    _passedCodes = _passedCodesFor(widget.grades);
-    _gradeByCode = _bestGradesByCode(widget.grades);
-    _groupedSubjects = _groupSubjects(_subjects);
-    _selectedGroup = _groupedSubjects.keys.isEmpty
-        ? ''
-        : _groupedSubjects.keys.first;
-  }
-
   @override
   Widget build(BuildContext context) {
-    final subjects =
-        _groupedSubjects[_selectedGroup] ?? const <ProgramSubject>[];
+    return ListenableBuilder(
+      listenable: widget.controller,
+      builder: (context, _) {
+        final presentation = widget.controller.curriculumPresentation;
+        final subjects = widget.controller.selectedCurriculumSubjects;
 
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 820, maxHeight: 760),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+        return Dialog(
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 24,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 820, maxHeight: 760),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      'Chương trình đào tạo',
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w800),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Chuong trinh dao tao',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: presentation.groupLabels
+                          .map(
+                            (group) => Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: ChoiceChip(
+                                label: Text(group),
+                                selected:
+                                    widget.controller.selectedCurriculumGroup ==
+                                    group,
+                                onSelected: (_) {
+                                  widget.controller.selectCurriculumGroup(
+                                    group,
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                          .toList(),
                     ),
                   ),
-                  IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(Icons.close),
+                  const SizedBox(height: 18),
+                  Expanded(
+                    child: subjects.isEmpty
+                        ? const Center(child: Text('Chua co du lieu'))
+                        : LayoutBuilder(
+                            builder: (context, constraints) {
+                              final isNarrow = constraints.maxWidth < 560;
+                              final itemWidth = isNarrow
+                                  ? constraints.maxWidth
+                                  : (constraints.maxWidth - 12) / 2;
+                              return SingleChildScrollView(
+                                child: Wrap(
+                                  spacing: 12,
+                                  runSpacing: 12,
+                                  children: subjects
+                                      .map(
+                                        (item) => SizedBox(
+                                          width: itemWidth,
+                                          child: _CurriculumSubjectCard(
+                                            subject: item.subject,
+                                            isCompleted: item.isCompleted,
+                                            gradeLetter: item.gradeLetter,
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              );
+                            },
+                          ),
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: _groupedSubjects.keys
-                      .map(
-                        (group) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(group),
-                            selected: _selectedGroup == group,
-                            onSelected: (_) => setState(() {
-                              _selectedGroup = group;
-                            }),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ),
-              const SizedBox(height: 18),
-              Expanded(
-                child: subjects.isEmpty
-                    ? const Center(child: Text('Ch\u01b0a c\u00f3 d\u1eef li\u1ec7u'))
-                    : LayoutBuilder(
-                        builder: (context, constraints) {
-                          final isNarrow = constraints.maxWidth < 560;
-                          final itemWidth = isNarrow
-                              ? constraints.maxWidth
-                              : (constraints.maxWidth - 12) / 2;
-                          return SingleChildScrollView(
-                            child: Wrap(
-                              spacing: 12,
-                              runSpacing: 12,
-                              children: subjects
-                                  .map(
-                                    (subject) => SizedBox(
-                                      width: itemWidth,
-                                      child: _CurriculumSubjectCard(
-                                        subject: subject,
-                                        isCompleted: _passedCodes.contains(
-                                          subject.subjectCode.trim(),
-                                        ),
-                                        gradeLetter:
-                                            _gradeByCode[subject.subjectCode
-                                                    .trim()]
-                                                ?.letter,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -251,7 +235,7 @@ class _CurriculumSubjectCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${subject.credits} tín chỉ • HK ${subject.semesterIndex}',
+                      '${subject.credits} tin chi • HK ${subject.semesterIndex}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
@@ -287,91 +271,4 @@ class _CurriculumSubjectCard extends StatelessWidget {
       ),
     );
   }
-}
-
-List<ProgramSubject> _dedupedSubjects(List<ProgramSubject> curriculumSubjects) {
-  final seen = <String>{};
-  final items = <ProgramSubject>[];
-  for (final subject in curriculumSubjects) {
-    final key = subject.subjectCode.trim().isEmpty
-        ? subject.subjectName.trim()
-        : subject.subjectCode.trim();
-    if (key.isEmpty || !seen.add(key)) continue;
-    items.add(subject);
-  }
-  items.sort((a, b) {
-    final semesterCompare = a.semesterIndex.compareTo(b.semesterIndex);
-    if (semesterCompare != 0) return semesterCompare;
-    return a.subjectName.compareTo(b.subjectName);
-  });
-  return items;
-}
-
-Set<String> _passedCodesFor(List<GradeItem> grades) {
-  final passed = <String>{};
-  for (final grade in grades) {
-    final code = grade.subjectCode.trim();
-    if (code.isEmpty) continue;
-    if (grade.mark4 >= 1.0 ||
-        (grade.letter.isNotEmpty &&
-            !grade.letter.toUpperCase().startsWith('F'))) {
-      passed.add(code);
-    }
-  }
-  return passed;
-}
-
-Map<String, GradeItem> _bestGradesByCode(List<GradeItem> grades) {
-  final best = <String, GradeItem>{};
-  for (final grade in grades) {
-    final code = grade.subjectCode.trim();
-    if (code.isEmpty) continue;
-    final current = best[code];
-    if (current == null || grade.mark4 > current.mark4) {
-      best[code] = grade;
-    }
-  }
-  return best;
-}
-
-Map<String, List<ProgramSubject>> _groupSubjects(
-  List<ProgramSubject> subjects,
-) {
-  const preferredOrder = ['Kiến thức ngành', 'Lý luận chính trị', 'Tự chọn'];
-  const trailingOrder = [
-    'Chuẩn đầu ra',
-    'Giáo dục quốc phòng',
-    'Giáo dục thể chất',
-  ];
-  final buckets = <String, List<ProgramSubject>>{};
-  for (final subject in subjects) {
-    final key = subject.curriculumGroup;
-    buckets.putIfAbsent(key, () => []).add(subject);
-  }
-
-  final orderedKeys = <String>[
-    ...preferredOrder.where(buckets.containsKey),
-    ...buckets.keys
-        .where(
-          (key) =>
-              !preferredOrder.contains(key) && !trailingOrder.contains(key),
-        )
-        .toList()
-      ..sort(),
-    ...trailingOrder.where(buckets.containsKey),
-  ];
-
-  return {
-    for (final key in orderedKeys)
-      key: buckets[key]!
-        ..sort((a, b) {
-          final gpaCompare = (b.isCountedForGpa ? 1 : 0).compareTo(
-            a.isCountedForGpa ? 1 : 0,
-          );
-          if (gpaCompare != 0) return gpaCompare;
-          final semesterCompare = a.semesterIndex.compareTo(b.semesterIndex);
-          if (semesterCompare != 0) return semesterCompare;
-          return a.subjectName.compareTo(b.subjectName);
-        }),
-  };
 }

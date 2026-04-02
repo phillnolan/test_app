@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/grade_item.dart';
-import '../../../models/program_subject.dart';
+import '../../controllers/grades_controller.dart';
+import '../../models/grade_item.dart';
+import '../../models/program_subject.dart';
 import 'widgets/curriculum_subjects_section.dart';
 import 'widgets/goal_planner_section.dart';
 
-class GradesPage extends StatelessWidget {
+class GradesPage extends StatefulWidget {
   const GradesPage({
     super.key,
     required this.grades,
@@ -20,83 +21,86 @@ class GradesPage extends StatelessWidget {
   final Widget emptyState;
 
   @override
-  Widget build(BuildContext context) {
-    final gpaCountedCodes = curriculumSubjects
-        .where((subject) => subject.isCountedForGpa)
-        .map((subject) => subject.subjectCode.trim())
-        .where((code) => code.isNotEmpty)
-        .toSet();
-    final gradesForGpa = gpaCountedCodes.isEmpty
-        ? grades
-        : grades
-              .where(
-                (grade) => gpaCountedCodes.contains(grade.subjectCode.trim()),
-              )
-              .toList();
-    final totalCredits = gradesForGpa.fold<int>(
-      0,
-      (sum, item) => sum + item.credits,
-    );
-    final gpa = totalCredits == 0
-        ? 0.0
-        : gradesForGpa.fold<double>(
-                0,
-                (sum, item) => sum + (item.mark4 * item.credits),
-              ) /
-              totalCredits;
+  State<GradesPage> createState() => _GradesPageState();
+}
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-      children: [
-        _GradesHeader(
-          curriculumSubjects: curriculumSubjects,
-          grades: grades,
-          curriculumRawItems: curriculumRawItems,
-        ),
-        const SizedBox(height: 16),
-        if (grades.isEmpty)
-          emptyState
-        else ...[
-          GradesHeroCard(
-            gpa: gpa,
-            totalCredits: totalCredits,
-            gradeCount: grades.length,
-          ),
-          const SizedBox(height: 16),
-          GoalPlannerSection(
-            currentGpa: gpa,
-            completedCredits: totalCredits,
-            grades: gradesForGpa,
-            curriculumSubjects: curriculumSubjects,
-          ),
-          const SizedBox(height: 16),
-          ...grades.map(
-            (grade) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: GradeCard(grade: grade),
+class _GradesPageState extends State<GradesPage> {
+  late final GradesController _controller = GradesController(
+    grades: widget.grades,
+    curriculumSubjects: widget.curriculumSubjects,
+  );
+
+  @override
+  void didUpdateWidget(covariant GradesPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (identical(oldWidget.grades, widget.grades) &&
+        identical(oldWidget.curriculumSubjects, widget.curriculumSubjects)) {
+      return;
+    }
+    _controller.updateData(
+      grades: widget.grades,
+      curriculumSubjects: widget.curriculumSubjects,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: _controller,
+      builder: (context, _) {
+        final metrics = _controller.metrics;
+
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          children: [
+            _GradesHeader(
+              controller: _controller,
+              curriculumRawItems: widget.curriculumRawItems,
             ),
-          ),
-        ],
-      ],
+            const SizedBox(height: 16),
+            if (_controller.grades.isEmpty)
+              widget.emptyState
+            else ...[
+              GradesHeroCard(
+                gpa: metrics.gpa,
+                totalCredits: metrics.totalCredits,
+                gradeCount: _controller.grades.length,
+              ),
+              const SizedBox(height: 16),
+              GoalPlannerSection(controller: _controller),
+              const SizedBox(height: 16),
+              ..._controller.grades.map(
+                (grade) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: GradeCard(grade: grade),
+                ),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 }
 
 class _GradesHeader extends StatelessWidget {
   const _GradesHeader({
-    required this.curriculumSubjects,
-    required this.grades,
+    required this.controller,
     required this.curriculumRawItems,
   });
 
-  final List<ProgramSubject> curriculumSubjects;
-  final List<GradeItem> grades;
+  final GradesController controller;
   final List<Map<String, dynamic>> curriculumRawItems;
 
-  static const String _title =
-      'K\u1ebft qu\u1ea3 h\u1ecdc t\u1eadp';
+  static const String _title = 'Ket qua hoc tap';
   static const String _subtitle =
-      'Theo d\u00f5i GPA, l\u00ean m\u1ee5c ti\u00eau v\u00e0 xem to\u00e0n b\u1ed9 ch\u01b0\u01a1ng tr\u00ecnh \u0111\u00e0o t\u1ea1o \u1edf m\u1ed9t ch\u1ed7.';
+      'Theo doi GPA, len muc tieu va xem toan bo chuong trinh dao tao o mot cho.';
 
   @override
   Widget build(BuildContext context) {
@@ -143,8 +147,7 @@ class _GradesHeader extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           CurriculumDialogButton(
-            curriculumSubjects: curriculumSubjects,
-            grades: grades,
+            controller: controller,
             curriculumRawItems: curriculumRawItems,
             foregroundColor: colorScheme.onPrimaryContainer,
             backgroundColor: colorScheme.surface.withValues(alpha: 0.46),
@@ -180,7 +183,7 @@ class GradesHeroCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'T\u1ed5ng quan',
+            'Tong quan',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: colorScheme.onPrimaryContainer,
             ),
@@ -195,7 +198,7 @@ class GradesHeroCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '$gradeCount m\u00f4n \u0111\u00e3 c\u00f3 \u0111i\u1ec3m \u2022 $totalCredits t\u00edn ch\u1ec9',
+            '$gradeCount mon da co diem • $totalCredits tin chi',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: colorScheme.onPrimaryContainer,
             ),
@@ -236,7 +239,7 @@ class GradeCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${grade.subjectCode} \u2022 ${grade.credits} t\u00edn ch\u1ec9',
+                  '${grade.subjectCode} • ${grade.credits} tin chi',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -255,7 +258,7 @@ class GradeCard extends StatelessWidget {
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
               Text(
-                'H\u1ec7 4: ${grade.mark4.toStringAsFixed(1)} \u2022 ${grade.letter}',
+                'He 4: ${grade.mark4.toStringAsFixed(1)} • ${grade.letter}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

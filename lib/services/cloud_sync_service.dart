@@ -5,10 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/event_attachment.dart';
+import '../models/local_cache_payload.dart';
 import '../models/student_event.dart';
 import 'file_bytes_reader_stub.dart'
     if (dart.library.io) 'file_bytes_reader_io.dart';
-import 'local_cache_service.dart';
 
 class CloudSyncService {
   CloudSyncService({http.Client? client}) : _client = client ?? http.Client();
@@ -73,7 +73,9 @@ class CloudSyncService {
     );
   }
 
-  Future<LocalCachePayload?> fetchSyncCache({String snapshotKey = 'dashboard'}) async {
+  Future<LocalCachePayload?> fetchSyncCache({
+    String snapshotKey = 'dashboard',
+  }) async {
     final headers = await _authHeaders(includeJsonContentType: false);
     if (headers == null) return null;
 
@@ -141,7 +143,9 @@ class CloudSyncService {
     }
 
     final response = await _client.get(
-      Uri.parse('$_baseUrl/attachments/download?key=${Uri.encodeQueryComponent(objectKey)}'),
+      Uri.parse(
+        '$_baseUrl/attachments/download?key=${Uri.encodeQueryComponent(objectKey)}',
+      ),
       headers: headers,
     );
     if (response.statusCode >= 400) {
@@ -163,7 +167,8 @@ class CloudSyncService {
 
     final token = await user.getIdToken();
     return {
-      if (includeJsonContentType) 'content-type': 'application/json; charset=utf-8',
+      if (includeJsonContentType)
+        'content-type': 'application/json; charset=utf-8',
       'authorization': 'Bearer $token',
     };
   }

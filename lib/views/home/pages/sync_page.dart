@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../models/student_profile.dart';
+import '../../../models/student_profile.dart';
 import '../widgets/home_common_widgets.dart';
 
 class SyncPage extends StatelessWidget {

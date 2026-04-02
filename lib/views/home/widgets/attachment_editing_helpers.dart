@@ -1,36 +1,22 @@
-import 'dart:convert';
-
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:pdf/widgets.dart' as pw;
 
-import '../../../../models/event_attachment.dart';
-import '../../../../services/file_bytes_reader_stub.dart'
-    if (dart.library.io) '../../../../services/file_bytes_reader_io.dart';
+import '../../../models/event_attachment.dart';
+import '../../../services/attachment_import_service.dart';
+import '../../../services/image_edit_service.dart';
 import '../image_attachment_editor.dart';
+
+final AttachmentImportService _attachmentImportService =
+    AttachmentImportService();
 
 Future<List<EventAttachment>> pickAttachments(BuildContext context) async {
   try {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.any,
-      withData: kIsWeb,
-    );
-    if (result == null) {
-      return const [];
-    }
-
-    return result.files
-        .map(_attachmentFromPlatformFile)
-        .whereType<EventAttachment>()
-        .toList();
+    return await _attachmentImportService.pickAttachments();
   } catch (_) {
     if (!context.mounted) {
       return const [];
     }
-    showAttachmentFailure(context, 'Không thể mở bộ chọn tệp.');
+    showAttachmentFailure(context, 'Khong the mo bo chon tep.');
     return const [];
   }
 }
@@ -39,8 +25,11 @@ Future<EventAttachment?> captureOrScanAttachment(
   BuildContext context, {
   required bool scanMode,
   ImagePicker? imagePicker,
+  AttachmentImportService? attachmentImportService,
+  ImageEditService imageEditService = const ImageEditService(),
 }) async {
   final picker = imagePicker ?? ImagePicker();
+  final importService = attachmentImportService ?? _attachmentImportService;
 
   try {
     final file = await picker.pickImage(
@@ -51,18 +40,22 @@ Future<EventAttachment?> captureOrScanAttachment(
       return null;
     }
 
-    final attachment = await attachmentFromXFile(file);
+    final attachment = await importService.attachmentFromXFile(file);
     if (!context.mounted) {
       return null;
     }
     if (attachment == null) {
-      showAttachmentFailure(context, 'Không thể đọc ảnh vừa chụp.');
+      showAttachmentFailure(context, 'Khong the doc anh vua chup.');
       return null;
     }
 
     EventAttachment result = attachment;
     if (scanMode || attachment.isImage) {
-      final edited = await editAttachment(context, attachment);
+      final edited = await editAttachment(
+        context,
+        attachment,
+        imageEditService: imageEditService,
+      );
       if (!context.mounted) {
         return null;
       }
@@ -80,7 +73,7 @@ Future<EventAttachment?> captureOrScanAttachment(
       if (saveAsPdf != true) {
         return result;
       }
-      result = await convertImageAttachmentToPdf(result);
+      result = await importService.convertImageAttachmentToPdf(result);
     }
 
     return result;
@@ -90,7 +83,7 @@ Future<EventAttachment?> captureOrScanAttachment(
     }
     showAttachmentFailure(
       context,
-      scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
+      scanMode ? 'Khong the quet tai lieu.' : 'Khong the chup anh.',
     );
     return null;
   }
@@ -98,33 +91,20 @@ Future<EventAttachment?> captureOrScanAttachment(
 
 Future<EventAttachment?> editAttachment(
   BuildContext context,
-  EventAttachment attachment,
-) async {
+  EventAttachment attachment, {
+  ImageEditService imageEditService = const ImageEditService(),
+}) async {
   if (!attachment.isImage) {
     return attachment;
   }
 
   return Navigator.of(context).push<EventAttachment>(
     MaterialPageRoute(
-      builder: (context) => ImageAttachmentEditor(attachment: attachment),
+      builder: (context) => ImageAttachmentEditor(
+        attachment: attachment,
+        imageEditService: imageEditService,
+      ),
     ),
-  );
-}
-
-Future<EventAttachment?> attachmentFromXFile(XFile file) async {
-  final bytes = await file.readAsBytes();
-  if (bytes.isEmpty) {
-    return null;
-  }
-
-  final fileName = file.name.isEmpty
-      ? 'camera_${DateTime.now().millisecondsSinceEpoch}.jpg'
-      : file.name;
-  return EventAttachment(
-    id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$fileName',
-    name: fileName,
-    path: kIsWeb ? '' : file.path,
-    bytesBase64: kIsWeb || file.path.isEmpty ? base64Encode(bytes) : null,
   );
 }
 
@@ -140,7 +120,7 @@ Future<bool?> askScanOutputMode(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Lưu tài liệu dưới dạng',
+              'Luu tai lieu duoi dang',
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
@@ -148,7 +128,7 @@ Future<bool?> askScanOutputMode(BuildContext context) {
             const SizedBox(height: 12),
             ListTile(
               leading: const Icon(Icons.image_outlined),
-              title: const Text('Ảnh'),
+              title: const Text('Anh'),
               onTap: () => Navigator.of(context).pop(false),
             ),
             ListTile(
@@ -163,52 +143,10 @@ Future<bool?> askScanOutputMode(BuildContext context) {
   );
 }
 
-Future<EventAttachment> convertImageAttachmentToPdf(
-  EventAttachment attachment,
-) async {
-  final bytes = attachment.bytesBase64 != null
-      ? base64Decode(attachment.bytesBase64!)
-      : await readBytesFromPath(attachment.path);
-  if (bytes == null || bytes.isEmpty) {
-    return attachment;
-  }
-
-  final document = pw.Document();
-  final image = pw.MemoryImage(bytes);
-  document.addPage(
-    pw.Page(
-      build: (_) => pw.Center(child: pw.Image(image, fit: pw.BoxFit.contain)),
-    ),
-  );
-  final pdfBytes = await document.save();
-  final baseName = attachment.name.replaceAll(RegExp(r'\.[^.]+$'), '');
-  return EventAttachment(
-    id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-$baseName-pdf',
-    name: '$baseName.pdf',
-    path: '',
-    bytesBase64: base64Encode(pdfBytes),
-  );
-}
-
 void showAttachmentFailure(BuildContext context, String message) {
   if (!context.mounted) {
     return;
   }
 
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-}
-
-EventAttachment? _attachmentFromPlatformFile(PlatformFile file) {
-  final attachment = EventAttachment(
-    id: 'attachment-${DateTime.now().microsecondsSinceEpoch}-${file.name}',
-    name: file.name,
-    path: file.path ?? '',
-    bytesBase64: file.bytes == null ? null : base64Encode(file.bytes!),
-  );
-
-  if (attachment.path.isEmpty && attachment.bytesBase64 == null) {
-    return null;
-  }
-
-  return attachment;
 }

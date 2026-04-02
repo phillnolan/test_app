@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../models/event_attachment.dart';
-import '../../../../models/student_event.dart';
+import '../../../models/event_attachment.dart';
+import '../../../models/student_event.dart';
 import 'attachment_editing_helpers.dart';
 import '../../../controllers/home_flow_models.dart';
 

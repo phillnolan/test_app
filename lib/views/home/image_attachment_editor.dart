@@ -1,19 +1,21 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '../../../models/event_attachment.dart';
-import '../../../services/file_bytes_reader_stub.dart'
-    if (dart.library.io) '../../../services/file_bytes_reader_io.dart';
+import '../../models/event_attachment.dart';
+import '../../services/image_edit_service.dart';
 
 class ImageAttachmentEditor extends StatefulWidget {
-  const ImageAttachmentEditor({super.key, required this.attachment});
+  const ImageAttachmentEditor({
+    super.key,
+    required this.attachment,
+    this.imageEditService = const ImageEditService(),
+  });
 
   final EventAttachment attachment;
+  final ImageEditService imageEditService;
 
   @override
   State<ImageAttachmentEditor> createState() => _ImageAttachmentEditorState();
@@ -29,8 +31,8 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
   bool _isLoading = true;
   _EditorTool _tool = _EditorTool.crop;
   Rect _cropRect = const Rect.fromLTWH(0.1, 0.1, 0.8, 0.8);
-  final List<_OverlayAction> _actions = [];
-  _StrokeAction? _activeStroke;
+  final List<ImageOverlayAction> _actions = [];
+  ImageStrokeAction? _activeStroke;
   final TextEditingController _textController = TextEditingController();
   Color _selectedColor = const Color(0xFFD32F2F);
   double _strokeWidth = 4;
@@ -51,24 +53,23 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
 
   @override
   void dispose() {
+    _previewImage?.dispose();
     _textController.dispose();
     super.dispose();
   }
 
   Future<void> _loadImage() async {
     try {
-      final bytes = widget.attachment.bytesBase64 != null
-          ? base64Decode(widget.attachment.bytesBase64!)
-          : await readBytesFromPath(widget.attachment.path);
-      if (bytes == null || bytes.isEmpty) {
-        throw const _ImageEditorException('Không đọc được dữ liệu ảnh.');
+      final document = await widget.imageEditService.loadAttachment(
+        widget.attachment,
+      );
+      if (!mounted) {
+        document.previewImage.dispose();
+        return;
       }
-
-      final previewImage = await _decodeUiImage(bytes);
-      if (!mounted) return;
       setState(() {
-        _displayBytes = bytes;
-        _previewImage = previewImage;
+        _displayBytes = document.bytes;
+        _previewImage = document.previewImage;
         _isLoading = false;
       });
     } catch (_) {
@@ -80,38 +81,35 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (_displayBytes == null || _previewImage == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Chỉnh sửa ảnh')),
-        body: const Center(child: Text('Không mở được ảnh để chỉnh sửa.')),
+        appBar: AppBar(title: const Text('Chinh sua anh')),
+        body: const Center(child: Text('Khong mo duoc anh de chinh sua.')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chỉnh sửa ảnh'),
+        title: const Text('Chinh sua anh'),
         actions: [
           IconButton(
-            tooltip: 'Hoàn tác',
+            tooltip: 'Hoan tac',
             onPressed: _actions.isNotEmpty || _activeStroke != null
                 ? _undoLastAction
                 : null,
             icon: const Icon(Icons.undo),
           ),
           IconButton(
-            tooltip: 'Xóa mục đang chọn',
-            onPressed: _selectedActionIndex == null ? null : _deleteSelectedAction,
+            tooltip: 'Xoa muc dang chon',
+            onPressed: _selectedActionIndex == null
+                ? null
+                : _deleteSelectedAction,
             icon: const Icon(Icons.delete_outline),
           ),
-          TextButton(
-            onPressed: _saveAttachment,
-            child: const Text('Lưu'),
-          ),
+          TextButton(onPressed: _saveAttachment, child: const Text('Luu')),
         ],
       ),
       body: SafeArea(
@@ -135,7 +133,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                         _previewImage!.width.toDouble(),
                         _previewImage!.height.toDouble(),
                       );
-                      final fitted = _containSize(
+                      final fitted = widget.imageEditService.containSize(
                         imageSize,
                         Size(constraints.maxWidth, constraints.maxHeight),
                       );
@@ -163,6 +161,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                                         : [..._actions, _activeStroke!],
                                     tool: _tool,
                                     selectedActionIndex: _selectedActionIndex,
+                                    imageEditService: widget.imageEditService,
                                   ),
                                 ),
                               ],
@@ -207,12 +206,12 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                     ButtonSegment(
                       value: _EditorTool.draw,
                       icon: Icon(Icons.draw_outlined),
-                      label: Text('Vẽ'),
+                      label: Text('Ve'),
                     ),
                     ButtonSegment(
                       value: _EditorTool.text,
                       icon: Icon(Icons.text_fields),
-                      label: Text('Chữ'),
+                      label: Text('Chu'),
                     ),
                   ],
                   selected: {_tool},
@@ -238,7 +237,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                       });
                     },
                     icon: const Icon(Icons.center_focus_strong),
-                    label: const Text('Đặt lại khung'),
+                    label: const Text('Dat lai khung'),
                   ),
                 ),
               ],
@@ -282,7 +281,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
               children: [
                 const Icon(Icons.brush_outlined, size: 18),
                 const SizedBox(width: 8),
-                Text('Độ dày: ${_strokeWidth.toStringAsFixed(0)}'),
+                Text('Do day: ${_strokeWidth.toStringAsFixed(0)}'),
               ],
             ),
             Slider(
@@ -298,8 +297,8 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
             TextField(
               controller: _textController,
               decoration: const InputDecoration(
-                labelText: 'Nội dung chữ',
-                hintText: 'Nhập chữ rồi chạm lên ảnh để đặt',
+                labelText: 'Noi dung chu',
+                hintText: 'Nhap chu roi cham len anh de dat',
               ),
             ),
             const SizedBox(height: 12),
@@ -307,7 +306,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
               children: [
                 const Icon(Icons.format_size, size: 18),
                 const SizedBox(width: 8),
-                Text('Cỡ chữ: ${_textSize.toStringAsFixed(0)}'),
+                Text('Co chu: ${_textSize.toStringAsFixed(0)}'),
               ],
             ),
             Slider(
@@ -321,7 +320,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
             const SizedBox(height: 4),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text('Giữ và kéo chữ đã đặt để di chuyển.'),
+              child: Text('Giu va keo chu da dat de di chuyen.'),
             ),
           ],
         ],
@@ -354,7 +353,11 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     final normalized = _normalizePoint(localPosition, canvasSize);
     if (normalized == null) return;
 
-    final tappedIndex = _hitTestAction(normalized, canvasSize);
+    final tappedIndex = widget.imageEditService.hitTestAction(
+      normalized,
+      canvasSize,
+      _actions,
+    );
     if (tappedIndex != null) {
       setState(() => _selectedActionIndex = tappedIndex);
       return;
@@ -368,14 +371,14 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     final text = _textController.text.trim();
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hãy nhập chữ trước khi đặt lên ảnh.')),
+        const SnackBar(content: Text('Hay nhap chu truoc khi dat len anh.')),
       );
       return;
     }
 
     setState(() {
       _actions.add(
-        _TextAction(
+        ImageTextAction(
           text: text,
           position: normalized,
           color: _selectedColor,
@@ -390,9 +393,13 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     final normalized = _normalizePoint(localPosition, canvasSize);
     if (normalized == null) return;
 
-    final textIndex = _hitTestTextAction(normalized, canvasSize);
+    final textIndex = widget.imageEditService.hitTestTextAction(
+      normalized,
+      canvasSize,
+      _actions,
+    );
     if (textIndex != null) {
-      final action = _actions[textIndex] as _TextAction;
+      final action = _actions[textIndex] as ImageTextAction;
       setState(() => _selectedActionIndex = textIndex);
       _draggingTextIndex = textIndex;
       _draggingTextStart = normalized;
@@ -409,7 +416,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     if (_tool == _EditorTool.draw) {
       setState(() {
         _selectedActionIndex = null;
-        _activeStroke = _StrokeAction(
+        _activeStroke = ImageStrokeAction(
           color: _selectedColor,
           thickness: _strokeWidth,
           points: [normalized],
@@ -447,7 +454,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
       );
       setState(() {
         _actions[_draggingTextIndex!] =
-            (_actions[_draggingTextIndex!] as _TextAction).copyWith(
+            (_actions[_draggingTextIndex!] as ImageTextAction).copyWith(
               position: next,
             );
         _selectedActionIndex = _draggingTextIndex;
@@ -479,8 +486,12 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
 
     if (_cropInteraction == _CropInteraction.move) {
       nextRect = _cropStartRect!.shift(delta);
-      if (nextRect.left < 0) nextRect = nextRect.shift(Offset(-nextRect.left, 0));
-      if (nextRect.top < 0) nextRect = nextRect.shift(Offset(0, -nextRect.top));
+      if (nextRect.left < 0) {
+        nextRect = nextRect.shift(Offset(-nextRect.left, 0));
+      }
+      if (nextRect.top < 0) {
+        nextRect = nextRect.shift(Offset(0, -nextRect.top));
+      }
       if (nextRect.right > 1) {
         nextRect = nextRect.shift(Offset(1 - nextRect.right, 0));
       }
@@ -488,17 +499,10 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
         nextRect = nextRect.shift(Offset(0, 1 - nextRect.bottom));
       }
     } else {
-      nextRect = Rect.fromLTRB(
-        _cropStartRect!.left,
-        _cropStartRect!.top,
-        math.max(_cropStartRect!.left + minSize, normalized.dx),
-        math.max(_cropStartRect!.top + minSize, normalized.dy),
-      );
-      nextRect = Rect.fromLTRB(
-        nextRect.left.clamp(0.0, 1.0),
-        nextRect.top.clamp(0.0, 1.0),
-        nextRect.right.clamp(0.0, 1.0),
-        nextRect.bottom.clamp(0.0, 1.0),
+      nextRect = widget.imageEditService.resizeCropRect(
+        cropRect: _cropStartRect!,
+        normalized: normalized,
+        minSize: minSize,
       );
     }
 
@@ -531,57 +535,6 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     _cropStartRect = null;
   }
 
-  int? _hitTestAction(Offset normalized, Size canvasSize) {
-    for (var index = _actions.length - 1; index >= 0; index--) {
-      final action = _actions[index];
-      if (action is _TextAction) {
-        if (_textBounds(action, canvasSize).inflate(0.02).contains(normalized)) {
-          return index;
-        }
-      } else if (action is _StrokeAction) {
-        for (final point in action.points) {
-          if ((point - normalized).distance <= 0.04) {
-            return index;
-          }
-        }
-      }
-    }
-    return null;
-  }
-
-  int? _hitTestTextAction(Offset normalized, Size canvasSize) {
-    for (var index = _actions.length - 1; index >= 0; index--) {
-      final action = _actions[index];
-      if (action is! _TextAction) continue;
-      if (_textBounds(action, canvasSize).inflate(0.02).contains(normalized)) {
-        return index;
-      }
-    }
-    return null;
-  }
-
-  Rect _textBounds(_TextAction action, Size canvasSize) {
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: action.text,
-        style: TextStyle(
-          fontSize: action.fontSize,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(maxWidth: canvasSize.width * 0.8);
-
-    final widthRatio = textPainter.width / canvasSize.width;
-    final heightRatio = textPainter.height / canvasSize.height;
-    return Rect.fromLTWH(
-      action.position.dx,
-      action.position.dy,
-      widthRatio.clamp(0.02, 0.9),
-      heightRatio.clamp(0.02, 0.3),
-    );
-  }
-
   Offset? _normalizePoint(Offset point, Size canvasSize) {
     if (canvasSize.width <= 0 || canvasSize.height <= 0) return null;
     return Offset(
@@ -591,183 +544,25 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
   }
 
   Future<void> _saveAttachment() async {
-    if (_displayBytes == null) return;
-    final codec = await ui.instantiateImageCodec(_displayBytes!);
-    final frame = await codec.getNextFrame();
-    final decodedImage = frame.image;
-
-    final cropLeft = (_cropRect.left * decodedImage.width)
-        .round()
-        .clamp(0, decodedImage.width - 1);
-    final cropTop = (_cropRect.top * decodedImage.height)
-        .round()
-        .clamp(0, decodedImage.height - 1);
-    final cropRight = (_cropRect.right * decodedImage.width)
-        .round()
-        .clamp(cropLeft + 1, decodedImage.width);
-    final cropBottom = (_cropRect.bottom * decodedImage.height)
-        .round()
-        .clamp(cropTop + 1, decodedImage.height);
-
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final outputWidth = cropRight - cropLeft;
-    final outputHeight = cropBottom - cropTop;
-    final destination = Rect.fromLTWH(
-      0,
-      0,
-      outputWidth.toDouble(),
-      outputHeight.toDouble(),
-    );
-    final source = Rect.fromLTWH(
-      cropLeft.toDouble(),
-      cropTop.toDouble(),
-      outputWidth.toDouble(),
-      outputHeight.toDouble(),
-    );
-
-    canvas.drawImageRect(decodedImage, source, destination, Paint());
-
-    for (final action in _actions) {
-      if (action is _StrokeAction) {
-        final visiblePoints = action.points
-            .map((point) => _mapPointIntoCrop(point, _cropRect, destination.size))
-            .whereType<Offset>()
-            .toList();
-        if (visiblePoints.length < 2) continue;
-        final paint = Paint()
-          ..color = action.color
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = action.thickness * (destination.width / 360).clamp(0.8, 3.2);
-        final path = Path()..moveTo(visiblePoints.first.dx, visiblePoints.first.dy);
-        for (final point in visiblePoints.skip(1)) {
-          path.lineTo(point.dx, point.dy);
-        }
-        canvas.drawPath(path, paint);
-      } else if (action is _TextAction) {
-        final point = _mapPointIntoCrop(action.position, _cropRect, destination.size);
-        if (point == null) continue;
-        final textPainter = TextPainter(
-          text: TextSpan(
-            text: action.text,
-            style: TextStyle(
-              color: action.color,
-              fontSize: action.fontSize * (destination.width / 360).clamp(0.8, 2.8),
-              fontWeight: FontWeight.w700,
-              shadows: const [
-                Shadow(
-                  color: Colors.black38,
-                  blurRadius: 2,
-                  offset: Offset(1, 1),
-                ),
-              ],
-            ),
-          ),
-          textDirection: TextDirection.ltr,
-        )..layout(maxWidth: destination.width * 0.8);
-        textPainter.paint(canvas, point);
-      }
+    if (_displayBytes == null) {
+      return;
     }
 
-    final picture = recorder.endRecording();
-    final image = await picture.toImage(outputWidth, outputHeight);
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    final renderedBytes = byteData!.buffer.asUint8List();
-
-    final updated = widget.attachment.copyWith(
-      name: _replaceExtensionWithPng(widget.attachment.name),
-      path: '',
-      remoteKey: null,
-      bytesBase64: base64Encode(renderedBytes),
-    );
-
-    if (!mounted) return;
-    Navigator.of(context).pop(updated);
-  }
-
-  Offset? _mapPointIntoCrop(Offset point, Rect cropRect, Size outputSize) {
-    final dx = (point.dx - cropRect.left) / cropRect.width;
-    final dy = (point.dy - cropRect.top) / cropRect.height;
-    if (dx < -0.05 || dy < -0.05 || dx > 1.05 || dy > 1.05) return null;
-    return Offset(dx * outputSize.width, dy * outputSize.height);
-  }
-
-  Size _containSize(Size source, Size bounds) {
-    final sourceRatio = source.width / source.height;
-    final boundsRatio = bounds.width / bounds.height;
-    if (sourceRatio > boundsRatio) {
-      return Size(bounds.width, bounds.width / sourceRatio);
+    try {
+      final updated = await widget.imageEditService.renderAttachment(
+        attachment: widget.attachment,
+        displayBytes: _displayBytes!,
+        cropRect: _cropRect,
+        actions: _actions,
+      );
+      if (!mounted) return;
+      Navigator.of(context).pop(updated);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Khong the luu anh da chinh sua.')),
+      );
     }
-    return Size(bounds.height * sourceRatio, bounds.height);
-  }
-
-  Future<ui.Image> _decodeUiImage(Uint8List bytes) {
-    final completer = Completer<ui.Image>();
-    ui.decodeImageFromList(bytes, completer.complete);
-    return completer.future;
-  }
-
-  String _replaceExtensionWithPng(String fileName) {
-    final dotIndex = fileName.lastIndexOf('.');
-    final baseName = dotIndex == -1 ? fileName : fileName.substring(0, dotIndex);
-    return '$baseName.png';
-  }
-}
-
-abstract class _OverlayAction {
-  const _OverlayAction();
-}
-
-class _StrokeAction extends _OverlayAction {
-  const _StrokeAction({
-    required this.color,
-    required this.thickness,
-    required this.points,
-  });
-
-  final Color color;
-  final double thickness;
-  final List<Offset> points;
-
-  _StrokeAction copyWith({
-    Color? color,
-    double? thickness,
-    List<Offset>? points,
-  }) {
-    return _StrokeAction(
-      color: color ?? this.color,
-      thickness: thickness ?? this.thickness,
-      points: points ?? this.points,
-    );
-  }
-}
-
-class _TextAction extends _OverlayAction {
-  const _TextAction({
-    required this.text,
-    required this.position,
-    required this.color,
-    required this.fontSize,
-  });
-
-  final String text;
-  final Offset position;
-  final Color color;
-  final double fontSize;
-
-  _TextAction copyWith({
-    String? text,
-    Offset? position,
-    Color? color,
-    double? fontSize,
-  }) {
-    return _TextAction(
-      text: text ?? this.text,
-      position: position ?? this.position,
-      color: color ?? this.color,
-      fontSize: fontSize ?? this.fontSize,
-    );
   }
 }
 
@@ -777,12 +572,14 @@ class _ImageEditOverlayPainter extends CustomPainter {
     required this.actions,
     required this.tool,
     required this.selectedActionIndex,
+    required this.imageEditService,
   });
 
   final Rect cropRect;
-  final List<_OverlayAction> actions;
+  final List<ImageOverlayAction> actions;
   final _EditorTool tool;
   final int? selectedActionIndex;
+  final ImageEditService imageEditService;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -790,7 +587,7 @@ class _ImageEditOverlayPainter extends CustomPainter {
       final action = actions[index];
       final isSelected = selectedActionIndex == index;
 
-      if (action is _StrokeAction) {
+      if (action is ImageStrokeAction) {
         if (action.points.length < 2) continue;
         final paint = Paint()
           ..color = action.color
@@ -814,7 +611,7 @@ class _ImageEditOverlayPainter extends CustomPainter {
             ..strokeWidth = action.thickness + 2;
           canvas.drawPath(path, highlight);
         }
-      } else if (action is _TextAction) {
+      } else if (action is ImageTextAction) {
         final textPainter = TextPainter(
           text: TextSpan(
             text: action.text,
@@ -882,10 +679,4 @@ class _ImageEditOverlayPainter extends CustomPainter {
         oldDelegate.tool != tool ||
         oldDelegate.selectedActionIndex != selectedActionIndex;
   }
-}
-
-class _ImageEditorException implements Exception {
-  const _ImageEditorException(this.message);
-
-  final String message;
 }

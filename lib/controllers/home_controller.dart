@@ -1,19 +1,22 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/event_attachment.dart';
+import '../models/home_action_result.dart';
+import '../models/local_cache_payload.dart';
 import '../models/student_event.dart';
 import '../models/weather_forecast.dart';
-import '../services/attachment_opener.dart';
+import '../models/weather_presentation.dart';
 import '../services/attachment_storage_service.dart';
 import '../services/cloud_sync_service.dart';
+import '../services/dashboard_persistence_service.dart';
+import '../services/device_effects_service.dart';
+import '../services/event_mutation_service.dart';
 import '../services/local_cache_service.dart';
-import '../services/notification_service.dart';
 import '../services/school_api_service.dart';
+import '../services/school_sync_coordinator.dart';
 import '../services/weather_service.dart';
 import '../services/widget_sync_service.dart';
 import '../utils/home_calendar_utils.dart';
@@ -29,15 +32,42 @@ class HomeController extends ChangeNotifier {
     CloudSyncService? cloudSyncService,
     WeatherService? weatherService,
     WidgetSyncService? widgetSyncService,
+    DeviceEffectsService? deviceEffectsService,
+    DashboardPersistenceService? dashboardPersistenceService,
+    SchoolSyncCoordinator? schoolSyncCoordinator,
+    EventMutationService? eventMutationService,
   }) : _accountAuthController =
            accountAuthController ?? AccountAuthController(),
-       _schoolApiService = schoolApiService ?? SchoolApiService(),
-       _localCacheService = localCacheService ?? LocalCacheService(),
-       _attachmentStorageService =
-           attachmentStorageService ?? AttachmentStorageService(),
-       _cloudSyncService = cloudSyncService ?? CloudSyncService(),
-       _weatherService = weatherService ?? WeatherService(),
-       _widgetSyncService = widgetSyncService ?? WidgetSyncService() {
+       _weatherService = weatherService ?? WeatherService() {
+    final resolvedLocalCacheService = localCacheService ?? LocalCacheService();
+    final resolvedCloudSyncService = cloudSyncService ?? CloudSyncService();
+    final resolvedWidgetSyncService = widgetSyncService ?? WidgetSyncService();
+    final resolvedDeviceEffectsService =
+        deviceEffectsService ??
+        DeviceEffectsService(widgetSyncService: resolvedWidgetSyncService);
+    final resolvedDashboardPersistenceService =
+        dashboardPersistenceService ??
+        DashboardPersistenceService(
+          localCacheService: resolvedLocalCacheService,
+          cloudSyncService: resolvedCloudSyncService,
+          deviceEffectsService: resolvedDeviceEffectsService,
+        );
+
+    _dashboardPersistenceService = resolvedDashboardPersistenceService;
+    _schoolSyncCoordinator =
+        schoolSyncCoordinator ??
+        SchoolSyncCoordinator(
+          schoolApiService: schoolApiService ?? SchoolApiService(),
+        );
+    _eventMutationService =
+        eventMutationService ??
+        EventMutationService(
+          attachmentStorageService:
+              attachmentStorageService ?? AttachmentStorageService(),
+          cloudSyncService: resolvedCloudSyncService,
+          dashboardPersistenceService: resolvedDashboardPersistenceService,
+        );
+
     final now = DateTime.now();
     _today = DateTime(now.year, now.month, now.day);
     _selectedDate = _today;
@@ -45,17 +75,11 @@ class HomeController extends ChangeNotifier {
 
   static const int pastDayRange = 365;
   static const int futureDayRange = 365;
-  static const double dayTileWidth = 72;
-  static const double dayTileSpacing = 10;
-
   final AccountAuthController _accountAuthController;
-  final SchoolApiService _schoolApiService;
-  final LocalCacheService _localCacheService;
-  final AttachmentStorageService _attachmentStorageService;
-  final CloudSyncService _cloudSyncService;
-  final WidgetSyncService _widgetSyncService;
   final WeatherService _weatherService;
-  final ScrollController dayStripController = ScrollController();
+  late final DashboardPersistenceService _dashboardPersistenceService;
+  late final SchoolSyncCoordinator _schoolSyncCoordinator;
+  late final EventMutationService _eventMutationService;
 
   late final DateTime _today;
   late DateTime _selectedDate;
@@ -95,6 +119,7 @@ class HomeController extends ChangeNotifier {
       suggestions: _weatherService.suggestionsForDay(forecast).take(2).toList(),
     );
   }
+
   bool get isSyncing => _isSyncing;
   bool get isLoadingLocalCache => _isLoadingLocalCache;
   bool get isLoadingWeather => _isLoadingWeather;
@@ -130,11 +155,6 @@ class HomeController extends ChangeNotifier {
         }
       });
     }
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_isDisposed) return;
-      _jumpDayStripToDate(_selectedDate);
-    });
   }
 
   void setCurrentTab(int index) {
@@ -150,7 +170,6 @@ class HomeController extends ChangeNotifier {
   void selectDate(DateTime date) {
     _selectedDate = _normalizedDate(date);
     notifyListeners();
-    _scrollDayStripToDate(_selectedDate);
   }
 
   DateTime dateForIndex(int index) {
@@ -189,12 +208,13 @@ class HomeController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final snapshot = await _schoolApiService.sync(
+      final syncResult = await _schoolSyncCoordinator.sync(
         username: credentials.username,
         password: credentials.password,
+        currentPayload: _payload,
       );
-      final nextPayload = await _persistPayload(
-        _payloadFromSnapshot(snapshot, _payload),
+      final nextPayload = await _dashboardPersistenceService.persistPayload(
+        syncResult.payload,
       );
 
       if (_isDisposed) {
@@ -202,23 +222,18 @@ class HomeController extends ChangeNotifier {
       }
 
       _payload = nextPayload;
-      _selectedDate = _normalizedDate(snapshot.syncedAt);
+      _selectedDate = syncResult.selectedDate;
       _isLoadingLocalCache = false;
       _showSyncReminder = false;
       _currentTab = 0;
       notifyListeners();
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (_isDisposed) return;
-        _scrollDayStripToDate(_selectedDate);
-      });
-
-      return const HomeActionResult.success('Đồng bộ thành công.');
+      return const HomeActionResult.success('Dong bo thanh cong.');
     } on SchoolApiException catch (error) {
       return HomeActionResult.failure(error.message);
     } catch (_) {
       return const HomeActionResult.failure(
-        'Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.',
+        'Da co loi xay ra khi dong bo. Vui long thu lai sau.',
       );
     } finally {
       if (!_isDisposed) {
@@ -229,39 +244,15 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> addTask(TaskEditorResult result) async {
-    final start = DateTime(
-      result.date.year,
-      result.date.month,
-      result.date.day,
-      result.hour.hour,
-      result.hour.minute,
-    );
-    final updatedPersonalEvents = await _attachmentStorageService
-        .persistEvents([
-          ..._payload.personalEvents,
-          StudentEvent(
-            id: 'task-${DateTime.now().microsecondsSinceEpoch}',
-            title: result.title,
-            subtitle: 'Việc cá nhân',
-            start: start,
-            end: start.add(const Duration(hours: 1)),
-            type: StudentEventType.personalTask,
-            color: const Color(0xFFDDF4E4),
-            note: result.note.isEmpty ? null : result.note,
-            attachments: result.attachments,
-          ),
-        ]);
-    updatedPersonalEvents.sort((a, b) => a.start.compareTo(b.start));
-
-    _payload = await _persistPayload(
-      _payload.copyWith(personalEvents: updatedPersonalEvents),
+    _payload = await _eventMutationService.addTask(
+      currentPayload: _payload,
+      result: result,
     );
     if (_isDisposed) return;
 
     _selectedDate = _normalizedDate(result.date);
     _isLoadingLocalCache = false;
     notifyListeners();
-    _scrollDayStripToDate(_selectedDate);
   }
 
   Future<void> editEvent(StudentEvent event, NoteEditorResult result) async {
@@ -270,34 +261,10 @@ class HomeController extends ChangeNotifier {
       return;
     }
 
-    final trimmed = result.note.trim();
-    final updatedPersonalEvents = await _attachmentStorageService.persistEvents(
-      _payload.personalEvents.map((item) {
-        if (item.id != event.id) return item;
-        return item.copyWith(
-          title: item.type == StudentEventType.personalTask
-              ? result.title?.trim()
-              : item.title,
-          note: trimmed.isEmpty ? null : trimmed,
-          attachments: result.attachments,
-        );
-      }).toList(),
-    );
-    final updatedSyncedEvents = await _attachmentStorageService.persistEvents(
-      _payload.syncedEvents.map((item) {
-        if (item.id != event.id) return item;
-        return item.copyWith(
-          note: trimmed.isEmpty ? null : trimmed,
-          attachments: result.attachments,
-        );
-      }).toList(),
-    );
-
-    _payload = await _persistPayload(
-      _payload.copyWith(
-        personalEvents: updatedPersonalEvents,
-        syncedEvents: updatedSyncedEvents,
-      ),
+    _payload = await _eventMutationService.editEvent(
+      currentPayload: _payload,
+      event: event,
+      result: result,
     );
     if (_isDisposed) return;
 
@@ -306,15 +273,13 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> deletePersonalEvent(StudentEvent event) async {
-    if (event.type != StudentEventType.personalTask) return;
-
-    _payload = await _persistPayload(
-      _payload.copyWith(
-        personalEvents: _payload.personalEvents
-            .where((item) => item.id != event.id)
-            .toList(),
-      ),
+    final nextPayload = await _eventMutationService.deletePersonalEvent(
+      currentPayload: _payload,
+      event: event,
     );
+    if (identical(nextPayload, _payload)) return;
+
+    _payload = nextPayload;
     if (_isDisposed) return;
 
     _isLoadingLocalCache = false;
@@ -322,13 +287,9 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> toggleDone(String id) async {
-    _payload = await _persistPayload(
-      _payload.copyWith(
-        personalEvents: _payload.personalEvents.map((event) {
-          if (event.id != id) return event;
-          return event.copyWith(isDone: !event.isDone);
-        }).toList(),
-      ),
+    _payload = await _eventMutationService.toggleDone(
+      currentPayload: _payload,
+      id: id,
     );
     if (_isDisposed) return;
 
@@ -339,31 +300,7 @@ class HomeController extends ChangeNotifier {
   Future<AttachmentOpenResult> openAttachment(
     EventAttachment attachment,
   ) async {
-    try {
-      final localBytes = await _attachmentStorageService.readAttachmentBytes(
-        attachment,
-      );
-      final bytes =
-          localBytes ??
-          (attachment.bytesBase64 == null
-              ? await _cloudSyncService.downloadAttachmentBytes(attachment)
-              : base64Decode(attachment.bytesBase64!));
-      final opened = await openAttachmentFile(
-        fileName: attachment.name,
-        localPath: kIsWeb ? null : attachment.path,
-        bytes: bytes,
-      );
-      if (opened) {
-        return const AttachmentOpenResult(didOpen: true);
-      }
-    } catch (_) {
-      // Fall through to a friendly failure result below.
-    }
-
-    return const AttachmentOpenResult(
-      didOpen: false,
-      message: 'Không thể mở tệp đính kèm. Vui lòng thử lại.',
-    );
+    return _eventMutationService.openAttachment(attachment);
   }
 
   Future<HomeActionResult> emailAuth(EmailAuthResult result) {
@@ -379,7 +316,7 @@ class HomeController extends ChangeNotifier {
   }
 
   Future<void> _loadLocalCache() async {
-    final cached = await _localCacheService.load();
+    final cached = await _dashboardPersistenceService.loadLocalCache();
     if (_isDisposed) return;
 
     if (cached == null) {
@@ -389,190 +326,30 @@ class HomeController extends ChangeNotifier {
     }
 
     _payload = cached;
-    _selectedDate = _selectedDateForPayload(cached, _today);
+    _selectedDate = _dashboardPersistenceService.selectedDateForPayload(
+      cached,
+      _today,
+    );
     _isLoadingLocalCache = false;
     notifyListeners();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_isDisposed) return;
-      _jumpDayStripToDate(_selectedDate);
-    });
   }
 
   Future<void> _restoreAndSyncCloudState() async {
-    var nextPayload = _payload;
-    DateTime? nextSelectedDate;
-
-    try {
-      final remotePayload = await _cloudSyncService.fetchSyncCache();
-      if (_shouldUseRemotePayload(_payload, remotePayload)) {
-        nextPayload = remotePayload!;
-        nextSelectedDate = _selectedDateForPayload(nextPayload, _selectedDate);
-      }
-    } catch (_) {
-      // Keep local-first experience if cloud read fails.
-    }
-
-    _payload = await _persistPayload(nextPayload);
+    final restoreResult = await _dashboardPersistenceService
+        .restoreAndSyncCloudState(
+          currentPayload: _payload,
+          fallbackSelectedDate: _selectedDate,
+        );
     if (_isDisposed) return;
 
-    _selectedDate = nextSelectedDate ?? _selectedDate;
+    _payload = restoreResult.payload;
+    _selectedDate = restoreResult.selectedDate ?? _selectedDate;
     _isLoadingLocalCache = false;
     notifyListeners();
-  }
-
-  Future<LocalCachePayload> _persistPayload(LocalCachePayload payload) async {
-    await _localCacheService.save(payload);
-    await _refreshDeviceState(payload);
-
-    final syncedPayload = await _syncPayloadToCloud(payload);
-    await _localCacheService.save(syncedPayload);
-    return syncedPayload;
-  }
-
-  Future<void> _refreshDeviceState(LocalCachePayload payload) async {
-    final events = [...payload.syncedEvents, ...payload.personalEvents]
-      ..sort((a, b) => a.start.compareTo(b.start));
-
-    try {
-      await NotificationService.instance.rescheduleForEvents(events);
-    } catch (_) {
-      // Notifications are best-effort on unsupported platforms.
-    }
-
-    try {
-      await _widgetSyncService.updateTodayWidget(
-        profile: payload.profile,
-        events: events,
-      );
-    } catch (_) {
-      // Widget sync is also best-effort.
-    }
-  }
-
-  Future<LocalCachePayload> _syncPayloadToCloud(
-    LocalCachePayload payload,
-  ) async {
-    final updatedSyncedEvents = await _uploadMissingAttachments(
-      payload.syncedEvents,
-    );
-    final updatedPersonalEvents = await _uploadMissingAttachments(
-      payload.personalEvents,
-    );
-    final syncedPayload = payload.copyWith(
-      syncedEvents: updatedSyncedEvents,
-      personalEvents: updatedPersonalEvents,
-    );
-
-    for (final event in updatedSyncedEvents) {
-      await _cloudSyncService.upsertNote(event);
-    }
-    for (final event in updatedPersonalEvents) {
-      await _cloudSyncService.upsertNote(event);
-      await _cloudSyncService.upsertTask(event);
-    }
-
-    await _cloudSyncService.saveSyncCache(syncedPayload);
-    return syncedPayload;
-  }
-
-  Future<List<StudentEvent>> _uploadMissingAttachments(
-    List<StudentEvent> events,
-  ) async {
-    final updatedEvents = <StudentEvent>[];
-    for (final event in events) {
-      final uploaded = <EventAttachment>[];
-      for (final attachment in event.attachments) {
-        uploaded.add(
-          await _cloudSyncService.uploadAttachment(
-            attachment: attachment,
-            eventId: event.id,
-          ),
-        );
-      }
-      updatedEvents.add(event.copyWith(attachments: uploaded));
-    }
-    return updatedEvents;
-  }
-
-  LocalCachePayload _payloadFromSnapshot(
-    dynamic snapshot,
-    LocalCachePayload currentPayload,
-  ) {
-    final currentUsername = currentPayload.profile?.username.trim();
-    final isDifferentStudent =
-        currentUsername != null &&
-        currentUsername.isNotEmpty &&
-        currentUsername != snapshot.profile.username.trim();
-
-    return LocalCachePayload(
-      profile: snapshot.profile,
-      grades: snapshot.grades,
-      curriculumSubjects: snapshot.curriculumSubjects,
-      curriculumRawItems: snapshot.curriculumRawItems,
-      syncedEvents: snapshot.events,
-      personalEvents: isDifferentStudent
-          ? const []
-          : currentPayload.personalEvents,
-      lastSyncedAt: snapshot.syncedAt,
-    );
-  }
-
-  bool _shouldUseRemotePayload(
-    LocalCachePayload localPayload,
-    LocalCachePayload? remotePayload,
-  ) {
-    if (remotePayload == null) return false;
-    if (!localPayload.hasData) return true;
-
-    final remoteTime = remotePayload.lastSyncedAt;
-    final localTime = localPayload.lastSyncedAt;
-    if (remoteTime == null) return false;
-    if (localTime == null) return true;
-    return remoteTime.isAfter(localTime);
-  }
-
-  DateTime _selectedDateForPayload(
-    LocalCachePayload payload,
-    DateTime fallback,
-  ) {
-    final lastSyncedAt = payload.lastSyncedAt;
-    if (lastSyncedAt == null) {
-      return _normalizedDate(fallback);
-    }
-    return _normalizedDate(lastSyncedAt);
   }
 
   DateTime _normalizedDate(DateTime value) {
     return DateTime(value.year, value.month, value.day);
-  }
-
-  void _jumpDayStripToDate(DateTime date) {
-    if (!dayStripController.hasClients) return;
-    final offset = HomeCalendarUtils.stripOffsetForDate(
-      today: _today,
-      pastDayRange: pastDayRange,
-      date: date,
-      itemExtent: dayTileWidth + dayTileSpacing,
-    );
-    dayStripController.jumpTo(
-      offset.clamp(0.0, dayStripController.position.maxScrollExtent),
-    );
-  }
-
-  void _scrollDayStripToDate(DateTime date) {
-    if (!dayStripController.hasClients) return;
-    final offset = HomeCalendarUtils.stripOffsetForDate(
-      today: _today,
-      pastDayRange: pastDayRange,
-      date: date,
-      itemExtent: dayTileWidth + dayTileSpacing,
-    );
-    dayStripController.animateTo(
-      offset.clamp(0.0, dayStripController.position.maxScrollExtent),
-      duration: const Duration(milliseconds: 260),
-      curve: Curves.easeOutCubic,
-    );
   }
 
   @override
@@ -580,7 +357,6 @@ class HomeController extends ChangeNotifier {
     _isDisposed = true;
     _syncReminderTimer?.cancel();
     _authSubscription?.cancel();
-    dayStripController.dispose();
     super.dispose();
   }
 }

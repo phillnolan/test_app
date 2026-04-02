@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/home_flow_models.dart';
 import '../../models/event_attachment.dart';
+import '../../models/home_action_result.dart';
 import '../../models/student_event.dart';
 import '../../utils/home_calendar_utils.dart';
 import '../grades/grades_page.dart';
@@ -25,17 +26,32 @@ class HomeShell extends StatefulWidget {
 }
 
 class _HomeShellState extends State<HomeShell> {
+  static const double _dayTileWidth = 72;
+  static const double _dayTileSpacing = 10;
+
   late final HomeController _controller = widget.controller ?? HomeController();
   late final bool _ownsController = widget.controller == null;
+  late final ScrollController _dayStripController = ScrollController();
+  late DateTime _lastSelectedDate;
+  late bool _wasLoadingLocalCache;
 
   @override
   void initState() {
     super.initState();
+    _lastSelectedDate = _normalizedDate(_controller.selectedDate);
+    _wasLoadingLocalCache = _controller.isLoadingLocalCache;
+    _controller.addListener(_handleControllerChanged);
     _controller.initialize();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _jumpDayStripToDate(_controller.selectedDate);
+    });
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_handleControllerChanged);
+    _dayStripController.dispose();
     if (_ownsController) {
       _controller.dispose();
     }
@@ -113,10 +129,10 @@ class _HomeShellState extends State<HomeShell> {
       isLoadingLocalCache: _controller.isLoadingLocalCache,
       isLoadingWeather: _controller.isLoadingWeather,
       showSyncReminder: _controller.showSyncReminder,
-      dayStripController: _controller.dayStripController,
+      dayStripController: _dayStripController,
       dayStripItemCount:
           HomeController.pastDayRange + HomeController.futureDayRange + 1,
-      dayTileSpacing: HomeController.dayTileSpacing,
+      dayTileSpacing: _dayTileSpacing,
       dateForIndex: _controller.dateForIndex,
       indicatorsForDate: _controller.indicatorsForDate,
       isSameDate: HomeCalendarUtils.isSameDate,
@@ -131,7 +147,7 @@ class _HomeShellState extends State<HomeShell> {
       onAddTask: () {
         unawaited(_openTaskEditor());
       },
-      onSelectDate: _controller.selectDate,
+      onSelectDate: _handleSelectDate,
       onEditEvent: (event) {
         unawaited(_openNoteEditor(event));
       },
@@ -214,7 +230,7 @@ class _HomeShellState extends State<HomeShell> {
     );
 
     if (picked == null || !mounted) return;
-    _controller.selectDate(picked);
+    _handleSelectDate(picked);
   }
 
   Future<void> _openSyncDialog(BuildContext context) async {
@@ -228,7 +244,11 @@ class _HomeShellState extends State<HomeShell> {
     if (!mounted) return;
 
     final result = await _controller.syncSchoolData(credentials);
-    if (!mounted || result.message == null) return;
+    if (!mounted) return;
+    if (result.isSuccess) {
+      _animateDayStripToDate(_controller.selectedDate);
+    }
+    if (result.message == null) return;
 
     _showSnackBar(result.message!);
   }
@@ -244,6 +264,8 @@ class _HomeShellState extends State<HomeShell> {
     if (result == null || !mounted) return;
 
     await _controller.addTask(result);
+    if (!mounted) return;
+    _animateDayStripToDate(_controller.selectedDate);
   }
 
   Future<void> _openNoteEditor(StudentEvent event) async {
@@ -316,5 +338,59 @@ class _HomeShellState extends State<HomeShell> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _handleControllerChanged() {
+    final selectedDate = _normalizedDate(_controller.selectedDate);
+    final localCacheJustLoaded =
+        _wasLoadingLocalCache && !_controller.isLoadingLocalCache;
+    _wasLoadingLocalCache = _controller.isLoadingLocalCache;
+
+    if (localCacheJustLoaded &&
+        !HomeCalendarUtils.isSameDate(_lastSelectedDate, selectedDate)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _jumpDayStripToDate(selectedDate);
+      });
+    }
+
+    _lastSelectedDate = selectedDate;
+  }
+
+  void _handleSelectDate(DateTime date) {
+    _controller.selectDate(date);
+    _animateDayStripToDate(_controller.selectedDate);
+  }
+
+  DateTime _normalizedDate(DateTime value) {
+    return DateTime(value.year, value.month, value.day);
+  }
+
+  void _jumpDayStripToDate(DateTime date) {
+    if (!_dayStripController.hasClients) return;
+    final offset = HomeCalendarUtils.stripOffsetForDate(
+      today: _controller.today,
+      pastDayRange: HomeController.pastDayRange,
+      date: date,
+      itemExtent: _dayTileWidth + _dayTileSpacing,
+    );
+    _dayStripController.jumpTo(
+      offset.clamp(0.0, _dayStripController.position.maxScrollExtent),
+    );
+  }
+
+  void _animateDayStripToDate(DateTime date) {
+    if (!_dayStripController.hasClients) return;
+    final offset = HomeCalendarUtils.stripOffsetForDate(
+      today: _controller.today,
+      pastDayRange: HomeController.pastDayRange,
+      date: date,
+      itemExtent: _dayTileWidth + _dayTileSpacing,
+    );
+    _dayStripController.animateTo(
+      offset.clamp(0.0, _dayStripController.position.maxScrollExtent),
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeOutCubic,
+    );
   }
 }

@@ -7,6 +7,7 @@ import 'package:sinhvien_app/controllers/account_auth_controller.dart';
 import 'package:sinhvien_app/controllers/home_controller.dart';
 import 'package:sinhvien_app/controllers/home_flow_models.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
+import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';
 import 'package:sinhvien_app/models/student_event.dart';
 import 'package:sinhvien_app/models/student_profile.dart';
@@ -35,6 +36,29 @@ void main() {
     expect(find.text('Điểm'), findsOneWidget);
     expect(find.text('Đồng bộ'), findsOneWidget);
     expect(find.text('Tài khoản'), findsOneWidget);
+
+    controller.dispose();
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('home shell lets the view own date selection wiring', (
+    WidgetTester tester,
+  ) async {
+    final controller = _buildController();
+    final tomorrow = controller.dateForIndex(HomeController.pastDayRange + 1);
+
+    await tester.pumpWidget(
+      MaterialApp(home: HomeShell(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('${tomorrow.day}').first);
+    await tester.pumpAndSettle();
+
+    expect(
+      controller.selectedDate,
+      DateTime(tomorrow.year, tomorrow.month, tomorrow.day),
+    );
 
     controller.dispose();
     await tester.pumpWidget(const SizedBox.shrink());
