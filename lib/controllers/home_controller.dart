@@ -105,7 +105,7 @@ class HomeController extends ChangeNotifier {
   bool _isSigningOut = false;
   bool _showCloudRestoreWarning = false;
   bool _showSyncReminder = true;
-  int _currentTab = 0;
+  int _currentTab = 2;
   User? _signedInUser;
   String? _linkedStudentUsername;
   StudentSyncCredentials? _savedSyncCredentials;

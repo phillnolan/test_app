@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/current_tuition.dart';
 import '../models/grade_item.dart';
 import '../models/program_subject.dart';
 import '../models/school_sync_snapshot.dart';
@@ -40,6 +41,10 @@ class SchoolApiService {
       '$_baseHost/api/studentsubjectmark/getListMarkDetailStudent',
       headers,
     );
+    final tuitionFuture = _getJsonWithRetry(
+      '$_baseHost/api/student/viewstudentpayablebyLoginUser',
+      headers,
+    );
     final timetableFuture = _getJsonWithRetry(
       '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
       headers,
@@ -57,6 +62,7 @@ class SchoolApiService {
       curriculumPayloads.add(curriculumJson);
     }
     final marksJson = await marksFuture;
+    final tuitionJson = await tuitionFuture;
     final timetableJson = await timetableFuture;
     final examsJson = await examsFuture;
 
@@ -66,6 +72,7 @@ class SchoolApiService {
     );
 
     final grades = _parseGrades(marksJson);
+    final currentTuition = _parseCurrentTuition(tuitionJson);
     final curriculumRawItems = _flattenApiList(curriculumPayloads)
         .whereType<Map<String, dynamic>>()
         .map((item) => Map<String, dynamic>.from(item))
@@ -78,6 +85,7 @@ class SchoolApiService {
 
     return SchoolSyncSnapshot(
       profile: profile,
+      currentTuition: currentTuition,
       grades: grades,
       curriculumSubjects: curriculumSubjects,
       curriculumRawItems: curriculumRawItems,
@@ -164,7 +172,9 @@ class SchoolApiService {
         .get(Uri.parse(url), headers: headers)
         .timeout(_requestTimeout);
     if (response.statusCode >= 400) {
-      throw SchoolApiException('Không tải được dữ liệu từ cổng trường.');
+      throw SchoolApiException(
+        'Không tải được dữ liệu từ cổng trường.',
+      );
     }
     return _decodeJson(_decodeBody(response));
   }
@@ -188,7 +198,9 @@ class SchoolApiService {
       }
     }
     throw lastError ??
-        SchoolApiException('Không tải được dữ liệu từ cổng trường.');
+        SchoolApiException(
+          'Không tải được dữ liệu từ cổng trường.',
+        );
   }
 
   List<int> _resolveCurriculumProgramIds(dynamic studentJson) {
@@ -222,6 +234,76 @@ class SchoolApiService {
     ).whereType<Map<String, dynamic>>().map(GradeItem.fromApi).toList();
   }
 
+  CurrentTuition? _parseCurrentTuition(dynamic data) {
+    final map = data is Map<String, dynamic> ? data : const <String, dynamic>{};
+    final payables = _normalizeList(
+      map['receiveAbleNotCompleteDtos'],
+    ).whereType<Map<String, dynamic>>().toList();
+    if (payables.isEmpty) {
+      return null;
+    }
+
+    final current = payables.last;
+
+    final semesterLabel = current['semester']?['schoolYear']?['name']
+        ?.toString()
+        .trim();
+    final semesterCode =
+        current['semester']?['semesterName']?.toString().trim() ??
+        current['semester']?['semesterCode']?.toString().trim() ??
+        '';
+    final registerPeriodLabel =
+        current['registerPeriod']?['name']?.toString().trim() ?? 'Học kỳ chính';
+    final details = payables
+        .expand(
+          (item) => _normalizeList(item['details']).whereType<Map<String, dynamic>>(),
+        )
+        .map(_parseTuitionSubjectCharge)
+        .where((item) => item.subjectName.isNotEmpty && item.amount > 0)
+        .toList()
+      ..sort((a, b) => b.amount.compareTo(a.amount));
+
+    final totalAmount = _toDouble(map['totalReceiveAble']);
+    final paidAmount = _toDouble(map['totalReceived']);
+    final outstandingAmount = _toDouble(map['totalReceiveAbleNotComplete']);
+
+    return CurrentTuition(
+      semesterLabel: [
+        if (semesterCode.isNotEmpty) semesterCode,
+        if (semesterLabel != null && semesterLabel.isNotEmpty) semesterLabel,
+      ].join(' • '),
+      registerPeriodLabel: registerPeriodLabel,
+      totalAmount: totalAmount,
+      paidAmount: paidAmount,
+      outstandingAmount: outstandingAmount,
+      items: details,
+    );
+  }
+
+  TuitionSubjectCharge _parseTuitionSubjectCharge(Map<String, dynamic> item) {
+    final rawNote = item['note']?.toString().trim() ?? '';
+    final cleanedNote = rawNote.replaceFirst(
+      RegExp(r'^Học phí môn\s+', caseSensitive: false),
+      '',
+    );
+    final splitIndex = cleanedNote.lastIndexOf('-');
+    final subjectName = splitIndex > 0
+        ? cleanedNote.substring(0, splitIndex).trim()
+        : cleanedNote;
+    final subjectCode = splitIndex > 0
+        ? cleanedNote.substring(splitIndex + 1).trim()
+        : null;
+
+    return TuitionSubjectCharge(
+      subjectName: subjectName,
+      subjectCode: subjectCode == null || subjectCode.isEmpty
+          ? null
+          : subjectCode,
+      amount: _toDouble(item['totalAmount'] ?? item['amount']),
+      note: rawNote.isEmpty ? null : rawNote,
+    );
+  }
+
   List<ProgramSubject> _parseCurriculum(dynamic data) {
     final seen = <String>{};
     return _flattenApiList(data)
@@ -250,7 +332,9 @@ class SchoolApiService {
       data,
     ).whereType<Map<String, dynamic>>()) {
       final title =
-          (rawCourse['subjectCode'] ?? rawCourse['subjectName'] ?? 'Lịch học')
+          (rawCourse['subjectCode'] ??
+                  rawCourse['subjectName'] ??
+                  'Lịch học')
               .toString();
       final teacher =
           rawCourse['courseSubject']?['teacher']?['displayName']?.toString() ??
@@ -299,7 +383,7 @@ class SchoolApiService {
               type: StudentEventType.classSchedule,
               color: const Color(0xFFDDE7FF),
               location: room,
-              sourceNote: noteParts.isEmpty ? null : noteParts.join(' • '),
+              sourceNote: noteParts.isEmpty ? null : noteParts.join(' â€¢ '),
               referenceCode: null,
             ),
           );
@@ -462,6 +546,13 @@ class SchoolApiService {
       return DateTime.fromMillisecondsSinceEpoch(millis);
     }
     return DateTime.tryParse(text);
+  }
+
+  double _toDouble(dynamic value) {
+    if (value is num) {
+      return value.toDouble();
+    }
+    return double.tryParse(value?.toString() ?? '') ?? 0;
   }
 
   TimeOfDay? _parseClock(dynamic displayTime) {

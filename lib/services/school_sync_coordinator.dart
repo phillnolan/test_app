@@ -51,6 +51,7 @@ class SchoolSyncCoordinator {
 
     final basePayload = LocalCachePayload(
       profile: snapshot.profile,
+      currentTuition: snapshot.currentTuition,
       grades: snapshot.grades,
       curriculumSubjects: snapshot.curriculumSubjects,
       curriculumRawItems: snapshot.curriculumRawItems,

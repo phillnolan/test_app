@@ -1,3 +1,4 @@
+import 'current_tuition.dart';
 import 'grade_item.dart';
 import 'program_subject.dart';
 import 'student_event.dart';
@@ -6,6 +7,7 @@ import 'student_profile.dart';
 class LocalCachePayload {
   const LocalCachePayload({
     this.profile,
+    this.currentTuition,
     this.grades = const [],
     this.curriculumSubjects = const [],
     this.curriculumRawItems = const [],
@@ -15,6 +17,7 @@ class LocalCachePayload {
   });
 
   final StudentProfile? profile;
+  final CurrentTuition? currentTuition;
   final List<GradeItem> grades;
   final List<ProgramSubject> curriculumSubjects;
   final List<Map<String, dynamic>> curriculumRawItems;
@@ -24,12 +27,14 @@ class LocalCachePayload {
 
   bool get hasData =>
       profile != null ||
+      currentTuition != null ||
       grades.isNotEmpty ||
       syncedEvents.isNotEmpty ||
       personalEvents.isNotEmpty;
 
   LocalCachePayload copyWith({
     StudentProfile? profile,
+    CurrentTuition? currentTuition,
     List<GradeItem>? grades,
     List<ProgramSubject>? curriculumSubjects,
     List<Map<String, dynamic>>? curriculumRawItems,
@@ -39,6 +44,7 @@ class LocalCachePayload {
   }) {
     return LocalCachePayload(
       profile: profile ?? this.profile,
+      currentTuition: currentTuition ?? this.currentTuition,
       grades: grades ?? this.grades,
       curriculumSubjects: curriculumSubjects ?? this.curriculumSubjects,
       curriculumRawItems: curriculumRawItems ?? this.curriculumRawItems,
@@ -51,6 +57,7 @@ class LocalCachePayload {
   Map<String, dynamic> toJson() {
     return {
       'profile': profile?.toJson(),
+      'currentTuition': currentTuition?.toJson(),
       'grades': grades.map((item) => item.toJson()).toList(),
       'curriculumSubjects': curriculumSubjects
           .map((item) => item.toJson())
@@ -67,6 +74,13 @@ class LocalCachePayload {
       profile: json['profile'] is Map
           ? StudentProfile.fromJson(
               (json['profile'] as Map).map(
+                (key, value) => MapEntry(key.toString(), value),
+              ),
+            )
+          : null,
+      currentTuition: json['currentTuition'] is Map
+          ? CurrentTuition.fromJson(
+              (json['currentTuition'] as Map).map(
                 (key, value) => MapEntry(key.toString(), value),
               ),
             )

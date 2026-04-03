@@ -1,3 +1,4 @@
+import 'current_tuition.dart';
 import 'grade_item.dart';
 import 'program_subject.dart';
 import 'student_event.dart';
@@ -6,6 +7,7 @@ import 'student_profile.dart';
 class SchoolSyncSnapshot {
   const SchoolSyncSnapshot({
     required this.profile,
+    required this.currentTuition,
     required this.grades,
     required this.curriculumSubjects,
     required this.curriculumRawItems,
@@ -14,6 +16,7 @@ class SchoolSyncSnapshot {
   });
 
   final StudentProfile profile;
+  final CurrentTuition? currentTuition;
   final List<GradeItem> grades;
   final List<ProgramSubject> curriculumSubjects;
   final List<Map<String, dynamic>> curriculumRawItems;
@@ -23,6 +26,7 @@ class SchoolSyncSnapshot {
   Map<String, dynamic> toJson() {
     return {
       'profile': profile.toJson(),
+      'currentTuition': currentTuition?.toJson(),
       'grades': grades.map((item) => item.toJson()).toList(),
       'curriculumSubjects': curriculumSubjects
           .map((item) => item.toJson())
@@ -40,6 +44,13 @@ class SchoolSyncSnapshot {
           (key, value) => MapEntry(key.toString(), value),
         ),
       ),
+      currentTuition: json['currentTuition'] is Map
+          ? CurrentTuition.fromJson(
+              (json['currentTuition'] as Map).map(
+                (key, value) => MapEntry(key.toString(), value),
+              ),
+            )
+          : null,
       grades: ((json['grades'] as List?) ?? const [])
           .whereType<Map>()
           .map(

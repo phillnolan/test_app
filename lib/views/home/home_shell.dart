@@ -11,7 +11,9 @@ import '../../services/school_api_service.dart';
 import '../../utils/home_calendar_utils.dart';
 import '../grades/grades_page.dart';
 import 'pages/account_page.dart';
+import 'pages/quiz_page.dart';
 import 'pages/schedule_page.dart';
+import 'pages/tuition_page.dart';
 import 'widgets/home_common_widgets.dart';
 import 'widgets/home_dialogs.dart';
 import 'widgets/home_editors.dart';
@@ -64,8 +66,10 @@ class _HomeShellState extends State<HomeShell> {
       listenable: _controller,
       builder: (context, _) {
         final pages = <Widget>[
-          _buildSchedulePage(context),
           _buildGradesPage(),
+          _buildQuizPage(),
+          _buildSchedulePage(context),
+          _buildTuitionPage(),
           _buildAccountPage(),
         ];
 
@@ -78,14 +82,24 @@ class _HomeShellState extends State<HomeShell> {
             onDestinationSelected: _controller.setCurrentTab,
             destinations: const [
               NavigationDestination(
+                icon: Icon(Icons.school_outlined),
+                selectedIcon: Icon(Icons.school),
+                label: 'Điểm',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.quiz_outlined),
+                selectedIcon: Icon(Icons.quiz),
+                label: 'Quiz',
+              ),
+              NavigationDestination(
                 icon: Icon(Icons.calendar_today_outlined),
                 selectedIcon: Icon(Icons.calendar_today),
                 label: 'Lịch',
               ),
               NavigationDestination(
-                icon: Icon(Icons.school_outlined),
-                selectedIcon: Icon(Icons.school),
-                label: 'Điểm',
+                icon: Icon(Icons.receipt_long_outlined),
+                selectedIcon: Icon(Icons.receipt_long),
+                label: 'Học phí',
               ),
               NavigationDestination(
                 icon: Icon(Icons.person_outline),
@@ -94,7 +108,7 @@ class _HomeShellState extends State<HomeShell> {
               ),
             ],
           ),
-          floatingActionButton: _controller.currentTab == 0
+          floatingActionButton: _controller.currentTab == 2
               ? FloatingActionButton(
                   onPressed: () {
                     unawaited(_openTaskEditor());
@@ -137,7 +151,7 @@ class _HomeShellState extends State<HomeShell> {
       onOpenMonthPicker: () {
         unawaited(_openMonthPicker(context));
       },
-      onOpenSyncTab: () => _controller.setCurrentTab(2),
+      onOpenSyncTab: () => _controller.setCurrentTab(4),
       onAddTask: () {
         unawaited(_openTaskEditor());
       },
@@ -171,12 +185,24 @@ class _HomeShellState extends State<HomeShell> {
       curriculumRawItems: _controller.payload.curriculumRawItems,
       emptyState: EmptyStateCard(
         icon: Icons.school_outlined,
-        title: 'Chưa có bảng điểm',
+        title: 'Chưa đông bộ dữ liệu',
         description:
             'Hãy chuyển sang trang Tài khoản để đăng nhập và đồng bộ dữ liệu mới nhất.',
         actionLabel: 'Mở tài khoản',
-        onAction: () => _controller.setCurrentTab(2),
+        onAction: () => _controller.setCurrentTab(4),
       ),
+    );
+  }
+
+  Widget _buildQuizPage() {
+    return const QuizPage();
+  }
+
+  Widget _buildTuitionPage() {
+    return TuitionPage(
+      profile: _controller.payload.profile,
+      currentTuition: _controller.payload.currentTuition,
+      onOpenAccountTab: () => _controller.setCurrentTab(4),
     );
   }
 
@@ -330,6 +356,7 @@ class _HomeShellState extends State<HomeShell> {
       if (!mounted) return;
 
       if (result.isSuccess) {
+        _controller.setCurrentTab(2);
         _animateDayStripToDate(_controller.selectedDate);
       }
       if (result.message != null) {
@@ -343,7 +370,9 @@ class _HomeShellState extends State<HomeShell> {
       debugPrint('HomeShell: sync flow failed: $error');
       debugPrintStack(stackTrace: stackTrace);
       if (!mounted) return;
-      _showSnackBar('Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.');
+      _showSnackBar(
+        'Đã có lỗi xảy ra trong quá trình đồng bộ. Vui lòng thử lại sau.',
+      );
     } finally {
       _controller.setSyncInProgress(false);
     }
@@ -460,7 +489,7 @@ class _HomeShellState extends State<HomeShell> {
       builder: (context) => AlertDialog(
         title: const Text('Xác nhận đăng xuất?'),
         content: const Text(
-          'Bạn sẽ đăng xuất khỏi tài khoản ứng dụng và toàn bộ dữ liệu đang lưu trên thiết bị này sẽ được dọn sạch.',
+          'Bạn sẽ đăng xuất khỏi tài khoản ứng dụng và toàn bộ dữ liệu đang lưu trên thiết bị này sẽ được dọn dẹp.',
         ),
         actions: [
           TextButton(
@@ -522,7 +551,7 @@ class _HomeShellState extends State<HomeShell> {
     AccountLinkDecision decision, {
     required bool isSyncFlow,
   }) {
-    final target = decision.targetStudentUsername ?? 'sinh viên này';
+    final target = decision.targetStudentUsername ?? 'sinh viên mới';
 
     if (decision.action == AccountLinkAction.linkStudent) {
       final content = isSyncFlow
@@ -549,8 +578,8 @@ class _HomeShellState extends State<HomeShell> {
 
     final current = decision.currentLinkedStudentUsername ?? 'sinh viên khác';
     final content = isSyncFlow
-        ? 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu tiếp tục, toàn bộ ghi chú, ảnh và tệp của sinh viên cũ trên cloud sẽ bị xóa, sau đó tài khoản sẽ được liên kết với "$target".'
-        : 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu xác nhận, toàn bộ ghi chú, ảnh và tệp của sinh viên cũ trên cloud sẽ bị xóa để chuyển sang liên kết với "$target".';
+        ? 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu tiếp tục, toàn bộ ghi chú, ảnh và tập của sinh viên cũ trên cloud sẽ bị xóa, sau đó tài khoản sẽ được liên kết với "$target".'
+        : 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu xác nhận, toàn bộ ghi chú, ảnh và tập của sinh viên cũ trên cloud sẽ bị xóa để chuyển sang liên kết với "$target".';
 
     return showDialog<bool>(
       context: context,
@@ -585,7 +614,7 @@ class _HomeShellState extends State<HomeShell> {
         title: const Text('Đổi sinh viên đồng bộ?'),
         content: Text(
           'Thiết bị đang có dữ liệu của "$currentStudent". '
-          'Nếu đồng bộ với "$nextStudent", dữ liệu hiện tại sẽ mất '
+          'Nếu đồng bộ với "$nextStudent", dữ liệu hiện tại sẽ bị mất '
           '(bạn nên đổi sang một tài khoản khác để đồng bộ).',
         ),
         actions: [
