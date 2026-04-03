@@ -26,11 +26,13 @@ enum _EditorTool { crop, draw, text }
 enum _CropInteraction { move, resize }
 
 class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
+  static const Rect _defaultCropRect = Rect.fromLTWH(0.1, 0.1, 0.8, 0.8);
+
   Uint8List? _displayBytes;
   ui.Image? _previewImage;
   bool _isLoading = true;
   _EditorTool _tool = _EditorTool.crop;
-  Rect _cropRect = const Rect.fromLTWH(0.1, 0.1, 0.8, 0.8);
+  Rect _cropRect = _defaultCropRect;
   final List<ImageOverlayAction> _actions = [];
   ImageStrokeAction? _activeStroke;
   final TextEditingController _textController = TextEditingController();
@@ -86,30 +88,30 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
 
     if (_displayBytes == null || _previewImage == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Chinh sua anh')),
-        body: const Center(child: Text('Khong mo duoc anh de chinh sua.')),
+        appBar: AppBar(title: const Text('Chỉnh sửa ảnh')),
+        body: const Center(child: Text('Không thể mở ảnh để chỉnh sửa.')),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chinh sua anh'),
+        title: const Text('Chỉnh sửa ảnh'),
         actions: [
           IconButton(
-            tooltip: 'Hoan tac',
+            tooltip: 'Hoàn tác',
             onPressed: _actions.isNotEmpty || _activeStroke != null
                 ? _undoLastAction
                 : null,
             icon: const Icon(Icons.undo),
           ),
           IconButton(
-            tooltip: 'Xoa muc dang chon',
+            tooltip: 'Xóa mục đang chọn',
             onPressed: _selectedActionIndex == null
                 ? null
                 : _deleteSelectedAction,
             icon: const Icon(Icons.delete_outline),
           ),
-          TextButton(onPressed: _saveAttachment, child: const Text('Luu')),
+          TextButton(onPressed: _saveAttachment, child: const Text('Lưu')),
         ],
       ),
       body: SafeArea(
@@ -206,12 +208,12 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                     ButtonSegment(
                       value: _EditorTool.draw,
                       icon: Icon(Icons.draw_outlined),
-                      label: Text('Ve'),
+                      label: Text('Vẽ'),
                     ),
                     ButtonSegment(
                       value: _EditorTool.text,
                       icon: Icon(Icons.text_fields),
-                      label: Text('Chu'),
+                      label: Text('Chữ'),
                     ),
                   ],
                   selected: {_tool},
@@ -237,7 +239,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
                       });
                     },
                     icon: const Icon(Icons.center_focus_strong),
-                    label: const Text('Dat lai khung'),
+                    label: const Text('Đặt lại khung'),
                   ),
                 ),
               ],
@@ -281,7 +283,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
               children: [
                 const Icon(Icons.brush_outlined, size: 18),
                 const SizedBox(width: 8),
-                Text('Do day: ${_strokeWidth.toStringAsFixed(0)}'),
+                Text('Độ dày: ${_strokeWidth.toStringAsFixed(0)}'),
               ],
             ),
             Slider(
@@ -297,8 +299,8 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
             TextField(
               controller: _textController,
               decoration: const InputDecoration(
-                labelText: 'Noi dung chu',
-                hintText: 'Nhap chu roi cham len anh de dat',
+                labelText: 'Nội dung chữ',
+                hintText: 'Nhập chữ rồi chạm vào ảnh để đặt',
               ),
             ),
             const SizedBox(height: 12),
@@ -306,7 +308,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
               children: [
                 const Icon(Icons.format_size, size: 18),
                 const SizedBox(width: 8),
-                Text('Co chu: ${_textSize.toStringAsFixed(0)}'),
+                Text('Cỡ chữ: ${_textSize.toStringAsFixed(0)}'),
               ],
             ),
             Slider(
@@ -320,7 +322,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
             const SizedBox(height: 4),
             const Align(
               alignment: Alignment.centerLeft,
-              child: Text('Giu va keo chu da dat de di chuyen.'),
+              child: Text('Giữ và kéo chữ đã đặt để di chuyển.'),
             ),
           ],
         ],
@@ -371,7 +373,7 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     final text = _textController.text.trim();
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Hay nhap chu truoc khi dat len anh.')),
+        const SnackBar(content: Text('Hãy nhập chữ trước khi đặt lên ảnh.')),
       );
       return;
     }
@@ -548,6 +550,34 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
       return;
     }
 
+    if (!_hasPendingEdits) {
+      Navigator.of(context).pop(widget.attachment);
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Lưu chỉnh sửa ảnh?'),
+        content: const Text(
+          'Ảnh này đã được chỉnh sửa. Bạn có muốn lưu thay đổi không?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Lưu'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
     try {
       final updated = await widget.imageEditService.renderAttachment(
         attachment: widget.attachment,
@@ -560,9 +590,23 @@ class _ImageAttachmentEditorState extends State<ImageAttachmentEditor> {
     } catch (_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Khong the luu anh da chinh sua.')),
+        const SnackBar(content: Text('Không thể lưu ảnh đã chỉnh sửa.')),
       );
     }
+  }
+
+  bool get _hasPendingEdits {
+    return !_sameRect(_cropRect, _defaultCropRect) ||
+        _actions.isNotEmpty ||
+        (_activeStroke?.points.isNotEmpty ?? false);
+  }
+
+  bool _sameRect(Rect left, Rect right) {
+    const tolerance = 0.0001;
+    return (left.left - right.left).abs() < tolerance &&
+        (left.top - right.top).abs() < tolerance &&
+        (left.right - right.right).abs() < tolerance &&
+        (left.bottom - right.bottom).abs() < tolerance;
   }
 }
 

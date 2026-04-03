@@ -70,8 +70,8 @@ class _GoalPlannerSectionState extends State<GoalPlannerSection> {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: widget.controller.setTargetGpaInput,
             decoration: InputDecoration(
-              labelText: 'GPA muc tieu he 4',
-              hintText: 'Vi du: 3.20',
+              labelText: 'GPA mục tiêu hệ 4',
+              hintText: 'Ví dụ: 3.20',
               errorText: calculation.validationError,
             ),
           ),
@@ -83,14 +83,14 @@ class _GoalPlannerSectionState extends State<GoalPlannerSection> {
             icon: const Icon(Icons.checklist_rtl_outlined),
             label: Text(
               widget.controller.guaranteedASubjectCodes.isEmpty
-                  ? 'Chon cac mon chac A'
-                  : 'Chinh danh sach chac A (${widget.controller.guaranteedASubjectCodes.length})',
+                  ? 'Chọn các môn chắc A'
+                  : 'Chỉnh danh sách chắc A (${widget.controller.guaranteedASubjectCodes.length})',
             ),
           ),
           const SizedBox(height: 12),
           if (result == null)
             Text(
-              'Nhap GPA muc tieu de xem lo trinh.',
+              'Nhập GPA mục tiêu để xem lộ trình.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurfaceVariant,
               ),
@@ -99,14 +99,14 @@ class _GoalPlannerSectionState extends State<GoalPlannerSection> {
             _GoalSummaryCard(result: result),
             const SizedBox(height: 12),
             _GoalRecommendationTile(
-              title: 'Hoc phan con lai',
+              title: 'Học phần còn lại',
               subtitle:
-                  'Giu quanh ${result.remainingBand.label4} (${result.remainingBand.letter}).',
+                  'Giữ khoảng ${result.remainingBand.label4} (${result.remainingBand.letter}).',
             ),
             if (result.retakeSuggestions.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text(
-                'Nen hoc lai toi thieu',
+                'Nên học lại tối thiểu',
                 style: Theme.of(
                   context,
                 ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
@@ -128,7 +128,7 @@ class _GoalPlannerSectionState extends State<GoalPlannerSection> {
               _GoalRecommendationTile(
                 title: result.thesisLabel,
                 subtitle:
-                    'Giu toi thieu ${result.thesisBand.label4} (${result.thesisBand.letter}).',
+                    'Giữ tối thiểu ${result.thesisBand.label4} (${result.thesisBand.letter}).',
               ),
             ],
             const SizedBox(height: 12),
@@ -217,7 +217,7 @@ class _GuaranteedASelectorDialogState
                 children: [
                   Expanded(
                     child: Text(
-                      'Chon cac mon chac A',
+                      'Chọn các môn chắc A',
                       style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.w700),
                     ),
@@ -230,7 +230,7 @@ class _GuaranteedASelectorDialogState
               ),
               const SizedBox(height: 8),
               Text(
-                'Tu chon con duoc chon $maxElectiveSelection mon.',
+                'Tự chọn còn được chọn $maxElectiveSelection môn.',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -249,7 +249,7 @@ class _GuaranteedASelectorDialogState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _SelectorSection(
-                        title: 'Bat buoc',
+                        title: 'Bắt buộc',
                         subjects: coreSubjects,
                         selectedCodes: _selectedCodes,
                         onToggle: _toggle,
@@ -268,7 +268,7 @@ class _GuaranteedASelectorDialogState
                                 electiveSelectedCount >= maxElectiveSelection) {
                               setState(() {
                                 _errorText =
-                                    'Ban chi co the chon toi da $maxElectiveSelection mon tu chon.';
+                                    'Bạn chỉ có thể chọn tối đa $maxElectiveSelection môn tự chọn.';
                               });
                               return;
                             }
@@ -285,7 +285,7 @@ class _GuaranteedASelectorDialogState
                 alignment: Alignment.centerRight,
                 child: FilledButton(
                   onPressed: () => Navigator.of(context).pop(_selectedCodes),
-                  child: const Text('Luu chon'),
+                  child: const Text('Lưu chọn'),
                 ),
               ),
             ],
@@ -406,7 +406,7 @@ class _SelectableSubjectCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${subject.credits} tin chi',
+                      '${subject.credits} tín chỉ',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -449,20 +449,20 @@ class _GoalSummaryCard extends StatelessWidget {
         children: [
           Expanded(
             child: _GoalMetric(
-              label: 'Muc tieu',
+              label: 'Mục tiêu',
               value: result.targetGpa.toStringAsFixed(2),
             ),
           ),
           Expanded(
             child: _GoalMetric(
-              label: 'Con lai',
-              value: '${result.remainingCredits} tin',
+              label: 'Còn lại',
+              value: '${result.remainingCredits} tín chỉ',
             ),
           ),
           Expanded(
             child: _GoalMetric(
-              label: 'Hoc lai',
-              value: '${result.retakeSuggestions.length} mon',
+              label: 'Học lại',
+              value: '${result.retakeSuggestions.length} môn',
             ),
           ),
         ],
@@ -565,7 +565,7 @@ class _RetakeSuggestionCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Ban dau: ${item.grade.letter}  •  Can: ${item.targetLetter}',
+            'Ban đầu: ${item.grade.letter}  •  Cần: ${item.targetLetter}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w600,

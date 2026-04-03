@@ -21,7 +21,7 @@ class GradeItem {
           (json['subject']?['subjectCode'] ?? json['subjectCode'] ?? '--')
               .toString(),
       subjectName:
-          (json['subject']?['subjectName'] ?? json['subjectName'] ?? 'Mon hoc')
+          (json['subject']?['subjectName'] ?? json['subjectName'] ?? 'Môn học')
               .toString(),
       credits: _toInt(
         json['subject']?['numberOfCredit'] ?? json['numberOfCredit'],
@@ -56,7 +56,7 @@ class GradeItem {
   factory GradeItem.fromJson(Map<String, dynamic> json) {
     return GradeItem(
       subjectCode: (json['subjectCode'] ?? '--').toString(),
-      subjectName: (json['subjectName'] ?? 'Mon hoc').toString(),
+      subjectName: (json['subjectName'] ?? 'Môn học').toString(),
       credits: _toInt(json['credits']),
       mark10: _toDouble(json['mark10']),
       mark4: _toDouble(json['mark4']),

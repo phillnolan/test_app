@@ -287,7 +287,7 @@ class _HomeShellState extends State<HomeShell> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Xoa ghi chu ca nhan?'),
+        title: const Text('Xóa ghi chú cá nhân?'),
         content: Text(
           'Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và cloud.',
         ),

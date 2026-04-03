@@ -98,9 +98,9 @@ class _GradesHeader extends StatelessWidget {
   final GradesController controller;
   final List<Map<String, dynamic>> curriculumRawItems;
 
-  static const String _title = 'Ket qua hoc tap';
+  static const String _title = 'Kết quả học tập';
   static const String _subtitle =
-      'Theo doi GPA, len muc tieu va xem toan bo chuong trinh dao tao o mot cho.';
+      'Theo dõi GPA, lập mục tiêu và xem toàn bộ chương trình đào tạo ở một chỗ.';
 
   @override
   Widget build(BuildContext context) {
@@ -183,7 +183,7 @@ class GradesHeroCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tong quan',
+            'Tổng quan',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: colorScheme.onPrimaryContainer,
             ),
@@ -198,7 +198,7 @@ class GradesHeroCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            '$gradeCount mon da co diem • $totalCredits tin chi',
+            '$gradeCount môn đã có điểm • $totalCredits tín chỉ',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: colorScheme.onPrimaryContainer,
             ),
@@ -239,7 +239,7 @@ class GradeCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  '${grade.subjectCode} • ${grade.credits} tin chi',
+                  '${grade.subjectCode} • ${grade.credits} tín chỉ',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
@@ -258,7 +258,7 @@ class GradeCard extends StatelessWidget {
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
               ),
               Text(
-                'He 4: ${grade.mark4.toStringAsFixed(1)} • ${grade.letter}',
+                'Hệ 4: ${grade.mark4.toStringAsFixed(1)} • ${grade.letter}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant,
                 ),

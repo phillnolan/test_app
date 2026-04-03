@@ -280,7 +280,7 @@ GoalPlanCalculation calculateGoalPlan({
   final targetGpa = double.tryParse(targetText);
   if (targetGpa == null || targetGpa < 0 || targetGpa > 4) {
     return const GoalPlanCalculation(
-      validationError: 'GPA muc tieu phai nam trong khoang 0.00 den 4.00',
+      validationError: 'GPA mục tiêu phải nằm trong khoảng 0.00 đến 4.00',
     );
   }
 
@@ -332,7 +332,7 @@ GoalPlanCalculation calculateGoalPlan({
         remainingBand: remainingBand,
         thesisBand: MarkBand.fromScale4(3.0),
         note:
-            'Giu cac mon con lai o muc ${remainingBand.letter}, chi hoc lai ${retakeSuggestions.length} mon va uu tien cac mon D truoc.',
+            'Giữ các môn còn lại ở mức ${remainingBand.letter}, chỉ học lại ${retakeSuggestions.length} môn và ưu tiên các môn D trước.',
         retakeSuggestions: retakeSuggestions,
         guaranteedASelections: guaranteedASelections,
         thesisLabel: defaults.thesisLabel,
@@ -349,8 +349,8 @@ GoalPlanCalculation calculateGoalPlan({
       remainingBand: MarkBand.fromScale4(3.0),
       thesisBand: MarkBand.fromScale4(3.0),
       note: retakeSuggestions.isEmpty
-          ? 'Co the dat muc tieu ma khong can hoc lai, chi can giu cac mon con lai o muc B.'
-          : 'Co the dat muc tieu voi so mon hoc lai toi thieu, uu tien xu ly cac mon D truoc.',
+          ? 'Có thể đạt mục tiêu mà không cần học lại, chỉ cần giữ các môn còn lại ở mức B.'
+          : 'Có thể đạt mục tiêu với số môn học lại tối thiểu, ưu tiên xử lý các môn D trước.',
       retakeSuggestions: retakeSuggestions,
       guaranteedASelections: guaranteedASelections,
       thesisLabel: defaults.thesisLabel,

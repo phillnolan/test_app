@@ -20,7 +20,7 @@ class CurriculumDialogButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton.filledTonal(
-      tooltip: 'Chuong trinh dao tao',
+      tooltip: 'Chương trình đào tạo',
       style: IconButton.styleFrom(
         foregroundColor: foregroundColor,
         backgroundColor: backgroundColor,
@@ -81,7 +81,7 @@ class _CurriculumSubjectsDialogState extends State<CurriculumSubjectsDialog> {
                     children: [
                       Expanded(
                         child: Text(
-                          'Chuong trinh dao tao',
+                          'Chương trình đào tạo',
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.w800),
                         ),
@@ -119,7 +119,7 @@ class _CurriculumSubjectsDialogState extends State<CurriculumSubjectsDialog> {
                   const SizedBox(height: 18),
                   Expanded(
                     child: subjects.isEmpty
-                        ? const Center(child: Text('Chua co du lieu'))
+                        ? const Center(child: Text('Chưa có dữ liệu'))
                         : LayoutBuilder(
                             builder: (context, constraints) {
                               final isNarrow = constraints.maxWidth < 560;
@@ -235,7 +235,7 @@ class _CurriculumSubjectCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${subject.credits} tin chi • HK ${subject.semesterIndex}',
+                      '${subject.credits} tín chỉ • HK ${subject.semesterIndex}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(

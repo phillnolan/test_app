@@ -16,7 +16,7 @@ Future<List<EventAttachment>> pickAttachments(BuildContext context) async {
     if (!context.mounted) {
       return const [];
     }
-    showAttachmentFailure(context, 'Khong the mo bo chon tep.');
+    showAttachmentFailure(context, 'Không thể mở bộ chọn tệp.');
     return const [];
   }
 }
@@ -45,7 +45,7 @@ Future<EventAttachment?> captureOrScanAttachment(
       return null;
     }
     if (attachment == null) {
-      showAttachmentFailure(context, 'Khong the doc anh vua chup.');
+      showAttachmentFailure(context, 'Không thể đọc ảnh vừa chụp.');
       return null;
     }
 
@@ -83,7 +83,7 @@ Future<EventAttachment?> captureOrScanAttachment(
     }
     showAttachmentFailure(
       context,
-      scanMode ? 'Khong the quet tai lieu.' : 'Khong the chup anh.',
+      scanMode ? 'Không thể quét tài liệu.' : 'Không thể chụp ảnh.',
     );
     return null;
   }
@@ -120,7 +120,7 @@ Future<bool?> askScanOutputMode(BuildContext context) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Luu tai lieu duoi dang',
+              'Lưu tài liệu dưới dạng',
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),

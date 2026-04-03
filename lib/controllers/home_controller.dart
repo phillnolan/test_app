@@ -228,12 +228,12 @@ class HomeController extends ChangeNotifier {
       _currentTab = 0;
       notifyListeners();
 
-      return const HomeActionResult.success('Dong bo thanh cong.');
+      return const HomeActionResult.success('Đồng bộ thành công!');
     } on SchoolApiException catch (error) {
       return HomeActionResult.failure(error.message);
     } catch (_) {
       return const HomeActionResult.failure(
-        'Da co loi xay ra khi dong bo. Vui long thu lai sau.',
+        'Đã có lỗi xảy ra khi đồng bộ. Vui lòng thử lại sau.',
       );
     } finally {
       if (!_isDisposed) {

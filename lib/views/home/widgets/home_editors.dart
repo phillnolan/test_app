@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../controllers/home_flow_models.dart';
 import '../../../models/event_attachment.dart';
 import '../../../models/student_event.dart';
 import 'attachment_editing_helpers.dart';
-import '../../../controllers/home_flow_models.dart';
 
 class EnhancedNoteEditorSheet extends StatefulWidget {
   const EnhancedNoteEditorSheet({super.key, required this.event});
@@ -120,29 +120,7 @@ class _EnhancedNoteEditorSheetState extends State<EnhancedNoteEditorSheet> {
                   label: const Text('Xóa ghi chú cá nhân'),
                 ),
               const Spacer(),
-              FilledButton(
-                onPressed: () {
-                  final title = _titleController.text.trim();
-                  if (widget.event.type == StudentEventType.personalTask &&
-                      title.isEmpty) {
-                    setState(() {
-                      _titleErrorText = 'Không được để trống tiêu đề';
-                    });
-                    return;
-                  }
-
-                  Navigator.of(context).pop(
-                    NoteEditorResult(
-                      title: widget.event.type == StudentEventType.personalTask
-                          ? title
-                          : null,
-                      note: _controller.text,
-                      attachments: _attachments,
-                    ),
-                  );
-                },
-                child: const Text('Lưu'),
-              ),
+              FilledButton(onPressed: _saveNote, child: const Text('Lưu')),
             ],
           ),
         ],
@@ -191,7 +169,46 @@ class _EnhancedNoteEditorSheetState extends State<EnhancedNoteEditorSheet> {
     });
   }
 
-  void _removeAttachment(String attachmentId) {
+  Future<void> _removeAttachment(String attachmentId) async {
+    EventAttachment? attachment;
+    for (final item in _attachments) {
+      if (item.id == attachmentId) {
+        attachment = item;
+        break;
+      }
+    }
+    if (attachment == null) {
+      return;
+    }
+    final selectedAttachment = attachment;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          selectedAttachment.isImage
+              ? 'Xóa ảnh đính kèm?'
+              : 'Xóa tệp đính kèm?',
+        ),
+        content: Text(
+          '"${selectedAttachment.name}" sẽ bị gỡ khỏi ghi chú này.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
     setState(() {
       _attachments = _attachments
           .where((attachment) => attachment.id != attachmentId)
@@ -210,6 +227,91 @@ class _EnhancedNoteEditorSheetState extends State<EnhancedNoteEditorSheet> {
           .map((item) => item.id == attachment.id ? edited : item)
           .toList();
     });
+  }
+
+  Future<void> _saveNote() async {
+    final title = _titleController.text.trim();
+    if (widget.event.type == StudentEventType.personalTask && title.isEmpty) {
+      setState(() {
+        _titleErrorText = 'Không được để trống tiêu đề';
+      });
+      return;
+    }
+
+    final result = NoteEditorResult(
+      title: widget.event.type == StudentEventType.personalTask ? title : null,
+      note: _controller.text,
+      attachments: _attachments,
+    );
+    if (!_hasMeaningfulChanges(result)) {
+      Navigator.of(context).pop();
+      return;
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Lưu thay đổi ghi chú?'),
+        content: Text(
+          'Bạn có chắc muốn lưu các thay đổi cho "${widget.event.title}"?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Lưu'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    Navigator.of(context).pop(result);
+  }
+
+  bool _hasMeaningfulChanges(NoteEditorResult result) {
+    final initialTitle = widget.event.type == StudentEventType.personalTask
+        ? widget.event.title.trim()
+        : null;
+    final currentTitle = widget.event.type == StudentEventType.personalTask
+        ? result.title?.trim()
+        : null;
+    final initialNote = (widget.event.note ?? '').trim();
+    final currentNote = result.note.trim();
+
+    return initialTitle != currentTitle ||
+        initialNote != currentNote ||
+        !_attachmentsMatch(widget.event.attachments, result.attachments);
+  }
+
+  bool _attachmentsMatch(
+    List<EventAttachment> left,
+    List<EventAttachment> right,
+  ) {
+    if (left.length != right.length) {
+      return false;
+    }
+
+    for (var index = 0; index < left.length; index++) {
+      if (!_sameAttachment(left[index], right[index])) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  bool _sameAttachment(EventAttachment left, EventAttachment right) {
+    return left.id == right.id &&
+        left.name == right.name &&
+        left.path == right.path &&
+        left.remoteKey == right.remoteKey &&
+        left.bytesBase64 == right.bytesBase64;
   }
 }
 
@@ -411,7 +513,7 @@ class _EnhancedTaskEditorSheetState extends State<EnhancedTaskEditorSheet> {
     });
   }
 
-  void _removeAttachment(String attachmentId) {
+  Future<void> _removeAttachment(String attachmentId) async {
     setState(() {
       _attachments = _attachments
           .where((attachment) => attachment.id != attachmentId)
@@ -448,7 +550,7 @@ class _AttachmentEditorSection extends StatelessWidget {
   final Future<void> Function() onCapturePhoto;
   final Future<void> Function() onScanDocument;
   final Future<void> Function(EventAttachment attachment) onEdit;
-  final ValueChanged<String> onRemove;
+  final Future<void> Function(String attachmentId) onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -499,7 +601,9 @@ class _AttachmentEditorSection extends StatelessWidget {
                     tooltip: attachment.isImage
                         ? 'Chỉnh sửa ảnh'
                         : attachment.name,
-                    onDeleted: () => onRemove(attachment.id),
+                    onDeleted: () {
+                      onRemove(attachment.id);
+                    },
                   ),
                 )
                 .toList(),
