@@ -63,6 +63,10 @@ export default {
       return getSyncCache(url, env, auth.data.uid);
     }
 
+    if (url.pathname === "/account-data" && request.method === "DELETE") {
+      return deleteAccountData(env, auth.data.uid);
+    }
+
     if (url.pathname === "/attachments/upload" && request.method === "POST") {
       return uploadAttachment(request, env, auth.data.uid);
     }
@@ -330,6 +334,42 @@ async function uploadAttachment(
   });
 }
 
+async function deleteAccountData(
+  env: Env,
+  firebaseUid: string,
+): Promise<Response> {
+  await env.CACHE.delete(buildCacheKey(firebaseUid, "dashboard"));
+
+  const attachmentRows = await env.DB.prepare(
+    `SELECT object_key
+     FROM attachments
+     WHERE firebase_uid = ?`,
+  )
+    .bind(firebaseUid)
+    .all<{ object_key: string }>();
+
+  for (const row of attachmentRows.results) {
+    if (row.object_key) {
+      await env.FILES.delete(row.object_key);
+    }
+  }
+
+  await env.DB.batch([
+    env.DB.prepare(`DELETE FROM attachments WHERE firebase_uid = ?`).bind(
+      firebaseUid,
+    ),
+    env.DB.prepare(`DELETE FROM notes WHERE firebase_uid = ?`).bind(firebaseUid),
+    env.DB.prepare(`DELETE FROM personal_tasks WHERE firebase_uid = ?`).bind(
+      firebaseUid,
+    ),
+    env.DB.prepare(`DELETE FROM sync_snapshots WHERE firebase_uid = ?`).bind(
+      firebaseUid,
+    ),
+  ]);
+
+  return json({ ok: true });
+}
+
 async function downloadAttachment(
   url: URL,
   env: Env,
@@ -389,7 +429,7 @@ function json(body: ApiResponse, init?: ResponseInit): Response {
 
 function withCors(response: Response): Response {
   response.headers.set("access-control-allow-origin", "*");
-  response.headers.set("access-control-allow-methods", "GET,POST,OPTIONS");
+  response.headers.set("access-control-allow-methods", "GET,POST,DELETE,OPTIONS");
   response.headers.set(
     "access-control-allow-headers",
     "content-type,authorization,x-file-name,x-event-id",

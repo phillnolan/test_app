@@ -1,3 +1,5 @@
+const Object _eventAttachmentUnset = Object();
+
 class EventAttachment {
   const EventAttachment({
     required this.id,
@@ -35,15 +37,19 @@ class EventAttachment {
     String? id,
     String? name,
     String? path,
-    String? remoteKey,
-    String? bytesBase64,
+    Object? remoteKey = _eventAttachmentUnset,
+    Object? bytesBase64 = _eventAttachmentUnset,
   }) {
     return EventAttachment(
       id: id ?? this.id,
       name: name ?? this.name,
       path: path ?? this.path,
-      remoteKey: remoteKey ?? this.remoteKey,
-      bytesBase64: bytesBase64 ?? this.bytesBase64,
+      remoteKey: identical(remoteKey, _eventAttachmentUnset)
+          ? this.remoteKey
+          : remoteKey as String?,
+      bytesBase64: identical(bytesBase64, _eventAttachmentUnset)
+          ? this.bytesBase64
+          : bytesBase64 as String?,
     );
   }
 

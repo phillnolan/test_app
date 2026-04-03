@@ -42,88 +42,91 @@ class _EnhancedNoteEditorSheetState extends State<EnhancedNoteEditorSheet> {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Ghi chú', style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          if (widget.event.type == StudentEventType.personalTask) ...[
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Ghi chú', style: Theme.of(context).textTheme.headlineSmall),
+            const SizedBox(height: 12),
+            if (widget.event.type == StudentEventType.personalTask) ...[
+              TextField(
+                controller: _titleController,
+                onChanged: (_) {
+                  if (_titleErrorText != null &&
+                      _titleController.text.trim().isNotEmpty) {
+                    setState(() => _titleErrorText = null);
+                  }
+                },
+                decoration: InputDecoration(
+                  labelText: 'Tiêu đề',
+                  hintText: 'Nhập tiêu đề ghi chú',
+                  errorText: _titleErrorText,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
             TextField(
-              controller: _titleController,
-              onChanged: (_) {
-                if (_titleErrorText != null &&
-                    _titleController.text.trim().isNotEmpty) {
-                  setState(() => _titleErrorText = null);
-                }
-              },
-              decoration: InputDecoration(
-                labelText: 'Tiêu đề',
-                hintText: 'Nhập tiêu đề ghi chú',
-                errorText: _titleErrorText,
+              controller: _controller,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                hintText: 'Nhập ghi chú cho sự kiện này',
               ),
             ),
             const SizedBox(height: 12),
-          ],
-          TextField(
-            controller: _controller,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: 'Nhập ghi chú cho sự kiện này',
+            _AttachmentEditorSection(
+              attachments: _attachments,
+              onAddFiles: _pickAttachments,
+              onCapturePhoto: _capturePhotoAttachment,
+              onScanDocument: _scanDocumentAttachment,
+              onEdit: _editAttachment,
+              onRemove: _removeAttachment,
             ),
-          ),
-          const SizedBox(height: 12),
-          _AttachmentEditorSection(
-            attachments: _attachments,
-            onAddFiles: _pickAttachments,
-            onCapturePhoto: _capturePhotoAttachment,
-            onScanDocument: _scanDocumentAttachment,
-            onEdit: _editAttachment,
-            onRemove: _removeAttachment,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              if (widget.event.type == StudentEventType.personalTask)
-                TextButton.icon(
-                  onPressed: () async {
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Xóa ghi chú cá nhân?'),
-                        content: const Text(
-                          'Ghi chú này sẽ bị xóa khỏi thiết bị và cloud.',
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                if (widget.event.type == StudentEventType.personalTask)
+                  TextButton.icon(
+                    onPressed: () async {
+                      final confirmed = await showDialog<bool>(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text('Xóa ghi chú cá nhân?'),
+                          content: const Text(
+                            'Ghi chú này sẽ bị xóa khỏi thiết bị và cloud.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: const Text('Hủy'),
+                            ),
+                            FilledButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: const Text('Xóa'),
+                            ),
+                          ],
                         ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Hủy'),
-                          ),
-                          FilledButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Xóa'),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed != true || !context.mounted) {
-                      return;
-                    }
+                      );
+                      if (confirmed != true || !context.mounted) {
+                        return;
+                      }
 
-                    Navigator.of(
-                      context,
-                    ).pop(const NoteEditorResult(deleteEvent: true));
-                  },
-                  icon: const Icon(Icons.delete_outline),
-                  label: const Text('Xóa ghi chú cá nhân'),
-                ),
-              const Spacer(),
-              FilledButton(onPressed: _saveNote, child: const Text('Lưu')),
-            ],
-          ),
-        ],
+                      Navigator.of(
+                        context,
+                      ).pop(const NoteEditorResult(deleteEvent: true));
+                    },
+                    icon: const Icon(Icons.delete_outline),
+                    label: const Text('Xóa ghi chú cá nhân'),
+                  ),
+                const Spacer(),
+                FilledButton(onPressed: _saveNote, child: const Text('Lưu')),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -351,123 +354,126 @@ class _EnhancedTaskEditorSheetState extends State<EnhancedTaskEditorSheet> {
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Thêm việc cá nhân',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _titleController,
-            onChanged: (_) {
-              if (_titleErrorText != null &&
-                  _titleController.text.trim().isNotEmpty) {
-                setState(() => _titleErrorText = null);
-              }
-            },
-            decoration: InputDecoration(
-              labelText: 'Tiêu đề',
-              hintText: 'Ví dụ: Ôn thi giữa kỳ',
-              errorText: _titleErrorText,
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Thêm việc cá nhân',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showDatePicker(
-                      context: context,
-                      locale: const Locale('vi', 'VN'),
-                      initialDate: _date,
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2035),
-                    );
-                    if (picked == null) {
-                      return;
-                    }
-
-                    setState(() {
-                      _date = DateTime(picked.year, picked.month, picked.day);
-                    });
-                  },
-                  icon: const Icon(Icons.calendar_today_outlined),
-                  label: Text('${_date.day}/${_date.month}/${_date.year}'),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    final picked = await showTimePicker(
-                      context: context,
-                      initialTime: _time,
-                    );
-                    if (picked == null) {
-                      return;
-                    }
-
-                    setState(() => _time = picked);
-                  },
-                  icon: const Icon(Icons.access_time),
-                  label: Text(
-                    '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _noteController,
-            maxLines: 4,
-            decoration: const InputDecoration(
-              labelText: 'Ghi chú',
-              hintText: 'Những điều quan trọng cần nhớ',
-            ),
-          ),
-          const SizedBox(height: 12),
-          _AttachmentEditorSection(
-            attachments: _attachments,
-            onAddFiles: _pickAttachments,
-            onCapturePhoto: _capturePhotoAttachment,
-            onScanDocument: _scanDocumentAttachment,
-            onEdit: _editAttachment,
-            onRemove: _removeAttachment,
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                final title = _titleController.text.trim();
-                if (title.isEmpty) {
-                  setState(() {
-                    _titleErrorText = 'Không được để trống tiêu đề';
-                  });
-                  return;
+            const SizedBox(height: 12),
+            TextField(
+              controller: _titleController,
+              onChanged: (_) {
+                if (_titleErrorText != null &&
+                    _titleController.text.trim().isNotEmpty) {
+                  setState(() => _titleErrorText = null);
                 }
-
-                Navigator.of(context).pop(
-                  TaskEditorResult(
-                    title: title,
-                    note: _noteController.text.trim(),
-                    date: _date,
-                    hour: _time,
-                    attachments: _attachments,
-                  ),
-                );
               },
-              child: const Text('Tạo việc'),
+              decoration: InputDecoration(
+                labelText: 'Tiêu đề',
+                hintText: 'Ví dụ: Ôn thi giữa kỳ',
+                errorText: _titleErrorText,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        locale: const Locale('vi', 'VN'),
+                        initialDate: _date,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2035),
+                      );
+                      if (picked == null) {
+                        return;
+                      }
+
+                      setState(() {
+                        _date = DateTime(picked.year, picked.month, picked.day);
+                      });
+                    },
+                    icon: const Icon(Icons.calendar_today_outlined),
+                    label: Text('${_date.day}/${_date.month}/${_date.year}'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final picked = await showTimePicker(
+                        context: context,
+                        initialTime: _time,
+                      );
+                      if (picked == null) {
+                        return;
+                      }
+
+                      setState(() => _time = picked);
+                    },
+                    icon: const Icon(Icons.access_time),
+                    label: Text(
+                      '${_time.hour.toString().padLeft(2, '0')}:${_time.minute.toString().padLeft(2, '0')}',
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _noteController,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                labelText: 'Ghi chú',
+                hintText: 'Những điều quan trọng cần nhớ',
+              ),
+            ),
+            const SizedBox(height: 12),
+            _AttachmentEditorSection(
+              attachments: _attachments,
+              onAddFiles: _pickAttachments,
+              onCapturePhoto: _capturePhotoAttachment,
+              onScanDocument: _scanDocumentAttachment,
+              onEdit: _editAttachment,
+              onRemove: _removeAttachment,
+            ),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton(
+                onPressed: () {
+                  final title = _titleController.text.trim();
+                  if (title.isEmpty) {
+                    setState(() {
+                      _titleErrorText = 'Không được để trống tiêu đề';
+                    });
+                    return;
+                  }
+
+                  Navigator.of(context).pop(
+                    TaskEditorResult(
+                      title: title,
+                      note: _noteController.text.trim(),
+                      date: _date,
+                      hour: _time,
+                      attachments: _attachments,
+                    ),
+                  );
+                },
+                child: const Text('Tạo việc'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

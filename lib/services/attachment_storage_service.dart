@@ -53,6 +53,55 @@ class AttachmentStorageService {
     return file.readAsBytes();
   }
 
+  Future<void> deleteUnusedAttachments({
+    required List<StudentEvent> previousEvents,
+    required List<StudentEvent> nextEvents,
+  }) async {
+    if (kIsWeb) return;
+
+    final directory = await _attachmentsDirectory();
+    final directoryPath = directory.path;
+    final retainedPaths = nextEvents
+        .expand((event) => event.attachments)
+        .map((attachment) => attachment.path)
+        .where((path) => path.isNotEmpty)
+        .toSet();
+    final removablePaths = previousEvents
+        .expand((event) => event.attachments)
+        .map((attachment) => attachment.path)
+        .where(
+          (path) =>
+              path.isNotEmpty &&
+              !retainedPaths.contains(path) &&
+              path.startsWith(directoryPath),
+        )
+        .toSet();
+
+    for (final path in removablePaths) {
+      final file = File(path);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
+  }
+
+  Future<void> clearAllAttachments() async {
+    if (kIsWeb) return;
+
+    final directory = await _attachmentsDirectory();
+    if (!await directory.exists()) {
+      return;
+    }
+
+    await for (final entity in directory.list()) {
+      try {
+        await entity.delete(recursive: true);
+      } catch (_) {
+        // Best-effort cleanup keeps sign-out resilient.
+      }
+    }
+  }
+
   Future<Directory> _attachmentsDirectory() async {
     final baseDirectory = await getApplicationDocumentsDirectory();
     final directory = Directory(

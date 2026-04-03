@@ -35,6 +35,10 @@ class SchedulePage extends StatelessWidget {
     required this.onDeleteEvent,
     required this.onOpenAttachment,
     required this.onToggleDone,
+    required this.showCloudSyncStatus,
+    required this.isEventCloudSyncPending,
+    required this.isEventCloudDeletePending,
+    required this.isEventCloudSyncDeferred,
     required this.onReloadWeather,
   });
 
@@ -64,6 +68,10 @@ class SchedulePage extends StatelessWidget {
   final ValueChanged<StudentEvent> onDeleteEvent;
   final ValueChanged<EventAttachment> onOpenAttachment;
   final ValueChanged<String> onToggleDone;
+  final bool showCloudSyncStatus;
+  final bool Function(String eventId) isEventCloudSyncPending;
+  final bool Function(String eventId) isEventCloudDeletePending;
+  final bool Function(String eventId) isEventCloudSyncDeferred;
   final VoidCallback onReloadWeather;
 
   @override
@@ -167,9 +175,9 @@ class SchedulePage extends StatelessWidget {
                     ? 'Chưa có dữ liệu từ cổng trường'
                     : 'Ngày này chưa có sự kiện',
                 description: profile == null
-                    ? 'Mở trang Đồng bộ để đăng nhập và tải lịch học, lịch thi, bảng điểm.'
+                    ? 'Mở trang Tài khoản để đăng nhập và tải lịch học, lịch thi, bảng điểm.'
                     : 'Bạn có thể thêm việc cá nhân hoặc chọn ngày khác để xem lịch.',
-                actionLabel: profile == null ? 'Mở đồng bộ' : 'Thêm việc',
+                actionLabel: profile == null ? 'Mở tài khoản' : 'Thêm việc',
                 onAction: profile == null ? onOpenSyncTab : onAddTask,
               ),
             ),
@@ -182,9 +190,17 @@ class SchedulePage extends StatelessWidget {
               itemBuilder: (context, index) {
                 final event = eventsForDay[index];
                 return Padding(
+                  key: ValueKey(
+                    '${event.id}|${event.title}|${event.note ?? ''}|'
+                    '${event.attachments.length}|${event.isDone}',
+                  ),
                   padding: const EdgeInsets.only(bottom: 12),
                   child: _EventCard(
                     event: event,
+                    showCloudSyncStatus: showCloudSyncStatus,
+                    isCloudSyncPending: isEventCloudSyncPending(event.id),
+                    isCloudDeletePending: isEventCloudDeletePending(event.id),
+                    isCloudSyncDeferred: isEventCloudSyncDeferred(event.id),
                     onEditNote: () => onEditEvent(event),
                     onDelete: event.type == StudentEventType.personalTask
                         ? () => onDeleteEvent(event)
@@ -652,6 +668,10 @@ class _DayChip extends StatelessWidget {
 class _EventCard extends StatelessWidget {
   const _EventCard({
     required this.event,
+    required this.showCloudSyncStatus,
+    required this.isCloudSyncPending,
+    required this.isCloudDeletePending,
+    required this.isCloudSyncDeferred,
     required this.onEditNote,
     this.onDelete,
     required this.onOpenAttachment,
@@ -659,6 +679,10 @@ class _EventCard extends StatelessWidget {
   });
 
   final StudentEvent event;
+  final bool showCloudSyncStatus;
+  final bool isCloudSyncPending;
+  final bool isCloudDeletePending;
+  final bool isCloudSyncDeferred;
   final VoidCallback onEditNote;
   final VoidCallback? onDelete;
   final ValueChanged<EventAttachment> onOpenAttachment;
@@ -667,6 +691,14 @@ class _EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isTask = event.type == StudentEventType.personalTask;
+    final isDeleting = isCloudDeletePending;
+    final cloudStatus = !showCloudSyncStatus
+        ? null
+        : isCloudSyncPending
+        ? (isCloudSyncDeferred
+              ? _CloudIndicatorStatus.deferred
+              : _CloudIndicatorStatus.syncing)
+        : null;
 
     return Container(
       decoration: BoxDecoration(
@@ -678,7 +710,14 @@ class _EventCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _EventTypeBadge(event: event),
+          Row(
+            children: [
+              _EventTypeBadge(event: event),
+              const Spacer(),
+              if (cloudStatus != null)
+                _PendingCloudChip(status: cloudStatus, isDeleting: isDeleting),
+            ],
+          ),
           const SizedBox(height: 12),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -697,12 +736,12 @@ class _EventCard extends StatelessWidget {
               if (isTask)
                 Checkbox(
                   value: event.isDone,
-                  onChanged: (_) => onToggleDone?.call(),
+                  onChanged: isDeleting ? null : (_) => onToggleDone?.call(),
                 ),
               if (isTask)
                 IconButton(
                   tooltip: 'Xóa ghi chú cá nhân',
-                  onPressed: onDelete,
+                  onPressed: isDeleting ? null : onDelete,
                   icon: const Icon(Icons.delete_outline),
                 ),
             ],
@@ -732,11 +771,21 @@ class _EventCard extends StatelessWidget {
             const SizedBox(height: 8),
             _LabeledValueRow(label: 'Số báo danh', value: event.referenceCode!),
           ],
-          if ((event.note ?? '').isNotEmpty) ...[
+          if ((event.sourceNote ?? '').isNotEmpty) ...[
             const SizedBox(height: 8),
             _LabeledValueRow(
               label: event.type == StudentEventType.exam
                   ? 'Đợt thi'
+                  : 'Thông tin đồng bộ',
+              value: event.sourceNote!,
+              maxLines: 2,
+            ),
+          ],
+          if ((event.note ?? '').isNotEmpty) ...[
+            const SizedBox(height: 8),
+            _LabeledValueRow(
+              label: event.type == StudentEventType.personalTask
+                  ? 'Ghi chú'
                   : 'Ghi chú',
               value: event.note!,
               maxLines: 2,
@@ -753,9 +802,13 @@ class _EventCard extends StatelessWidget {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton.icon(
-              onPressed: onEditNote,
-              icon: const Icon(Icons.edit_note),
-              label: Text(isTask ? 'Sửa ghi chú' : 'Ghi chú'),
+              onPressed: isDeleting ? null : onEditNote,
+              icon: Icon(isDeleting ? Icons.hourglass_top : Icons.edit_note),
+              label: Text(
+                isDeleting
+                    ? 'Đang xoá...'
+                    : (isTask ? 'Sửa ghi chú' : 'Ghi chú'),
+              ),
             ),
           ),
         ],
@@ -776,6 +829,72 @@ class _EventCard extends StatelessWidget {
         '${twoDigits(event.end.hour)}:${twoDigits(event.end.minute)}';
   }
 }
+
+class _PendingCloudChip extends StatelessWidget {
+  const _PendingCloudChip({required this.status, required this.isDeleting});
+
+  final _CloudIndicatorStatus status;
+  final bool isDeleting;
+
+  @override
+  Widget build(BuildContext context) {
+    const syncBlue = Color(0xFF9FC8FF);
+    final colorScheme = Theme.of(context).colorScheme;
+    final backgroundColor = switch (status) {
+      _CloudIndicatorStatus.syncing => syncBlue.withValues(alpha: 0.18),
+      _CloudIndicatorStatus.deferred => colorScheme.error,
+      _CloudIndicatorStatus.synced => Colors.transparent,
+    };
+    final foregroundColor = switch (status) {
+      _CloudIndicatorStatus.syncing => syncBlue,
+      _CloudIndicatorStatus.deferred => Colors.white,
+      _CloudIndicatorStatus.synced => Colors.transparent,
+    };
+    final tooltip = switch (status) {
+      _CloudIndicatorStatus.syncing =>
+        isDeleting ? 'Đang xóa trên cloud' : 'Đang đẩy lên cloud',
+      _CloudIndicatorStatus.deferred =>
+        'Đang chờ mạng hoặc sẽ tự thử lại để đẩy lên cloud',
+      _CloudIndicatorStatus.synced => 'Đã lưu trên cloud',
+    };
+
+    return Tooltip(
+      message: tooltip,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        alignment: Alignment.center,
+        child: switch (status) {
+          _CloudIndicatorStatus.syncing => SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.4,
+              color: foregroundColor,
+              backgroundColor: syncBlue.withValues(alpha: 0.28),
+            ),
+          ),
+          _CloudIndicatorStatus.deferred => Icon(
+            Icons.cloud_off_rounded,
+            size: 18,
+            color: foregroundColor,
+          ),
+          _CloudIndicatorStatus.synced => Icon(
+            Icons.cloud_done_rounded,
+            size: 18,
+            color: foregroundColor,
+          ),
+        },
+      ),
+    );
+  }
+}
+
+enum _CloudIndicatorStatus { syncing, deferred, synced }
 
 class _EventTypeBadge extends StatelessWidget {
   const _EventTypeBadge({required this.event});

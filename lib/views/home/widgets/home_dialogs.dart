@@ -185,7 +185,14 @@ class _MonthPickerDialogState extends State<MonthPickerDialog> {
 }
 
 class SyncCredentialsDialog extends StatefulWidget {
-  const SyncCredentialsDialog({super.key});
+  const SyncCredentialsDialog({
+    super.key,
+    this.initialUsername,
+    this.initialPassword,
+  });
+
+  final String? initialUsername;
+  final String? initialPassword;
 
   @override
   State<SyncCredentialsDialog> createState() => _SyncCredentialsDialogState();
@@ -197,6 +204,13 @@ class _SyncCredentialsDialogState extends State<SyncCredentialsDialog> {
   bool _obscurePassword = true;
 
   @override
+  void initState() {
+    super.initState();
+    _usernameController.text = widget.initialUsername ?? '';
+    _passwordController.text = widget.initialPassword ?? '';
+  }
+
+  @override
   void dispose() {
     _usernameController.dispose();
     _passwordController.dispose();
@@ -205,59 +219,115 @@ class _SyncCredentialsDialogState extends State<SyncCredentialsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Đăng nhập để đồng bộ'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+
+    return _CredentialActionSheet(
+      icon: Icons.sync_alt,
+      title: 'Đồng bộ tài khoản sinh viên',
+      subtitle:
+          'Nhập tài khoản cổng trường để tải lịch học, lịch thi và bảng điểm mới nhất.',
+      bottomInset: bottomInset,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextField(
+          _SheetField(
             controller: _usernameController,
-            decoration: const InputDecoration(
-              labelText: 'Tên đăng nhập',
-              prefixIcon: Icon(Icons.person_outline),
-            ),
+            labelText: 'Tên đăng nhập sinh viên',
+            hintText: 'Ví dụ: 22110xxx',
+            prefixIcon: Icons.person_outline,
+            textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 12),
-          TextField(
+          _SheetField(
             controller: _passwordController,
+            labelText: 'Mật khẩu',
+            hintText: 'Nhập mật khẩu cổng trường',
+            prefixIcon: Icons.lock_outline,
             obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              labelText: 'Mật khẩu',
-              prefixIcon: const Icon(Icons.lock_outline),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
-                ),
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _submit(),
+            suffix: IconButton(
+              onPressed: () {
+                setState(() => _obscurePassword = !_obscurePassword);
+              },
+              icon: Icon(
+                _obscurePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
               ),
             ),
           ),
+          const SizedBox(height: 12),
+          _SubmitHint(
+            text:
+                'Hệ thống sẽ kiểm tra liên kết tài khoản ứng dụng với sinh viên này trước khi đồng bộ.',
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Hủy'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: _submit,
+                  icon: const Icon(Icons.sync),
+                  label: const Text('Tiếp tục'),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Hủy'),
-        ),
-        FilledButton(
-          onPressed: () {
-            final username = _usernameController.text.trim();
-            final password = _passwordController.text;
-            if (username.isEmpty || password.isEmpty) {
-              return;
-            }
+    );
+  }
 
-            Navigator.of(
-              context,
-            ).pop(CredentialsResult(username: username, password: password));
-          },
-          child: const Text('Đồng bộ'),
-        ),
-      ],
+  Future<void> _submit() async {
+    final username = _usernameController.text.trim();
+    final password = _passwordController.text;
+    if (username.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    final confirmed = await _confirmSubmit(
+      title: 'Xác nhận đồng bộ?',
+      content: 'Bạn sắp đồng bộ tài khoản sinh viên "$username". Tiếp tục chứ?',
+      actionLabel: 'Đồng bộ',
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    Navigator.of(
+      context,
+    ).pop(CredentialsResult(username: username, password: password));
+  }
+
+  Future<bool?> _confirmSubmit({
+    required String title,
+    required String content,
+    required String actionLabel,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(actionLabel),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -285,25 +355,28 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
+    final isSignIn = _mode == EmailAuthMode.signIn;
+
+    return _CredentialActionSheet(
+      icon: isSignIn ? Icons.login_rounded : Icons.person_add_alt_1_rounded,
+      title: isSignIn ? 'Đăng nhập bằng email' : 'Tạo tài khoản ứng dụng',
+      subtitle: isSignIn
+          ? 'Dùng email để mở dữ liệu cloud và liên kết với tài khoản sinh viên.'
+          : 'Tạo tài khoản ứng dụng mới để lưu ghi chú, ảnh, tệp và dữ liệu đồng bộ.',
+      bottomInset: bottomInset,
       child: Column(
-        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            _mode == EmailAuthMode.signIn ? 'Đăng nhập email' : 'Tạo tài khoản',
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 12),
           SegmentedButton<EmailAuthMode>(
             segments: const [
               ButtonSegment(
                 value: EmailAuthMode.signIn,
+                icon: Icon(Icons.login_rounded),
                 label: Text('Đăng nhập'),
               ),
               ButtonSegment(
                 value: EmailAuthMode.register,
+                icon: Icon(Icons.person_add_alt_1_rounded),
                 label: Text('Đăng ký'),
               ),
             ],
@@ -312,58 +385,250 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
               setState(() => _mode = selection.first);
             },
           ),
-          const SizedBox(height: 12),
-          TextField(
+          const SizedBox(height: 16),
+          _SheetField(
             controller: _emailController,
+            labelText: 'Email',
+            hintText: 'Nhập email của bạn',
+            prefixIcon: Icons.mail_outline,
             keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              prefixIcon: Icon(Icons.mail_outline),
+            textInputAction: TextInputAction.next,
+          ),
+          const SizedBox(height: 12),
+          _SheetField(
+            controller: _passwordController,
+            labelText: 'Mật khẩu',
+            hintText: isSignIn
+                ? 'Nhập mật khẩu để đăng nhập'
+                : 'Tạo mật khẩu cho tài khoản mới',
+            prefixIcon: Icons.lock_outline,
+            obscureText: _obscurePassword,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (_) => _submit(),
+            suffix: IconButton(
+              onPressed: () {
+                setState(() => _obscurePassword = !_obscurePassword);
+              },
+              icon: Icon(
+                _obscurePassword
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+              ),
             ),
           ),
           const SizedBox(height: 12),
-          TextField(
-            controller: _passwordController,
-            obscureText: _obscurePassword,
-            decoration: InputDecoration(
-              labelText: 'Mật khẩu',
-              prefixIcon: const Icon(Icons.lock_outline),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() => _obscurePassword = !_obscurePassword);
-                },
-                icon: Icon(
-                  _obscurePassword
-                      ? Icons.visibility_outlined
-                      : Icons.visibility_off_outlined,
+          _SubmitHint(
+            text: isSignIn
+                ? 'Sau khi đăng nhập, app sẽ kiểm tra liên kết dữ liệu sinh viên hiện có.'
+                : 'Sau khi tạo tài khoản, app có thể liên kết ngay với dữ liệu sinh viên đang có trên máy.',
+          ),
+          const SizedBox(height: 18),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Hủy'),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Align(
-            alignment: Alignment.centerRight,
-            child: FilledButton(
-              onPressed: () {
-                final email = _emailController.text.trim();
-                final password = _passwordController.text;
-                if (email.isEmpty || password.isEmpty) {
-                  return;
-                }
-
-                Navigator.of(context).pop(
-                  EmailAuthResult(
-                    mode: _mode,
-                    email: email,
-                    password: password,
+              const SizedBox(width: 12),
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: _submit,
+                  icon: Icon(
+                    isSignIn
+                        ? Icons.login_rounded
+                        : Icons.person_add_alt_1_rounded,
                   ),
-                );
-              },
-              child: Text(
-                _mode == EmailAuthMode.signIn ? 'Đăng nhập' : 'Tạo tài khoản',
+                  label: Text(isSignIn ? 'Tiếp tục' : 'Tạo tài khoản'),
+                ),
               ),
-            ),
+            ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      return;
+    }
+
+    final isSignIn = _mode == EmailAuthMode.signIn;
+    final confirmed = await _confirmSubmit(
+      title: isSignIn ? 'Xác nhận đăng nhập?' : 'Xác nhận đăng ký?',
+      content: isSignIn
+          ? 'Bạn sắp đăng nhập bằng email "$email". Tiếp tục chứ?'
+          : 'Bạn sắp tạo tài khoản mới với email "$email". Tiếp tục chứ?',
+      actionLabel: isSignIn ? 'Đăng nhập' : 'Đăng ký',
+    );
+    if (confirmed != true || !mounted) {
+      return;
+    }
+
+    Navigator.of(
+      context,
+    ).pop(EmailAuthResult(mode: _mode, email: email, password: password));
+  }
+
+  Future<bool?> _confirmSubmit({
+    required String title,
+    required String content,
+    required String actionLabel,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text(actionLabel),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CredentialActionSheet extends StatelessWidget {
+  const _CredentialActionSheet({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.bottomInset,
+    required this.child,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final double bottomInset;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, 8, 16, 16 + bottomInset),
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(32),
+            border: Border.all(color: colorScheme.outlineVariant),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  color: colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Icon(icon, color: colorScheme.onPrimaryContainer),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                subtitle,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 20),
+              child,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SheetField extends StatelessWidget {
+  const _SheetField({
+    required this.controller,
+    required this.labelText,
+    required this.hintText,
+    required this.prefixIcon,
+    this.keyboardType,
+    this.obscureText = false,
+    this.textInputAction,
+    this.onSubmitted,
+    this.suffix,
+  });
+
+  final TextEditingController controller;
+  final String labelText;
+  final String hintText;
+  final IconData prefixIcon;
+  final TextInputType? keyboardType;
+  final bool obscureText;
+  final TextInputAction? textInputAction;
+  final ValueChanged<String>? onSubmitted;
+  final Widget? suffix;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      obscureText: obscureText,
+      textInputAction: textInputAction,
+      onSubmitted: onSubmitted,
+      decoration: InputDecoration(
+        labelText: labelText,
+        hintText: hintText,
+        prefixIcon: Icon(prefixIcon),
+        suffixIcon: suffix,
+      ),
+    );
+  }
+}
+
+class _SubmitHint extends StatelessWidget {
+  const _SubmitHint({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            Icons.info_outline,
+            size: 18,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 10),
+          Expanded(child: Text(text)),
         ],
       ),
     );

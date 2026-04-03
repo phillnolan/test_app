@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/event_attachment.dart';
@@ -25,10 +25,17 @@ class CloudSyncService {
   bool get isConfigured => _baseUrl.isNotEmpty;
 
   Future<void> upsertNote(StudentEvent event) async {
+    final stopwatch = Stopwatch()..start();
     final headers = await _authHeaders();
-    if (headers == null) return;
+    if (headers == null) {
+      _logTiming(
+        'upsertNote skipped ${event.id}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+      );
+      return;
+    }
 
-    await _client.post(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/notes'),
       headers: headers,
       body: jsonEncode({
@@ -38,13 +45,25 @@ class CloudSyncService {
         'content': event.note ?? '',
       }),
     );
+    _logTiming(
+      'upsertNote ${event.id}',
+      elapsedMs: stopwatch.elapsedMilliseconds,
+      extra: 'status=${response.statusCode}',
+    );
   }
 
   Future<void> upsertTask(StudentEvent event) async {
+    final stopwatch = Stopwatch()..start();
     final headers = await _authHeaders();
-    if (headers == null) return;
+    if (headers == null) {
+      _logTiming(
+        'upsertTask skipped ${event.id}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+      );
+      return;
+    }
 
-    await _client.post(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/tasks'),
       headers: headers,
       body: jsonEncode({
@@ -56,13 +75,25 @@ class CloudSyncService {
         'isDone': event.isDone,
       }),
     );
+    _logTiming(
+      'upsertTask ${event.id}',
+      elapsedMs: stopwatch.elapsedMilliseconds,
+      extra: 'status=${response.statusCode}',
+    );
   }
 
   Future<void> saveSyncCache(LocalCachePayload payload) async {
+    final stopwatch = Stopwatch()..start();
     final headers = await _authHeaders();
-    if (headers == null) return;
+    if (headers == null) {
+      _logTiming(
+        'saveSyncCache skipped',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+      );
+      return;
+    }
 
-    await _client.post(
+    final response = await _client.post(
       Uri.parse('$_baseUrl/sync-cache'),
       headers: headers,
       body: jsonEncode({
@@ -71,6 +102,19 @@ class CloudSyncService {
         'ttlSeconds': 60 * 60 * 6,
       }),
     );
+    _logTiming(
+      'saveSyncCache',
+      elapsedMs: stopwatch.elapsedMilliseconds,
+      extra:
+          'status=${response.statusCode} synced=${payload.syncedEvents.length} personal=${payload.personalEvents.length}',
+    );
+  }
+
+  Future<void> clearAccountData() async {
+    final headers = await _authHeaders(includeJsonContentType: false);
+    if (headers == null) return;
+
+    await _client.delete(Uri.parse('$_baseUrl/account-data'), headers: headers);
   }
 
   Future<LocalCachePayload?> fetchSyncCache({
@@ -99,13 +143,28 @@ class CloudSyncService {
     required EventAttachment attachment,
     required String eventId,
   }) async {
+    final stopwatch = Stopwatch()..start();
     final headers = await _authHeaders(includeJsonContentType: false);
-    if (headers == null || attachment.remoteKey != null) return attachment;
+    if (headers == null || attachment.remoteKey != null) {
+      _logTiming(
+        'uploadAttachment skipped ${attachment.name}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'event=$eventId hasRemote=${attachment.remoteKey != null}',
+      );
+      return attachment;
+    }
 
     final bytes = attachment.bytesBase64 != null
         ? base64Decode(attachment.bytesBase64!)
         : await readBytesFromPath(attachment.path);
-    if (bytes == null || bytes.isEmpty) return attachment;
+    if (bytes == null || bytes.isEmpty) {
+      _logTiming(
+        'uploadAttachment empty ${attachment.name}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'event=$eventId',
+      );
+      return attachment;
+    }
 
     final request = http.Request(
       'POST',
@@ -121,14 +180,36 @@ class CloudSyncService {
 
     final streamed = await _client.send(request);
     final response = await http.Response.fromStream(streamed);
-    if (response.statusCode >= 400) return attachment;
+    if (response.statusCode >= 400) {
+      _logTiming(
+        'uploadAttachment failed ${attachment.name}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra:
+            'event=$eventId status=${response.statusCode} bytes=${bytes.length}',
+      );
+      return attachment;
+    }
 
     final json = jsonDecode(response.body) as Map<String, dynamic>;
     final data = (json['data'] as Map?)?.map(
       (key, value) => MapEntry(key.toString(), value),
     );
     final objectKey = data?['objectKey']?.toString();
-    if (objectKey == null || objectKey.isEmpty) return attachment;
+    if (objectKey == null || objectKey.isEmpty) {
+      _logTiming(
+        'uploadAttachment missing-key ${attachment.name}',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'event=$eventId bytes=${bytes.length}',
+      );
+      return attachment;
+    }
+
+    _logTiming(
+      'uploadAttachment ${attachment.name}',
+      elapsedMs: stopwatch.elapsedMilliseconds,
+      extra:
+          'event=$eventId bytes=${bytes.length} status=${response.statusCode}',
+    );
 
     return attachment.copyWith(remoteKey: objectKey);
   }
@@ -185,5 +266,16 @@ class CloudSyncService {
     if (lower.endsWith('.gif')) return 'image/gif';
     if (lower.endsWith('.webp')) return 'image/webp';
     return 'application/octet-stream';
+  }
+
+  void _logTiming(String step, {required int elapsedMs, String? extra}) {
+    if (!kDebugMode) {
+      return;
+    }
+
+    debugPrint(
+      '[CloudSyncTiming] $step took ${elapsedMs}ms'
+      '${extra == null ? '' : ' | $extra'}',
+    );
   }
 }

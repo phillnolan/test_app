@@ -4,6 +4,8 @@ import 'event_attachment.dart';
 
 enum StudentEventType { classSchedule, exam, personalTask }
 
+const Object _studentEventUnset = Object();
+
 class StudentEvent {
   const StudentEvent({
     required this.id,
@@ -15,6 +17,7 @@ class StudentEvent {
     this.subtitle,
     this.location,
     this.note,
+    this.sourceNote,
     this.referenceCode,
     this.attachments = const [],
     this.isDone = false,
@@ -29,6 +32,7 @@ class StudentEvent {
   final String? subtitle;
   final String? location;
   final String? note;
+  final String? sourceNote;
   final String? referenceCode;
   final List<EventAttachment> attachments;
   final bool isDone;
@@ -40,10 +44,11 @@ class StudentEvent {
     DateTime? end,
     StudentEventType? type,
     Color? color,
-    String? subtitle,
-    String? location,
-    String? note,
-    String? referenceCode,
+    Object? subtitle = _studentEventUnset,
+    Object? location = _studentEventUnset,
+    Object? note = _studentEventUnset,
+    Object? sourceNote = _studentEventUnset,
+    Object? referenceCode = _studentEventUnset,
     List<EventAttachment>? attachments,
     bool? isDone,
   }) {
@@ -54,10 +59,19 @@ class StudentEvent {
       end: end ?? this.end,
       type: type ?? this.type,
       color: color ?? this.color,
-      subtitle: subtitle ?? this.subtitle,
-      location: location ?? this.location,
-      note: note ?? this.note,
-      referenceCode: referenceCode ?? this.referenceCode,
+      subtitle: identical(subtitle, _studentEventUnset)
+          ? this.subtitle
+          : subtitle as String?,
+      location: identical(location, _studentEventUnset)
+          ? this.location
+          : location as String?,
+      note: identical(note, _studentEventUnset) ? this.note : note as String?,
+      sourceNote: identical(sourceNote, _studentEventUnset)
+          ? this.sourceNote
+          : sourceNote as String?,
+      referenceCode: identical(referenceCode, _studentEventUnset)
+          ? this.referenceCode
+          : referenceCode as String?,
       attachments: attachments ?? this.attachments,
       isDone: isDone ?? this.isDone,
     );
@@ -74,6 +88,7 @@ class StudentEvent {
       'subtitle': subtitle,
       'location': location,
       'note': note,
+      'sourceNote': sourceNote,
       'referenceCode': referenceCode,
       'attachments': attachments.map((item) => item.toJson()).toList(),
       'isDone': isDone,
@@ -95,6 +110,7 @@ class StudentEvent {
       subtitle: json['subtitle']?.toString(),
       location: json['location']?.toString(),
       note: json['note']?.toString(),
+      sourceNote: json['sourceNote']?.toString(),
       referenceCode: json['referenceCode']?.toString(),
       attachments: ((json['attachments'] as List?) ?? const [])
           .whereType<Map>()

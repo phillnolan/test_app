@@ -280,10 +280,14 @@ class SchoolApiService {
         for (final occurrence in occurrences) {
           final start = occurrence.$1;
           final end = occurrence.$2;
+          final occurrenceKey =
+              '${start.toIso8601String()}-${end.toIso8601String()}';
+          final courseKey = rawCourse['id'] ?? title;
+          final slotKey = slot['id'] ?? occurrenceKey;
 
           events.add(
             StudentEvent(
-              id: 'class-${rawCourse['id'] ?? title}-${slot['id'] ?? start.toIso8601String()}',
+              id: 'class-$courseKey-$slotKey-$occurrenceKey',
               title: title,
               subtitle: teacher == null || teacher.isEmpty
                   ? 'Lịch học'
@@ -295,7 +299,7 @@ class SchoolApiService {
               type: StudentEventType.classSchedule,
               color: const Color(0xFFDDE7FF),
               location: room,
-              note: noteParts.isEmpty ? null : noteParts.join(' • '),
+              sourceNote: noteParts.isEmpty ? null : noteParts.join(' • '),
               referenceCode: null,
             ),
           );
@@ -357,7 +361,7 @@ class SchoolApiService {
           type: StudentEventType.exam,
           color: const Color(0xFFFFDAD6),
           location: room,
-          note: period,
+          sourceNote: period,
           referenceCode: referenceCode,
         ),
       );

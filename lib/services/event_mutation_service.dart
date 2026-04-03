@@ -13,6 +13,22 @@ import 'attachment_storage_service.dart';
 import 'cloud_sync_service.dart';
 import 'dashboard_persistence_service.dart';
 
+enum PendingEventSyncAction { saving, deleting }
+
+class EventMutationResult {
+  const EventMutationResult({
+    required this.payload,
+    required this.cloudSyncCompletion,
+    this.affectedEvent,
+    this.pendingAction,
+  });
+
+  final LocalCachePayload payload;
+  final Future<void> cloudSyncCompletion;
+  final StudentEvent? affectedEvent;
+  final PendingEventSyncAction? pendingAction;
+}
+
 class EventMutationService {
   EventMutationService({
     AttachmentStorageService? attachmentStorageService,
@@ -28,7 +44,7 @@ class EventMutationService {
   final CloudSyncService _cloudSyncService;
   final DashboardPersistenceService _dashboardPersistenceService;
 
-  Future<LocalCachePayload> addTask({
+  Future<EventMutationResult> addTask({
     required LocalCachePayload currentPayload,
     required TaskEditorResult result,
   }) async {
@@ -39,30 +55,37 @@ class EventMutationService {
       result.hour.hour,
       result.hour.minute,
     );
-    final updatedPersonalEvents = await _attachmentStorageService
-        .persistEvents([
-          ...currentPayload.personalEvents,
-          StudentEvent(
-            id: 'task-${DateTime.now().microsecondsSinceEpoch}',
-            title: result.title,
-            subtitle: 'Viec ca nhan',
-            start: start,
-            end: start.add(const Duration(hours: 1)),
-            type: StudentEventType.personalTask,
-            color: const Color(0xFFDDF4E4),
-            note: result.note.isEmpty ? null : result.note,
-            attachments: result.attachments,
-          ),
-        ]);
+    final task = StudentEvent(
+      id: 'task-${DateTime.now().microsecondsSinceEpoch}',
+      title: result.title,
+      subtitle: 'Viec ca nhan',
+      start: start,
+      end: start.add(const Duration(hours: 1)),
+      type: StudentEventType.personalTask,
+      color: const Color(0xFFDDF4E4),
+      note: result.note.isEmpty ? null : result.note,
+      attachments: result.attachments,
+    );
+    final updatedPersonalEvents = await _attachmentStorageService.persistEvents(
+      [...currentPayload.personalEvents, task],
+    );
 
-    return _dashboardPersistenceService.persistPayload(
-      currentPayload.copyWith(
-        personalEvents: _sortedEvents(updatedPersonalEvents),
-      ),
+    final persistResult = await _dashboardPersistenceService
+        .persistPayloadLocallyAndSyncInBackground(
+          currentPayload.copyWith(
+            personalEvents: _sortedEvents(updatedPersonalEvents),
+          ),
+          changedEvent: task,
+        );
+    return EventMutationResult(
+      payload: persistResult.payload,
+      affectedEvent: _eventById(persistResult.payload.personalEvents, task.id),
+      pendingAction: PendingEventSyncAction.saving,
+      cloudSyncCompletion: persistResult.cloudSyncCompletion,
     );
   }
 
-  Future<LocalCachePayload> editEvent({
+  Future<EventMutationResult> editEvent({
     required LocalCachePayload currentPayload,
     required StudentEvent event,
     required NoteEditorResult result,
@@ -90,44 +113,79 @@ class EventMutationService {
       }).toList(),
     );
 
-    return _dashboardPersistenceService.persistPayload(
-      currentPayload.copyWith(
-        personalEvents: _sortedEvents(updatedPersonalEvents),
-        syncedEvents: _sortedEvents(updatedSyncedEvents),
-      ),
+    final persistResult = await _dashboardPersistenceService
+        .persistPayloadLocallyAndSyncInBackground(
+          currentPayload.copyWith(
+            personalEvents: _sortedEvents(updatedPersonalEvents),
+            syncedEvents: _sortedEvents(updatedSyncedEvents),
+          ),
+          changedEvent:
+              _eventById(updatedPersonalEvents, event.id) ??
+              _eventById(updatedSyncedEvents, event.id),
+        );
+    final affectedEvent =
+        _eventById(persistResult.payload.personalEvents, event.id) ??
+        _eventById(persistResult.payload.syncedEvents, event.id);
+    return EventMutationResult(
+      payload: persistResult.payload,
+      affectedEvent: affectedEvent,
+      pendingAction: PendingEventSyncAction.saving,
+      cloudSyncCompletion: persistResult.cloudSyncCompletion,
     );
   }
 
-  Future<LocalCachePayload> deletePersonalEvent({
+  Future<EventMutationResult> deletePersonalEvent({
     required LocalCachePayload currentPayload,
     required StudentEvent event,
   }) async {
-    if (event.type != StudentEventType.personalTask) return currentPayload;
+    if (event.type != StudentEventType.personalTask) {
+      return EventMutationResult(
+        payload: currentPayload,
+        cloudSyncCompletion: Future<void>.value(),
+      );
+    }
 
-    return _dashboardPersistenceService.persistPayload(
-      currentPayload.copyWith(
-        personalEvents: _sortedEvents(
-          currentPayload.personalEvents
-              .where((item) => item.id != event.id)
-              .toList(),
-        ),
-      ),
+    final persistResult = await _dashboardPersistenceService
+        .persistPayloadLocallyAndSyncInBackground(
+          currentPayload.copyWith(
+            personalEvents: _sortedEvents(
+              currentPayload.personalEvents
+                  .where((item) => item.id != event.id)
+                  .toList(),
+            ),
+          ),
+          deletedEventId: event.id,
+        );
+    return EventMutationResult(
+      payload: persistResult.payload,
+      affectedEvent: event,
+      pendingAction: PendingEventSyncAction.deleting,
+      cloudSyncCompletion: persistResult.cloudSyncCompletion,
     );
   }
 
-  Future<LocalCachePayload> toggleDone({
+  Future<EventMutationResult> toggleDone({
     required LocalCachePayload currentPayload,
     required String id,
   }) async {
-    return _dashboardPersistenceService.persistPayload(
-      currentPayload.copyWith(
-        personalEvents: _sortedEvents(
-          currentPayload.personalEvents.map((event) {
-            if (event.id != id) return event;
-            return event.copyWith(isDone: !event.isDone);
-          }).toList(),
-        ),
-      ),
+    final changedEvent = _eventById(currentPayload.personalEvents, id);
+    final persistResult = await _dashboardPersistenceService
+        .persistPayloadLocallyAndSyncInBackground(
+          currentPayload.copyWith(
+            personalEvents: _sortedEvents(
+              currentPayload.personalEvents.map((event) {
+                if (event.id != id) return event;
+                return event.copyWith(isDone: !event.isDone);
+              }).toList(),
+            ),
+          ),
+          changedEvent: changedEvent?.copyWith(isDone: !changedEvent.isDone),
+        );
+    return EventMutationResult(
+      payload: persistResult.payload,
+      affectedEvent: _eventById(persistResult.payload.personalEvents, id),
+      pendingAction: PendingEventSyncAction.saving,
+      cloudSyncCompletion: persistResult.cloudSyncCompletion,
     );
   }
 
@@ -163,5 +221,14 @@ class EventMutationService {
 
   List<StudentEvent> _sortedEvents(List<StudentEvent> events) {
     return [...events]..sort((a, b) => a.start.compareTo(b.start));
+  }
+
+  StudentEvent? _eventById(List<StudentEvent> events, String id) {
+    for (final event in events) {
+      if (event.id == id) {
+        return event;
+      }
+    }
+    return null;
   }
 }
