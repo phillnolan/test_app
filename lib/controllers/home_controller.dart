@@ -742,6 +742,10 @@ class HomeController extends ChangeNotifier {
     }
 
     final localStudent = _studentUsernameForPayload(_payload);
+    final syncBackEventIds = _collectEventIdsNeedingCloudSyncAfterRestore(
+      localPayload: _payload,
+      remotePayload: remotePayload,
+    );
     final hasLocalMutationsDuringRestore =
         _localMutationVersion != restoreStartedMutationVersion;
     LocalCachePayload nextPayload = _payload;
@@ -788,12 +792,26 @@ class HomeController extends ChangeNotifier {
       );
     }
 
-    await _persistAndApplyPayload(
+    final persistedPayload = await _persistAndApplyPayload(
       previousPayload: _payload,
       nextPayload: nextPayload,
       selectedDate: nextSelectedDate,
       linkedStudentUsername: remoteStudent,
+      syncToCloud: false,
     );
+
+    final syncBackEvents = _eventsByIds(
+      payload: persistedPayload,
+      ids: syncBackEventIds,
+    );
+    if (syncBackEvents.isNotEmpty) {
+      unawaited(
+        _dashboardPersistenceService.queueCloudSyncForPayload(
+          persistedPayload,
+          changedEvents: syncBackEvents,
+        ),
+      );
+    }
   }
 
   void _startInitialCloudRestore() {
@@ -967,10 +985,11 @@ class HomeController extends ChangeNotifier {
     required LocalCachePayload nextPayload,
     DateTime? selectedDate,
     String? linkedStudentUsername,
+    bool syncToCloud = true,
   }) async {
-    final persistedPayload = await _dashboardPersistenceService.persistPayload(
-      nextPayload,
-    );
+    final persistedPayload = syncToCloud
+        ? await _dashboardPersistenceService.persistPayload(nextPayload)
+        : await _dashboardPersistenceService.persistPayloadLocally(nextPayload);
     try {
       await _attachmentStorageService.deleteUnusedAttachments(
         previousEvents: [
@@ -1003,6 +1022,81 @@ class HomeController extends ChangeNotifier {
 
   void _markLocalMutation() {
     _localMutationVersion++;
+  }
+
+  Set<String> _collectEventIdsNeedingCloudSyncAfterRestore({
+    required LocalCachePayload localPayload,
+    required LocalCachePayload remotePayload,
+  }) {
+    final ids = <String>{};
+
+    final remotePersonalById = {
+      for (final event in remotePayload.personalEvents) event.id: event,
+    };
+    for (final localEvent in localPayload.personalEvents) {
+      final remoteEvent = remotePersonalById[localEvent.id];
+      if (remoteEvent == null ||
+          _personalEventNeedsCloudSync(localEvent, remoteEvent)) {
+        ids.add(localEvent.id);
+      }
+    }
+
+    final remoteSyncedBySignature = {
+      for (final event in remotePayload.syncedEvents)
+        _syncedEventSignature(event): event,
+    };
+    for (final localEvent in localPayload.syncedEvents) {
+      final remoteEvent =
+          remoteSyncedBySignature[_syncedEventSignature(localEvent)];
+      final localScore = _syncedEventDataScore(localEvent);
+      final remoteScore = remoteEvent == null
+          ? 0
+          : _syncedEventDataScore(remoteEvent);
+      if (localScore > 0 && remoteScore < localScore) {
+        ids.add(localEvent.id);
+      }
+    }
+
+    return ids;
+  }
+
+  bool _personalEventNeedsCloudSync(StudentEvent local, StudentEvent remote) {
+    if (local.title != remote.title ||
+        local.start != remote.start ||
+        local.end != remote.end ||
+        local.note != remote.note ||
+        local.isDone != remote.isDone ||
+        local.attachments.length != remote.attachments.length) {
+      return true;
+    }
+
+    for (var index = 0; index < local.attachments.length; index++) {
+      final localAttachment = local.attachments[index];
+      final remoteAttachment = remote.attachments[index];
+      if (localAttachment.id != remoteAttachment.id ||
+          localAttachment.name != remoteAttachment.name ||
+          localAttachment.remoteKey != remoteAttachment.remoteKey ||
+          localAttachment.path != remoteAttachment.path ||
+          localAttachment.bytesBase64 != remoteAttachment.bytesBase64) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  List<StudentEvent> _eventsByIds({
+    required LocalCachePayload payload,
+    required Set<String> ids,
+  }) {
+    if (ids.isEmpty) {
+      return const [];
+    }
+
+    return [
+        ...payload.syncedEvents,
+        ...payload.personalEvents,
+      ].where((event) => ids.contains(event.id)).toList()
+      ..sort((a, b) => a.start.compareTo(b.start));
   }
 
   LocalCachePayload _mergePayloadsForSameStudent({

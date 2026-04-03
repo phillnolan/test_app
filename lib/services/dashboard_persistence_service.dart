@@ -154,6 +154,14 @@ class DashboardPersistenceService {
     }
   }
 
+  Future<LocalCachePayload> persistPayloadLocally(
+    LocalCachePayload payload,
+  ) async {
+    await _localCacheService.save(payload);
+    await _deviceEffectsService.refreshDeviceState(payload);
+    return payload;
+  }
+
   Future<LocalPersistResult> persistPayloadLocallyAndSyncInBackground(
     LocalCachePayload payload, {
     StudentEvent? changedEvent,
@@ -175,6 +183,33 @@ class DashboardPersistenceService {
       payload: payload,
       cloudSyncCompletion: cloudSyncCompletion,
     );
+  }
+
+  Future<void> queueCloudSyncForPayload(
+    LocalCachePayload payload, {
+    List<StudentEvent> changedEvents = const [],
+    List<String> deletedEventIds = const [],
+  }) async {
+    if (changedEvents.isEmpty && deletedEventIds.isEmpty) {
+      return;
+    }
+
+    final completions = <Future<void>>[];
+    for (final event in changedEvents) {
+      completions.add(
+        _scheduleCloudSync(
+          CloudSyncDelta(payload: payload, changedEvent: event),
+        ),
+      );
+    }
+    for (final deletedEventId in deletedEventIds) {
+      completions.add(
+        _scheduleCloudSync(
+          CloudSyncDelta(payload: payload, deletedEventId: deletedEventId),
+        ),
+      );
+    }
+    await Future.wait(completions);
   }
 
   void invalidatePendingCloudSyncs() {
