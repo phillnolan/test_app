@@ -19,9 +19,9 @@ class SchoolApiService {
   static const Duration _requestTimeout = Duration(minutes: 1);
 
   static const _baseHost = 'https://sinhvien1.tlu.edu.vn/education';
-  static const List<int> _examStudentRouteIds = [14];
-  static const int _examSemesterStart = 66;
-  static const int _examSemesterEnd = 66;
+  static const List<int> _examStudentRouteIds = [13,14];
+  static const int _examSemesterStart = 50;
+  static const int _examSemesterEnd = 80;
 
   Future<SchoolSyncSnapshot> sync({
     required String username,
@@ -383,7 +383,7 @@ class SchoolApiService {
               type: StudentEventType.classSchedule,
               color: const Color(0xFFDDE7FF),
               location: room,
-              sourceNote: noteParts.isEmpty ? null : noteParts.join(' â€¢ '),
+              sourceNote: noteParts.isEmpty ? null : noteParts.join(' • '),
               referenceCode: null,
             ),
           );
