@@ -1,21 +1,22 @@
 installation:
   version: 6.2.2
-  installDate: 2026-04-02T06:52:00.062Z
-  lastUpdated: 2026-04-02T06:52:00.062Z
+  installDate: 2026-04-09T21:45:51.790Z
+  lastUpdated: 2026-04-09T21:45:51.790Z
 modules:
   - name: core
     version: 6.2.2
-    installDate: 2026-04-02T06:52:00.062Z
-    lastUpdated: 2026-04-02T06:52:00.062Z
+    installDate: 2026-04-09T21:45:51.790Z
+    lastUpdated: 2026-04-09T21:45:51.790Z
     source: built-in
     npmPackage: null
     repoUrl: null
   - name: bmm
     version: 6.2.2
-    installDate: 2026-04-02T06:52:00.000Z
-    lastUpdated: 2026-04-02T06:52:00.062Z
+    installDate: 2026-04-09T21:45:51.736Z
+    lastUpdated: 2026-04-09T21:45:51.790Z
     source: built-in
     npmPackage: null
     repoUrl: null
 ides:
   - codex
+  - gemini
