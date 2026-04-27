@@ -13,7 +13,7 @@ import '../../weather/data/weather_service.dart';
 import '../../weather/domain/weather_presentation.dart';
 import '../../attachments/data/attachment_storage_service.dart';
 import '../../../services/device_effects_service.dart';
-import '../../../services/widget_sync_service.dart';
+import '../../widget/data/widget_sync_service.dart';
 import '../../auth/ui/account_auth_controller.dart';
 import '../data/event_mutation_service.dart';
 import '../domain/home_calendar_utils.dart';

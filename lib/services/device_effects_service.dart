@@ -1,7 +1,7 @@
 import '../models/local_cache_payload.dart';
 import '../models/student_event.dart';
-import 'notification_service.dart';
-import 'widget_sync_service.dart';
+import '../features/notifications/data/notification_service.dart';
+import '../features/widget/data/widget_sync_service.dart';
 
 typedef NotificationRescheduler =
     Future<void> Function(List<StudentEvent> events);

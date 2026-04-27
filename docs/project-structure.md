@@ -36,11 +36,11 @@ lib/
 |   |-- http_client_factory_stub.dart
 |   |-- http_client_factory_web.dart
 |   |-- local_cache_service.dart
-|   |-- notification_service.dart
+|   |-- features/notifications/data/notification_service.dart
 |   |-- school_api_service.dart
 |   |-- school_sync_coordinator.dart
 |   |-- features/weather/data/weather_service.dart
-|   `-- widget_sync_service.dart
+|   `-- features/widget/data/widget_sync_service.dart
 |-- theme/
 |   `-- app_theme.dart
 |-- utils/
@@ -200,8 +200,8 @@ lib/
 
 ### Device integration
 
-- `notification_service.dart`
-- `widget_sync_service.dart`
+- `features/notifications/data/notification_service.dart`
+- `features/widget/data/widget_sync_service.dart`
 - `device_effects_service.dart`
 
 ### `lib/features/weather/data/`

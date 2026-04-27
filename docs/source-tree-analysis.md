@@ -56,7 +56,7 @@ sinhvien-app/
 ### `lib/services/`
 
 **Mục đích:** tích hợp hệ ngoài, local storage, notification và cloud sync  
-**Chứa:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `notification_service.dart`, `widget_sync_service.dart`  
+**Chứa:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `features/notifications/data/notification_service.dart`, `features/widget/data/widget_sync_service.dart`  
 **Ghi chú tích hợp:** là giao điểm giữa app và API trường/Firebase/Cloudflare
 
 ### `lib/views/home/`
@@ -144,7 +144,7 @@ cloudflare-worker/
 
 - `mobile-app` -> `worker-api`: qua `lib/features/sync/data/cloud_sync_service.dart`
 - `mobile-app` -> TLU education API: qua `lib/features/sync/data/school_api_service.dart`
-- `mobile-app` -> Android host widget: qua `lib/services/widget_sync_service.dart`
+- `mobile-app` -> Android host widget: qua `lib/features/widget/data/widget_sync_service.dart`
 
 ## File cấu hình cần chú ý
 

@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/student_event.dart';
-import '../models/student_profile.dart';
+import '../../../models/student_event.dart';
+import '../../../models/student_profile.dart';
 
 class WidgetSyncService {
   static const MethodChannel _channel = MethodChannel(

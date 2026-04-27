@@ -17,6 +17,10 @@ This document describes the target folder structure for standardizing
   `lib/features/attachments/data/` and `lib/features/attachments/ui/`.
 - `weather` has already been split into `lib/features/weather/data/`,
   `lib/features/weather/domain/`, and `lib/features/weather/ui/` scaffold.
+- `notifications` has already been split into
+  `lib/features/notifications/data/` and `lib/features/notifications/ui/`.
+- `widget` has already been split into
+  `lib/features/widget/data/` and `lib/features/widget/ui/` scaffold.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 
@@ -96,8 +100,8 @@ lib/
 | `lib/features/weather/data/weather_service.dart` | `lib/features/weather/data/` |
 | `lib/features/weather/data/weather_forecast.dart` | `lib/features/weather/data/` |
 | `lib/features/weather/domain/weather_presentation.dart` | `lib/features/weather/domain/` |
-| `lib/services/notification_service.dart` | `lib/features/notifications/data/` |
-| `lib/services/widget_sync_service.dart` | `lib/features/widget/data/` |
+| `lib/features/notifications/data/notification_service.dart` | `lib/features/notifications/data/` |
+| `lib/features/widget/data/widget_sync_service.dart` | `lib/features/widget/data/` |
 | `lib/theme/app_theme.dart` | `lib/core/theme/` |
 | `lib/utils/*` | `lib/core/utils/` |
 | `lib/models/*` | `lib/core/models/` or feature-local `data/` |

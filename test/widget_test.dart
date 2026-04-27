@@ -18,7 +18,7 @@ import 'package:sinhvien_app/models/school_sync_snapshot.dart';
 import 'package:sinhvien_app/models/student_event.dart';
 import 'package:sinhvien_app/models/student_profile.dart';
 import 'package:sinhvien_app/features/attachments/data/attachment_storage_service.dart';
-import 'package:sinhvien_app/services/widget_sync_service.dart';
+import 'package:sinhvien_app/features/widget/data/widget_sync_service.dart';
 import 'package:sinhvien_app/features/home/ui/home_shell.dart';
 
 void main() {

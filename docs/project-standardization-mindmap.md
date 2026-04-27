@@ -57,6 +57,12 @@ mindmap
         lib/features/weather/data/weather_forecast.dart
         lib/features/weather/domain/weather_presentation.dart
         lib/features/weather/ui/.gitkeep
+      Notifications da split sang feature-first
+        lib/features/notifications/data/notification_service.dart
+        lib/features/notifications/ui/.gitkeep
+      Widget da split sang feature-first
+        lib/features/widget/data/widget_sync_service.dart
+        lib/features/widget/ui/.gitkeep
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/features/grades/ui/grades_controller.dart
@@ -153,9 +159,10 @@ mindmap
         lib/features/weather/data/weather_service.dart
         lib/features/weather/data/weather_forecast.dart
         lib/features/weather/domain/weather_presentation.dart
-      Tiện ích
-        lib/services/widget_sync_service.dart
-        lib/services/notification_service.dart
+      Thông báo
+        lib/features/notifications/data/notification_service.dart
+      Widget
+        lib/features/widget/data/widget_sync_service.dart
       Học phí
         lib/features/home/ui/pages/tuition_page.dart
         lib/models/current_tuition.dart

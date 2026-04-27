@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'app.dart';
 import 'features/auth/data/auth_service.dart';
 import 'firebase_options.dart';
-import 'services/notification_service.dart';
+import 'features/notifications/data/notification_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
