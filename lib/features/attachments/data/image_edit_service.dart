@@ -6,7 +6,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
-import '../models/event_attachment.dart';
+import '../../../models/event_attachment.dart';
 import 'file_bytes_reader_stub.dart'
     if (dart.library.io) 'file_bytes_reader_io.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sinhvien_app/services/image_edit_service.dart';
+import 'package:sinhvien_app/features/attachments/data/image_edit_service.dart';
 
 void main() {
   test('containSize preserves aspect ratio inside the bounds', () {

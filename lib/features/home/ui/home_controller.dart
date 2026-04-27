@@ -10,7 +10,7 @@ import '../../../models/student_event.dart';
 import '../../../models/student_sync_credentials.dart';
 import '../../../models/weather_forecast.dart';
 import '../../../models/weather_presentation.dart';
-import '../../../services/attachment_storage_service.dart';
+import '../../attachments/data/attachment_storage_service.dart';
 import '../../../services/device_effects_service.dart';
 import '../../../services/weather_service.dart';
 import '../../../services/widget_sync_service.dart';

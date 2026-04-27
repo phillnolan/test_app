@@ -45,6 +45,13 @@ mindmap
       Auth da split sang feature-first
         lib/features/auth/data/auth_service.dart
         lib/features/auth/ui/account_auth_controller.dart
+      Attachments da split sang feature-first
+        lib/features/attachments/data/attachment_storage_service.dart
+        lib/features/attachments/data/attachment_import_service.dart
+        lib/features/attachments/data/attachment_opener.dart
+        lib/features/attachments/data/image_edit_service.dart
+        lib/features/attachments/ui/image_attachment_editor.dart
+        lib/features/attachments/ui/attachment_editing_helpers.dart
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/features/grades/ui/grades_controller.dart
@@ -101,9 +108,7 @@ mindmap
     Bản đồ tính năng
       Lịch và ghi chú
         lib/features/home/ui/pages/schedule_page.dart
-        lib/features/home/ui/image_attachment_editor.dart
-        lib/features/home/ui/widgets/attachment_editing_helpers.dart
-        task / note / attachment flow
+        task / note flow
       Điểm và GPA
         lib/features/grades/ui/grades_page.dart
         lib/features/grades/ui/grades_controller.dart
@@ -125,11 +130,17 @@ mindmap
         Firebase Auth
         Google Sign-In
       Tệp đính kèm
-        lib/services/attachment_storage_service.dart
-        lib/services/attachment_opener_io.dart
-        lib/services/attachment_opener_stub.dart
-        lib/services/attachment_opener_web.dart
-        lib/services/attachment_import_service.dart
+        lib/features/attachments/ui/image_attachment_editor.dart
+        lib/features/attachments/ui/attachment_editing_helpers.dart
+        lib/features/attachments/data/attachment_storage_service.dart
+        lib/features/attachments/data/attachment_import_service.dart
+        lib/features/attachments/data/attachment_opener.dart
+        lib/features/attachments/data/attachment_opener_io.dart
+        lib/features/attachments/data/attachment_opener_stub.dart
+        lib/features/attachments/data/attachment_opener_web.dart
+        lib/features/attachments/data/file_bytes_reader_io.dart
+        lib/features/attachments/data/file_bytes_reader_stub.dart
+        lib/features/attachments/data/image_edit_service.dart
       Thời tiết và tiện ích
         lib/services/weather_service.dart
         lib/services/widget_sync_service.dart

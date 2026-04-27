@@ -26,19 +26,11 @@ lib/
 |   |-- weather_forecast.dart
 |   `-- weather_presentation.dart
 |-- services/
-|   |-- attachment_opener.dart
-|   |-- attachment_opener_io.dart
-|   |-- attachment_opener_stub.dart
-|   |-- attachment_opener_web.dart
-|   |-- attachment_import_service.dart
-|   |-- attachment_storage_service.dart
 |   |-- features/auth/data/auth_service.dart
 |   |-- cloud_sync_service.dart
 |   |-- dashboard_persistence_service.dart
 |   |-- device_effects_service.dart
 |   |-- event_mutation_service.dart
-|   |-- file_bytes_reader_io.dart
-|   |-- file_bytes_reader_stub.dart
 |   |-- http_client_factory.dart
 |   |-- http_client_factory_io.dart
 |   |-- http_client_factory_stub.dart
@@ -48,7 +40,6 @@ lib/
 |   |-- school_api_service.dart
 |   |-- school_sync_coordinator.dart
 |   |-- weather_service.dart
-|   |-- image_edit_service.dart
 |   `-- widget_sync_service.dart
 |-- theme/
 |   `-- app_theme.dart
@@ -64,13 +55,11 @@ lib/
     |       `-- goal_planner_section.dart
     `-- home/
         |-- home_shell.dart
-        |-- image_attachment_editor.dart
         |-- pages/
         |   |-- account_page.dart
         |   |-- schedule_page.dart
         |   `-- sync_page.dart
         `-- widgets/
-            |-- attachment_editing_helpers.dart
             |-- home_common_widgets.dart
             |-- home_dialogs.dart
             `-- home_editors.dart
@@ -145,13 +134,11 @@ lib/
 ### `views/home`
 
 - `home_shell.dart`: entry view chinh, bind `HomeController`, dung `IndexedStack`, mo dialog/sheet/snackbar, so huu `ScrollController` cua day strip, va xu ly `post-frame` jump/animate cho lich ngang.
-- `image_attachment_editor.dart`: man hinh chinh sua anh attachment, giu state UI va gesture; decode, hit-test, render anh di qua `image_edit_service.dart`.
 - `pages/account_page.dart`: UI tab tai khoan.
 - `pages/schedule_page.dart`: UI tab lich, weather card, day strip, danh sach event.
 - `pages/sync_page.dart`: UI tab dong bo va metric profile.
 - `widgets/home_dialogs.dart`: dialog va sheet nhe nhu month picker, sync credentials, email auth.
 - `widgets/home_editors.dart`: editor cho note/task.
-- `widgets/attachment_editing_helpers.dart`: helper view-level cho picker/camera flow, mo image editor, sheet chon output va hien snackbar loi.
 - `widgets/home_common_widgets.dart`: widget dung chung trong nhom home.
 
 ### `views/grades`
@@ -160,6 +147,15 @@ lib/
 - `widgets/curriculum_subjects_section.dart`: render chuong trinh dao tao dua tren filter state cua controller.
 - `widgets/goal_planner_section.dart`: render planner GPA va gui input typed len controller.
 - View grades chi render va mo dialog; state co the test duoc nam o `grades_controller.dart`.
+
+### `lib/features/attachments/`
+
+- `data/attachment_import_service.dart`: nhap attachment tu file picker, camera va PDF.
+- `data/attachment_storage_service.dart`: luu, doc va don dep attachment local-first.
+- `data/attachment_opener.dart`: mo attachment theo platform qua cac implementation io/web/stub.
+- `data/image_edit_service.dart`: decode, crop va render anh da chinh sua.
+- `ui/image_attachment_editor.dart`: man hinh chinh sua anh attachment.
+- `ui/attachment_editing_helpers.dart`: helper view-level cho picker/camera flow va snackbars.
 
 ## Services
 
@@ -176,7 +172,7 @@ lib/
 - `dashboard_persistence_service.dart`
 - `event_mutation_service.dart`
 
-### Attachment, file, open document
+### `lib/features/attachments/data/`
 
 - `attachment_import_service.dart`
 - `attachment_storage_service.dart`

@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../models/event_attachment.dart';
-import '../models/student_event.dart';
+import '../../../models/event_attachment.dart';
+import '../../../models/student_event.dart';
 
 class AttachmentStorageService {
   Future<List<StudentEvent>> persistEvents(List<StudentEvent> events) async {

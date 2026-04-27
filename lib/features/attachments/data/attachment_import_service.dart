@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/widgets.dart' as pw;
 
-import '../models/event_attachment.dart';
+import '../../../models/event_attachment.dart';
 import 'file_bytes_reader_stub.dart'
     if (dart.library.io) 'file_bytes_reader_io.dart';
 

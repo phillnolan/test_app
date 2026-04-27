@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../models/event_attachment.dart';
 import '../../../../models/student_event.dart';
 import '../../domain/home_flow_models.dart';
-import 'attachment_editing_helpers.dart';
+import '../../../attachments/ui/attachment_editing_helpers.dart';
 
 class EnhancedNoteEditorSheet extends StatefulWidget {
   const EnhancedNoteEditorSheet({super.key, required this.event});

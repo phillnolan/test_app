@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
 import '../../../models/event_attachment.dart';
-import '../../../services/image_edit_service.dart';
+import '../data/image_edit_service.dart';
 
 class ImageAttachmentEditor extends StatefulWidget {
   const ImageAttachmentEditor({

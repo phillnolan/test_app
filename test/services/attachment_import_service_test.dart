@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
-import 'package:sinhvien_app/services/attachment_import_service.dart';
+import 'package:sinhvien_app/features/attachments/data/attachment_import_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

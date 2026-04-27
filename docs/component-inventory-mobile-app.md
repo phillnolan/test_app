@@ -72,7 +72,7 @@ App Flutter tổ chức component theo màn hình và widget hỗ trợ, chưa c
 
 ### `ImageAttachmentEditor`
 
-- **File:** `lib/views/home/image_attachment_editor.dart`
+- **File:** `lib/features/attachments/ui/image_attachment_editor.dart`
 - **Vai trò:** chỉnh sửa ảnh đính kèm
 - **Chức năng:** crop, vẽ, thêm chữ, undo, export lại
 

@@ -65,7 +65,7 @@ flutter run --dart-define=CLOUDFLARE_WORKER_URL=https://your-worker.example.work
 - `HomeController` là trung tâm orchestration, nên mọi thay đổi đồng bộ/event dễ ảnh hưởng chéo.
 - `SchoolApiService` chứa logic parse API trường; thay đổi field map cần test thật kỹ.
 - `GoalPlannerSection` có nhiều logic tính toán hơn các màn hình khác.
-- `image_attachment_editor.dart` là file UI lớn và tương đối độc lập.
+- `lib/features/attachments/ui/image_attachment_editor.dart` là file UI lớn và tương đối độc lập.
 
 ## Rủi ro hiện tại
 

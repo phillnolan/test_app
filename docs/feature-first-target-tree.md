@@ -13,6 +13,8 @@ This document describes the target folder structure for standardizing
   `lib/features/auth/ui/`.
 - `sync` has already been split into `lib/features/sync/data/`,
   `lib/features/sync/domain/`, and `lib/features/sync/ui/` scaffold.
+- `attachments` has already been split into
+  `lib/features/attachments/data/` and `lib/features/attachments/ui/`.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 
@@ -81,9 +83,13 @@ lib/
 | `lib/services/dashboard_persistence_service.dart` | `lib/features/sync/data/` |
 | `lib/services/cloud_sync_service.dart` | `lib/features/sync/data/` |
 | `lib/services/event_mutation_service.dart` | `lib/features/home/data/` |
-| `lib/services/attachment_storage_service.dart` | `lib/features/attachments/data/` |
-| `lib/services/attachment_import_service.dart` | `lib/features/attachments/data/` |
-| `lib/services/attachment_opener*.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/data/attachment_storage_service.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/data/attachment_import_service.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/data/attachment_opener*.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/data/file_bytes_reader*.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/data/image_edit_service.dart` | `lib/features/attachments/data/` |
+| `lib/features/attachments/ui/image_attachment_editor.dart` | `lib/features/attachments/ui/` |
+| `lib/features/attachments/ui/attachment_editing_helpers.dart` | `lib/features/attachments/ui/` |
 | `lib/services/weather_service.dart` | `lib/features/weather/data/` |
 | `lib/services/notification_service.dart` | `lib/features/notifications/data/` |
 | `lib/services/widget_sync_service.dart` | `lib/features/widget/data/` |

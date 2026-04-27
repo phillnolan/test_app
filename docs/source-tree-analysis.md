@@ -62,13 +62,19 @@ sinhvien-app/
 ### `lib/views/home/`
 
 **Mục đích:** shell và tab lịch/đồng bộ/tài khoản  
-**Chứa:** `home_shell.dart`, `pages/`, `widgets/`, `image_attachment_editor.dart`  
+**Chứa:** `home_shell.dart`, `pages/`, `widgets/`  
 **Entry points:** `home_shell.dart`
 
 ### `lib/features/grades/`
 
 **Mục đích:** tab bảng điểm và lập kế hoạch GPA  
 **Chứa:** `grades_page.dart`, `widgets/curriculum_subjects_section.dart`, `widgets/goal_planner_section.dart`
+
+### `lib/features/attachments/`
+
+**Má»¥c Ä‘Ã­ch:** nháº­p, lÆ°u, má»Ÿ vÃ  chá»‰nh sá»­a tá»‡p Ä‘Ã­nh kÃ¨m  
+**Chá»©a:** `data/attachment_storage_service.dart`, `data/attachment_import_service.dart`, `data/attachment_opener*.dart`, `data/file_bytes_reader*.dart`, `data/image_edit_service.dart`, `ui/image_attachment_editor.dart`, `ui/attachment_editing_helpers.dart`  
+**Entry points:** `ui/image_attachment_editor.dart`
 
 ### `android/app/src/main/kotlin/com/example/sinhvien_app/`
 

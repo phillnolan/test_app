@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../models/event_attachment.dart';
-import '../../../../services/attachment_import_service.dart';
-import '../../../../services/image_edit_service.dart';
-import '../image_attachment_editor.dart';
+import '../../../models/event_attachment.dart';
+import '../data/attachment_import_service.dart';
+import '../data/image_edit_service.dart';
+import 'image_attachment_editor.dart';
 
 final AttachmentImportService _attachmentImportService =
     AttachmentImportService();
