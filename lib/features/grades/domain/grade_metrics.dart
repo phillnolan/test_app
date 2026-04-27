@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
-import '../models/grade_item.dart';
-import '../models/program_subject.dart';
+import '../../../models/grade_item.dart';
+import '../../../models/program_subject.dart';
 
 class GradeMetricsSummary {
   const GradeMetricsSummary({

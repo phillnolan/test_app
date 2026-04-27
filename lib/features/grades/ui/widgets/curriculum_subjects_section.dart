@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../controllers/grades_controller.dart';
-import '../../../models/program_subject.dart';
+import '../../../../models/program_subject.dart';
+import '../grades_controller.dart';
 
 class CurriculumDialogButton extends StatelessWidget {
   const CurriculumDialogButton({

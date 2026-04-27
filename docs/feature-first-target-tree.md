@@ -7,6 +7,8 @@ This document describes the target folder structure for standardizing
 
 - `home` has already been split into `lib/features/home/ui/`,
   `lib/features/home/domain/`, and `lib/features/home/data/`.
+- `grades` has already been split into `lib/features/grades/ui/`,
+  `lib/features/grades/domain/`, and `lib/features/grades/data/` scaffold.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 

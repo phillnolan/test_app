@@ -54,18 +54,18 @@ App Flutter tổ chức component theo màn hình và widget hỗ trợ, chưa c
 
 ### `GradesPage`
 
-- **File:** `lib/views/grades/grades_page.dart`
+- **File:** `lib/features/grades/ui/grades_page.dart`
 - **Vai trò:** tổng quan GPA, danh sách điểm, nhúng planner và dialog chương trình đào tạo
 
 ### `GoalPlannerSection`
 
-- **File:** `lib/views/grades/widgets/goal_planner_section.dart`
+- **File:** `lib/features/grades/ui/widgets/goal_planner_section.dart`
 - **Vai trò:** tính lộ trình GPA mục tiêu, chọn môn chắc A, gợi ý học lại
 - **Độ phức tạp:** cao nhất trong tab điểm
 
 ### `CurriculumDialogButton` + `CurriculumSubjectsDialog`
 
-- **File:** `lib/views/grades/widgets/curriculum_subjects_section.dart`
+- **File:** `lib/features/grades/ui/widgets/curriculum_subjects_section.dart`
 - **Vai trò:** xem chương trình đào tạo, nhóm theo khối kiến thức, hiển thị tiến độ hoàn thành
 
 ## Nhóm editor, sheet, dialog

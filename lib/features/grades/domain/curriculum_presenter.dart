@@ -1,5 +1,5 @@
-import '../models/grade_item.dart';
-import '../models/program_subject.dart';
+import '../../../models/grade_item.dart';
+import '../../../models/program_subject.dart';
 import 'grade_metrics.dart';
 
 class CurriculumPresentation {

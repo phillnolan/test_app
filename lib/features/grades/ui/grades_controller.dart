@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-import '../models/grade_item.dart';
-import '../models/program_subject.dart';
-import '../utils/curriculum_presenter.dart';
-import '../utils/grade_metrics.dart';
+import '../../../models/grade_item.dart';
+import '../../../models/program_subject.dart';
+import '../domain/curriculum_presenter.dart';
+import '../domain/grade_metrics.dart';
 
 class GradesController extends ChangeNotifier {
   GradesController({

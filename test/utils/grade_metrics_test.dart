@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/models/grade_item.dart';
 import 'package:sinhvien_app/models/program_subject.dart';
-import 'package:sinhvien_app/utils/grade_metrics.dart';
+import 'package:sinhvien_app/features/grades/domain/grade_metrics.dart';
 
 void main() {
   test(

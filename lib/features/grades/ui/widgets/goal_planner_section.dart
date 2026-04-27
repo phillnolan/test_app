@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../controllers/grades_controller.dart';
-import '../../../models/program_subject.dart';
-import '../../../utils/grade_metrics.dart';
+import '../../../../models/program_subject.dart';
+import '../../domain/grade_metrics.dart';
+import '../grades_controller.dart';
 
 class GoalPlannerSection extends StatefulWidget {
   const GoalPlannerSection({super.key, required this.controller});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../controllers/grades_controller.dart';
-import '../../models/grade_item.dart';
-import '../../models/program_subject.dart';
+import '../../../models/grade_item.dart';
+import '../../../models/program_subject.dart';
+import 'grades_controller.dart';
 import 'widgets/curriculum_subjects_section.dart';
 import 'widgets/goal_planner_section.dart';
 

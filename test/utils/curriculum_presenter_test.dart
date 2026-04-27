@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/models/grade_item.dart';
 import 'package:sinhvien_app/models/program_subject.dart';
-import 'package:sinhvien_app/utils/curriculum_presenter.dart';
+import 'package:sinhvien_app/features/grades/domain/curriculum_presenter.dart';
 
 void main() {
   test('buildCurriculumPresentation dedupe, group va danh dau mon da qua', () {

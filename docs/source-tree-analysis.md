@@ -65,7 +65,7 @@ sinhvien-app/
 **Chứa:** `home_shell.dart`, `pages/`, `widgets/`, `image_attachment_editor.dart`  
 **Entry points:** `home_shell.dart`
 
-### `lib/views/grades/`
+### `lib/features/grades/`
 
 **Mục đích:** tab bảng điểm và lập kế hoạch GPA  
 **Chứa:** `grades_page.dart`, `widgets/curriculum_subjects_section.dart`, `widgets/goal_planner_section.dart`

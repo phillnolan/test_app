@@ -28,9 +28,15 @@ mindmap
         lib/features/home/domain/home_calendar_utils.dart
         lib/features/home/domain/home_calendar_types.dart
         lib/features/home/data/event_mutation_service.dart
+      Grades đã split sang feature-first
+        lib/features/grades/ui/grades_controller.dart
+        lib/features/grades/ui/grades_page.dart
+        lib/features/grades/ui/widgets/*
+        lib/features/grades/domain/curriculum_presenter.dart
+        lib/features/grades/domain/grade_metrics.dart
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
-        lib/controllers/grades_controller.dart
+        lib/features/grades/ui/grades_controller.dart
         lib/controllers/account_auth_controller.dart
       Entry points
         lib/main.dart
@@ -88,10 +94,10 @@ mindmap
         lib/features/home/ui/widgets/attachment_editing_helpers.dart
         task / note / attachment flow
       Điểm và GPA
-        lib/views/grades/grades_page.dart
-        lib/controllers/grades_controller.dart
-        lib/utils/curriculum_presenter.dart
-        lib/utils/grade_metrics.dart
+        lib/features/grades/ui/grades_page.dart
+        lib/features/grades/ui/grades_controller.dart
+        lib/features/grades/domain/curriculum_presenter.dart
+        lib/features/grades/domain/grade_metrics.dart
       Đồng bộ sinh viên
         lib/services/school_api_service.dart
         lib/services/school_sync_coordinator.dart
