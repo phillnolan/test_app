@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/controllers/account_auth_controller.dart';
 import 'package:sinhvien_app/features/home/ui/home_controller.dart';
-import 'package:sinhvien_app/features/home/ui/home_flow_models.dart';
+import 'package:sinhvien_app/features/home/domain/home_flow_models.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
 import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';

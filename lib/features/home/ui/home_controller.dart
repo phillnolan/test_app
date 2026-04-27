@@ -14,16 +14,16 @@ import '../../../services/attachment_storage_service.dart';
 import '../../../services/cloud_sync_service.dart';
 import '../../../services/dashboard_persistence_service.dart';
 import '../../../services/device_effects_service.dart';
-import '../../../services/event_mutation_service.dart';
 import '../../../services/local_cache_service.dart';
 import '../../../services/school_api_service.dart';
 import '../../../services/school_sync_coordinator.dart';
 import '../../../services/student_sync_credentials_service.dart';
 import '../../../services/weather_service.dart';
 import '../../../services/widget_sync_service.dart';
-import '../../../utils/home_calendar_utils.dart';
 import '../../../controllers/account_auth_controller.dart';
-import 'home_flow_models.dart';
+import '../data/event_mutation_service.dart';
+import '../domain/home_calendar_utils.dart';
+import '../domain/home_flow_models.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController({

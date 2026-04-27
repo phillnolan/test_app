@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../features/home/ui/home_flow_models.dart';
-import '../models/event_attachment.dart';
-import '../models/home_action_result.dart';
-import '../models/local_cache_payload.dart';
-import '../models/student_event.dart';
-import 'attachment_opener.dart';
-import 'attachment_storage_service.dart';
-import 'cloud_sync_service.dart';
-import 'dashboard_persistence_service.dart';
+import '../../../models/event_attachment.dart';
+import '../../../models/home_action_result.dart';
+import '../../../models/local_cache_payload.dart';
+import '../../../models/student_event.dart';
+import '../../../services/attachment_opener.dart';
+import '../../../services/attachment_storage_service.dart';
+import '../../../services/cloud_sync_service.dart';
+import '../../../services/dashboard_persistence_service.dart';
+import '../domain/home_flow_models.dart';
 
 enum PendingEventSyncAction { saving, deleting }
 

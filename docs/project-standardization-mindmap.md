@@ -19,11 +19,15 @@ mindmap
         services tích hợp ngoại vi
         models dữ liệu dùng chung
         utils tính toán và presenter
-      Home đã migrate
+      Home đã split sang feature-first
         lib/features/home/ui/home_controller.dart
         lib/features/home/ui/home_shell.dart
         lib/features/home/ui/pages/*
         lib/features/home/ui/widgets/*
+        lib/features/home/domain/home_flow_models.dart
+        lib/features/home/domain/home_calendar_utils.dart
+        lib/features/home/domain/home_calendar_types.dart
+        lib/features/home/data/event_mutation_service.dart
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/controllers/grades_controller.dart
@@ -79,9 +83,9 @@ mindmap
         doc comments cho API công khai
     Bản đồ tính năng
       Lịch và ghi chú
-        lib/views/home/pages/schedule_page.dart
-        lib/views/home/image_attachment_editor.dart
-        lib/views/home/widgets/attachment_editing_helpers.dart
+        lib/features/home/ui/pages/schedule_page.dart
+        lib/features/home/ui/image_attachment_editor.dart
+        lib/features/home/ui/widgets/attachment_editing_helpers.dart
         task / note / attachment flow
       Điểm và GPA
         lib/views/grades/grades_page.dart
@@ -93,11 +97,11 @@ mindmap
         lib/services/school_sync_coordinator.dart
         lib/services/local_cache_service.dart
         lib/services/dashboard_persistence_service.dart
-        lib/views/home/pages/sync_page.dart
+        lib/features/home/ui/pages/sync_page.dart
       Tài khoản và xác thực
         lib/controllers/account_auth_controller.dart
         lib/services/auth_service.dart
-        lib/views/home/pages/account_page.dart
+        lib/features/home/ui/pages/account_page.dart
         Firebase Auth
         Google Sign-In
       Tệp đính kèm
@@ -111,7 +115,7 @@ mindmap
         lib/services/widget_sync_service.dart
         lib/services/notification_service.dart
       Học phí
-        lib/views/home/pages/tuition_page.dart
+        lib/features/home/ui/pages/tuition_page.dart
         lib/models/current_tuition.dart
     Luồng dữ liệu
       Local first
@@ -151,7 +155,7 @@ mindmap
     Migration order
       1. Giữ startup và data flow ổn định
       2. Tách shared/core khỏi feature
-      3. Home đã được chuyển sang `lib/features/home/ui/`
+      3. Home đã được chuyển sang `lib/features/home/ui/`, `domain/`, và `data/`
       4. Migrate từng feature sang Riverpod
       5. Chuẩn hóa state/result bằng sealed classes
       6. Cập nhật tests và docs sau mỗi lát cắt

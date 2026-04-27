@@ -5,7 +5,8 @@ This document describes the target folder structure for standardizing
 
 ## Current migration status
 
-- `home` has already been moved into `lib/features/home/ui/`.
+- `home` has already been split into `lib/features/home/ui/`,
+  `lib/features/home/domain/`, and `lib/features/home/data/`.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 
@@ -73,7 +74,7 @@ lib/
 | `lib/services/local_cache_service.dart` | `lib/features/sync/data/` |
 | `lib/services/dashboard_persistence_service.dart` | `lib/features/sync/data/` |
 | `lib/services/cloud_sync_service.dart` | `lib/features/sync/data/` |
-| `lib/services/event_mutation_service.dart` | `lib/features/home/domain/` |
+| `lib/services/event_mutation_service.dart` | `lib/features/home/data/` |
 | `lib/services/attachment_storage_service.dart` | `lib/features/attachments/data/` |
 | `lib/services/attachment_import_service.dart` | `lib/features/attachments/data/` |
 | `lib/services/attachment_opener*.dart` | `lib/features/attachments/data/` |

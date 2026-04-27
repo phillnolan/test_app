@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/student_event.dart';
-import '../features/home/ui/widgets/home_dialogs.dart';
+import 'home_calendar_types.dart';
 
 class HomeCalendarUtils {
   const HomeCalendarUtils._();

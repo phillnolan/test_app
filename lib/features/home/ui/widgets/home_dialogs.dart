@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../home_flow_models.dart';
-
-enum CalendarEventLevel { none, normal, important }
+import '../../domain/home_calendar_types.dart';
+import '../../domain/home_flow_models.dart';
 
 class MonthPickerDialog extends StatefulWidget {
   const MonthPickerDialog({
