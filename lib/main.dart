@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 import 'firebase_options.dart';
+import 'services/auth_service.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {
@@ -13,6 +14,11 @@ Future<void> main() async {
     );
   } catch (_) {
     // Allow the app to run without Firebase on unsupported platforms.
+  }
+  try {
+    await AuthService().initializeGoogleSignIn();
+  } catch (_) {
+    // Keep the app running if Google Sign-In is unavailable.
   }
   await NotificationService.instance.initialize();
   runApp(const StudentPlannerApp());

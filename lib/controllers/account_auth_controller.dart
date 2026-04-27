@@ -22,6 +22,17 @@ class AccountAuthController {
   }
 
   Future<HomeActionResult> submitEmailAuth(EmailAuthResult result) async {
+    final messages = switch (result.mode) {
+      EmailAuthMode.signIn => (
+        success: 'Đăng nhập tài khoản thành công.',
+        failure: 'Không thể đăng nhập.',
+      ),
+      EmailAuthMode.register => (
+        success: 'Đăng ký tài khoản thành công.',
+        failure: 'Không thể đăng ký.',
+      ),
+    };
+
     try {
       if (result.mode == EmailAuthMode.signIn) {
         await _authService.signInWithEmail(
@@ -35,9 +46,11 @@ class AccountAuthController {
         );
       }
 
-      return const HomeActionResult.success('Đăng nhập tài khoản thành công.');
+      return HomeActionResult.success(messages.success);
     } on FirebaseAuthException catch (error) {
-      return HomeActionResult.failure(error.message ?? 'Không thể đăng nhập.');
+      return HomeActionResult.failure(error.message ?? messages.failure);
+    } catch (_) {
+      return HomeActionResult.failure(messages.failure);
     }
   }
 

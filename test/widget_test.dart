@@ -34,7 +34,7 @@ void main() {
 
     expect(find.text('Lịch'), findsOneWidget);
     expect(find.text('Điểm'), findsOneWidget);
-    expect(find.text('Đồng bộ'), findsOneWidget);
+    expect(find.text('Học phí'), findsOneWidget);
     expect(find.text('Tài khoản'), findsOneWidget);
 
     controller.dispose();
@@ -85,6 +85,7 @@ void main() {
               username: 'new-user',
               displayName: 'New User',
             ),
+            currentTuition: null,
             grades: const [],
             curriculumSubjects: const [],
             curriculumRawItems: const [],
@@ -110,12 +111,16 @@ void main() {
         const CredentialsResult(username: 'new-user', password: 'secret'),
       );
 
-      expect(result.isSuccess, isTrue);
-      expect(controller.payload.profile?.username, 'new-user');
-      expect(controller.payload.personalEvents, isEmpty);
-      expect(controller.payload.syncedEvents, hasLength(1));
-      expect(controller.currentTab, 0);
-      expect(localCache.savedPayloads, isNotEmpty);
+      expect(result.isSuccess, isFalse);
+      expect(
+        result.message,
+        'Cần xác nhận liên kết tài khoản trước khi đồng bộ.',
+      );
+      expect(controller.payload.profile?.username, 'old-user');
+      expect(controller.payload.personalEvents, hasLength(1));
+      expect(controller.payload.syncedEvents, isEmpty);
+      expect(controller.currentTab, 2);
+      expect(localCache.savedPayloads, isEmpty);
 
       controller.dispose();
     },
@@ -177,6 +182,40 @@ void main() {
 
     expect(result.isSuccess, isFalse);
     expect(result.message, 'Sai mật khẩu.');
+  });
+
+  test('account auth controller returns sign in success message', () async {
+    final controller = AccountAuthController(
+      authService: FakeAuthService(available: true),
+    );
+
+    final result = await controller.submitEmailAuth(
+      const EmailAuthResult(
+        mode: EmailAuthMode.signIn,
+        email: 'student@example.com',
+        password: 'secret-pass',
+      ),
+    );
+
+    expect(result.isSuccess, isTrue);
+    expect(result.message, 'Đăng nhập tài khoản thành công.');
+  });
+
+  test('account auth controller returns sign up success message', () async {
+    final controller = AccountAuthController(
+      authService: FakeAuthService(available: true),
+    );
+
+    final result = await controller.submitEmailAuth(
+      const EmailAuthResult(
+        mode: EmailAuthMode.register,
+        email: 'student@example.com',
+        password: 'secret-pass',
+      ),
+    );
+
+    expect(result.isSuccess, isTrue);
+    expect(result.message, 'Đăng ký tài khoản thành công.');
   });
 }
 
@@ -263,6 +302,7 @@ class FakeSchoolApiService extends SchoolApiService {
               username: 'user-1',
               displayName: 'Student',
             ),
+            currentTuition: null,
             grades: const [],
             curriculumSubjects: const [],
             curriculumRawItems: const [],
@@ -306,6 +346,12 @@ class FakeAttachmentStorageService extends AttachmentStorageService {
   Future<Uint8List?> readAttachmentBytes(EventAttachment attachment) async {
     return null;
   }
+
+  @override
+  Future<void> deleteUnusedAttachments({
+    required List<StudentEvent> previousEvents,
+    required List<StudentEvent> nextEvents,
+  }) async {}
 }
 
 class FakeCloudSyncService extends CloudSyncService {

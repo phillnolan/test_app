@@ -38,16 +38,16 @@ void main() {
       expect(weather, isNotNull);
       expect(weather!.description, 'Troi quang');
       expect(weather.temperatureRangeLabel, '24° - 31°');
-      expect(weather.precipitationLabel, 'Mua 20%');
+      expect(weather.precipitationLabel, 'Mưa 20%');
       expect(weather.suggestions, isNotEmpty);
 
       controller.dispose();
     },
   );
 
-  testWidgets('syncSchoolData clears personal events for another student', (
-    WidgetTester tester,
-  ) async {
+  testWidgets(
+    'syncSchoolData requires confirmation before replacing another student',
+    (WidgetTester tester) async {
     final localCacheService = _MemoryLocalCacheService(
       initialPayload: LocalCachePayload(
         profile: const StudentProfile(
@@ -65,6 +65,7 @@ void main() {
             username: 'new-user',
             displayName: 'New User',
           ),
+          currentTuition: null,
           grades: const [],
           curriculumSubjects: const [],
           curriculumRawItems: const [],
@@ -85,21 +86,27 @@ void main() {
 
     controller.initialize();
     await tester.pump();
+    final initialSelectedDate = controller.selectedDate;
 
     final result = await controller.syncSchoolData(
       const CredentialsResult(username: 'new-user', password: 'secret'),
     );
     await tester.pump();
 
-    expect(result.isSuccess, isTrue);
-    expect(controller.payload.profile?.username, 'new-user');
-    expect(controller.payload.personalEvents, isEmpty);
-    expect(controller.payload.syncedEvents, hasLength(1));
-    expect(controller.selectedDate, DateTime(2026, 4, 10));
-    expect(localCacheService.savedPayloads, isNotEmpty);
+    expect(result.isSuccess, isFalse);
+    expect(
+      result.message,
+      'Cần xác nhận liên kết tài khoản trước khi đồng bộ.',
+    );
+    expect(controller.payload.profile?.username, 'old-user');
+    expect(controller.payload.personalEvents, hasLength(1));
+    expect(controller.payload.syncedEvents, isEmpty);
+    expect(controller.selectedDate, initialSelectedDate);
+    expect(localCacheService.savedPayloads, isEmpty);
 
     controller.dispose();
-  });
+    },
+  );
 
   testWidgets('toggleDone persists updated personal task state', (
     WidgetTester tester,
@@ -118,6 +125,8 @@ void main() {
     controller.initialize();
     await tester.pump();
     await controller.toggleDone('task-1');
+    await tester.pump(const Duration(seconds: 9));
+    await tester.pumpAndSettle();
 
     expect(controller.payload.personalEvents.single.isDone, isTrue);
     expect(
@@ -218,6 +227,7 @@ void main() {
 
     controller.initialize();
     await tester.pump();
+    await tester.pump(const Duration(seconds: 6));
     await tester.pump();
 
     expect(controller.payload.profile?.username, 'remote-user');
@@ -254,6 +264,7 @@ void main() {
 
     controller.initialize();
     await tester.pump();
+    await tester.pump(const Duration(seconds: 6));
     await tester.pump();
 
     expect(controller.payload.profile?.username, 'local-user');
@@ -287,6 +298,8 @@ HomeController _buildController({
     accountAuthController:
         accountAuthController ??
         AccountAuthController(authService: _FakeAuthService()),
+    attachmentStorageService:
+        attachmentStorageService ?? _FakeAttachmentStorageService(),
     schoolSyncCoordinator: SchoolSyncCoordinator(
       schoolApiService: schoolApiService ?? _FakeSchoolApiService(),
     ),
@@ -339,7 +352,10 @@ class _StreamAuthService extends AuthService {
   Stream<User?> authStateChanges() => authStates;
 }
 
-class _FakeUser extends Fake implements User {}
+class _FakeUser extends Fake implements User {
+  @override
+  String get uid => 'fake-uid';
+}
 
 class _MemoryLocalCacheService extends LocalCacheService {
   _MemoryLocalCacheService({LocalCachePayload? initialPayload})
@@ -370,6 +386,7 @@ class _FakeSchoolApiService extends SchoolApiService {
               username: 'user-1',
               displayName: 'Student',
             ),
+            currentTuition: null,
             grades: const [],
             curriculumSubjects: const [],
             curriculumRawItems: const [],
@@ -398,6 +415,12 @@ class _FakeAttachmentStorageService extends AttachmentStorageService {
   Future<Uint8List?> readAttachmentBytes(EventAttachment attachment) async {
     return null;
   }
+
+  @override
+  Future<void> deleteUnusedAttachments({
+    required List<StudentEvent> previousEvents,
+    required List<StudentEvent> nextEvents,
+  }) async {}
 }
 
 class _FakeCloudSyncService extends CloudSyncService {

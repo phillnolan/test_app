@@ -3,7 +3,7 @@
 **Type:** monorepo with 2 parts  
 **Primary Language:** Dart, TypeScript  
 **Architecture:** Flutter MVC thực dụng + Cloudflare Worker REST API  
-**Last Updated:** 2026-04-02T14:13:05+07:00
+**Last Updated:** 2026-04-28T01:39:41+07:00
 
 ## Project Overview
 
@@ -50,6 +50,8 @@ This project consists of 2 parts:
 ## Generated Documentation
 
 ### Core Documentation
+
+- [Project Standardization Mindmap](./project-standardization-mindmap.md) - Mindmap chuan hoa cau truc, sync flow, test va standards
 
 - [Project Overview](./project-overview.md) - Executive summary và phân loại repo
 - [Source Tree Analysis](./source-tree-analysis.md) - Cây thư mục có chú giải

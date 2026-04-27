@@ -208,7 +208,7 @@ class HomeController extends ChangeNotifier {
       notifyListeners();
     });
 
-    unawaited(_loadLocalCache());
+    final localCacheFuture = _loadLocalCache();
     unawaited(_loadSavedSyncCredentials());
     unawaited(reloadWeather());
 
@@ -221,7 +221,14 @@ class HomeController extends ChangeNotifier {
       });
 
       if (_signedInUser != null) {
-        _startInitialCloudRestore();
+        unawaited(
+          localCacheFuture.whenComplete(() {
+            if (_isDisposed || _signedInUser == null) {
+              return;
+            }
+            _startInitialCloudRestore();
+          }),
+        );
       }
     }
   }
@@ -700,11 +707,15 @@ class HomeController extends ChangeNotifier {
       return;
     }
 
-    _payload = cached;
-    _selectedDate = _dashboardPersistenceService.selectedDateForPayload(
-      cached,
-      _today,
-    );
+    // Keep the newer payload if cloud restore already applied or if the
+    // current in-memory state was mutated after the cache request started.
+    if (_dashboardPersistenceService.shouldUseRemotePayload(_payload, cached)) {
+      _payload = cached;
+      _selectedDate = _dashboardPersistenceService.selectedDateForPayload(
+        cached,
+        _today,
+      );
+    }
     _isLoadingLocalCache = false;
     notifyListeners();
   }
