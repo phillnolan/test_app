@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/controllers/account_auth_controller.dart';
-import 'package:sinhvien_app/controllers/home_controller.dart';
-import 'package:sinhvien_app/controllers/home_flow_models.dart';
+import 'package:sinhvien_app/features/home/ui/home_controller.dart';
+import 'package:sinhvien_app/features/home/ui/home_flow_models.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
 import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';
@@ -19,7 +19,7 @@ import 'package:sinhvien_app/services/local_cache_service.dart';
 import 'package:sinhvien_app/services/school_api_service.dart';
 import 'package:sinhvien_app/services/weather_service.dart';
 import 'package:sinhvien_app/services/widget_sync_service.dart';
-import 'package:sinhvien_app/views/home/home_shell.dart';
+import 'package:sinhvien_app/features/home/ui/home_shell.dart';
 
 void main() {
   testWidgets('home shell renders tabs with injected controller', (

@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/controllers/account_auth_controller.dart';
-import 'package:sinhvien_app/controllers/home_controller.dart';
-import 'package:sinhvien_app/controllers/home_flow_models.dart';
+import 'package:sinhvien_app/features/home/ui/home_controller.dart';
+import 'package:sinhvien_app/features/home/ui/home_flow_models.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
 import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';
@@ -48,63 +48,63 @@ void main() {
   testWidgets(
     'syncSchoolData requires confirmation before replacing another student',
     (WidgetTester tester) async {
-    final localCacheService = _MemoryLocalCacheService(
-      initialPayload: LocalCachePayload(
-        profile: const StudentProfile(
-          username: 'old-user',
-          displayName: 'Old User',
-        ),
-        personalEvents: [_personalTask(id: 'task-1')],
-      ),
-    );
-    final controller = _buildController(
-      localCacheService: localCacheService,
-      schoolApiService: _FakeSchoolApiService(
-        snapshot: SchoolSyncSnapshot(
+      final localCacheService = _MemoryLocalCacheService(
+        initialPayload: LocalCachePayload(
           profile: const StudentProfile(
-            username: 'new-user',
-            displayName: 'New User',
+            username: 'old-user',
+            displayName: 'Old User',
           ),
-          currentTuition: null,
-          grades: const [],
-          curriculumSubjects: const [],
-          curriculumRawItems: const [],
-          events: [
-            StudentEvent(
-              id: 'exam-1',
-              title: 'Thi giua ky',
-              start: DateTime(2026, 4, 10, 7, 0),
-              end: DateTime(2026, 4, 10, 9, 0),
-              type: StudentEventType.exam,
-              color: const Color(0xFFFFDAD6),
-            ),
-          ],
-          syncedAt: DateTime(2026, 4, 10, 9, 0),
+          personalEvents: [_personalTask(id: 'task-1')],
         ),
-      ),
-    );
+      );
+      final controller = _buildController(
+        localCacheService: localCacheService,
+        schoolApiService: _FakeSchoolApiService(
+          snapshot: SchoolSyncSnapshot(
+            profile: const StudentProfile(
+              username: 'new-user',
+              displayName: 'New User',
+            ),
+            currentTuition: null,
+            grades: const [],
+            curriculumSubjects: const [],
+            curriculumRawItems: const [],
+            events: [
+              StudentEvent(
+                id: 'exam-1',
+                title: 'Thi giua ky',
+                start: DateTime(2026, 4, 10, 7, 0),
+                end: DateTime(2026, 4, 10, 9, 0),
+                type: StudentEventType.exam,
+                color: const Color(0xFFFFDAD6),
+              ),
+            ],
+            syncedAt: DateTime(2026, 4, 10, 9, 0),
+          ),
+        ),
+      );
 
-    controller.initialize();
-    await tester.pump();
-    final initialSelectedDate = controller.selectedDate;
+      controller.initialize();
+      await tester.pump();
+      final initialSelectedDate = controller.selectedDate;
 
-    final result = await controller.syncSchoolData(
-      const CredentialsResult(username: 'new-user', password: 'secret'),
-    );
-    await tester.pump();
+      final result = await controller.syncSchoolData(
+        const CredentialsResult(username: 'new-user', password: 'secret'),
+      );
+      await tester.pump();
 
-    expect(result.isSuccess, isFalse);
-    expect(
-      result.message,
-      'Cần xác nhận liên kết tài khoản trước khi đồng bộ.',
-    );
-    expect(controller.payload.profile?.username, 'old-user');
-    expect(controller.payload.personalEvents, hasLength(1));
-    expect(controller.payload.syncedEvents, isEmpty);
-    expect(controller.selectedDate, initialSelectedDate);
-    expect(localCacheService.savedPayloads, isEmpty);
+      expect(result.isSuccess, isFalse);
+      expect(
+        result.message,
+        'Cần xác nhận liên kết tài khoản trước khi đồng bộ.',
+      );
+      expect(controller.payload.profile?.username, 'old-user');
+      expect(controller.payload.personalEvents, hasLength(1));
+      expect(controller.payload.syncedEvents, isEmpty);
+      expect(controller.selectedDate, initialSelectedDate);
+      expect(localCacheService.savedPayloads, isEmpty);
 
-    controller.dispose();
+      controller.dispose();
     },
   );
 

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 
 import '../models/home_action_result.dart';
 import '../services/auth_service.dart';
-import 'home_flow_models.dart';
+import '../features/home/ui/home_flow_models.dart';
 
 class AccountAuthController {
   AccountAuthController({AuthService? authService})

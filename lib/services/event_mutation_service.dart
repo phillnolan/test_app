@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../controllers/home_flow_models.dart';
+import '../features/home/ui/home_flow_models.dart';
 import '../models/event_attachment.dart';
 import '../models/home_action_result.dart';
 import '../models/local_cache_payload.dart';

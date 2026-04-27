@@ -1,78 +1,186 @@
 # Project Standardization Mindmap
 
-This document is a compact map of the current repo structure and the main areas that should stay consistent as the project grows.
+Tài liệu này là bản đồ chuẩn hóa của `sinhvien-app`, được dựng từ bộ tài liệu
+gốc đã được xác nhận là đúng và được đối chiếu với source tree hiện tại.
+
+Mindmap bên dưới phản ánh 2 lớp thông tin:
+
+- hiện trạng thật của repo theo source tree;
+- đích chuẩn hóa theo skill `dev`: `architecture-feature-first` -> `riverpod`
+  -> `dart-3-updates` -> `effective-dart`.
 
 ```mermaid
 mindmap
   root((sinhvien-app))
-    App Shell
-      main.dart
-      app.dart
-      HomeShell
-      Navigation tabs
-    Layering
-      controllers
-      views
-      models
-      services
-      utils
-    Data Flow
-      Local cache
-      School API
-      Cloud sync
-      Auth
+    Hiện trạng repo
+      Flutter app ở repo root
+      Pattern hiện tại
+        controllers + ChangeNotifier
+        services tích hợp ngoại vi
+        models dữ liệu dùng chung
+        utils tính toán và presenter
+      Home đã migrate
+        lib/features/home/ui/home_controller.dart
+        lib/features/home/ui/home_shell.dart
+        lib/features/home/ui/pages/*
+        lib/features/home/ui/widgets/*
+      Điều phối trung tâm
+        lib/features/home/ui/home_controller.dart
+        lib/controllers/grades_controller.dart
+        lib/controllers/account_auth_controller.dart
+      Entry points
+        lib/main.dart
+        lib/app.dart
+        lib/features/home/ui/home_shell.dart
+      Tabs hiện có
+        Điểm
+        Quiz
+        Lịch
+        Học phí
+        Tài khoản
+      Backend hiện tại
+        cloudflare-worker/src/index.ts
+        D1
+        KV
+        R2
+    Đích chuẩn hóa theo dev
+      Feature-first
+        lib/core
+        lib/features/home
+        lib/features/grades
+        lib/features/auth
+        lib/features/sync
+        lib/features/attachments
+        lib/features/weather
+        lib/features/notifications
+        lib/features/widget
+      Layered architecture
+        UI
+        Logic
+        Data
+        Shared core
+      Riverpod
+        ProviderScope ở entrypoint
+        ConsumerWidget / ConsumerStatefulWidget ở UI
+        Notifier / AsyncNotifier cho state
+        ref.watch trong build
+        ref.read trong callback
+        ref.onDispose cho cleanup
+      Dart 3
+        sealed classes cho state và result
+        switch expressions cho nhánh rõ ràng
+        records cho multi-return nhỏ
+        patterns cho destructuring
+      Effective Dart
+        naming nhất quán
+        type annotation rõ ràng
+        const / final ưu tiên
+        file nhỏ, một trách nhiệm
+        doc comments cho API công khai
+    Bản đồ tính năng
+      Lịch và ghi chú
+        lib/views/home/pages/schedule_page.dart
+        lib/views/home/image_attachment_editor.dart
+        lib/views/home/widgets/attachment_editing_helpers.dart
+        task / note / attachment flow
+      Điểm và GPA
+        lib/views/grades/grades_page.dart
+        lib/controllers/grades_controller.dart
+        lib/utils/curriculum_presenter.dart
+        lib/utils/grade_metrics.dart
+      Đồng bộ sinh viên
+        lib/services/school_api_service.dart
+        lib/services/school_sync_coordinator.dart
+        lib/services/local_cache_service.dart
+        lib/services/dashboard_persistence_service.dart
+        lib/views/home/pages/sync_page.dart
+      Tài khoản và xác thực
+        lib/controllers/account_auth_controller.dart
+        lib/services/auth_service.dart
+        lib/views/home/pages/account_page.dart
         Firebase Auth
-        Google Sign-In init at startup
-        Firebase ID token to Worker
+        Google Sign-In
+      Tệp đính kèm
+        lib/services/attachment_storage_service.dart
+        lib/services/attachment_opener_io.dart
+        lib/services/attachment_opener_stub.dart
+        lib/services/attachment_opener_web.dart
+        lib/services/attachment_import_service.dart
+      Thời tiết và tiện ích
+        lib/services/weather_service.dart
+        lib/services/widget_sync_service.dart
+        lib/services/notification_service.dart
+      Học phí
+        lib/views/home/pages/tuition_page.dart
+        lib/models/current_tuition.dart
+    Luồng dữ liệu
+      Local first
+        cache trước cloud
+        khôi phục cloud sau khi cache sẵn sàng
+        tránh stale overwrite
+      School API
+        tải lịch, điểm, chương trình đào tạo
+        chuẩn hóa thành snapshot
+      Cloud sync
+        Firebase ID token -> Worker
+        note / task / attachment / snapshot
       Attachments
-      Device effects
-    Sync Startup
-      Load local first
-      Restore cloud after cache
-      Prefer newer payload
-      Avoid stale overwrite
-    Testing
-      Controller tests
-      Widget tests
-      Fakes and stubs
-      Async and timer handling
-      Platform-independent cleanup
+        lưu cục bộ trước
+        đồng bộ cloud sau
+        dọn file không còn dùng
     Backend
       Cloudflare Worker
-      D1
-      KV
-      R2
-      Firebase Bearer token verification
-      Attachment upload/download
-      Account data cleanup
-    Standards
-      Naming consistency
-      Typed models and DTOs
-      No UI label drift
-      Docs updated with API changes
-      Google Sign-In initialized before auth calls
+        auth verification
+        storage adapters
+        sync snapshots
+        account cleanup
+      Storage
+        D1
+        KV
+        R2
+      Standardization tiếp theo
+        tách route
+        tách auth
+        tách db
+        tách storage
+    Testing
+      Controller and notifier unit tests
+      Widget tests cho shell và tabs
+      Fakes / stubs cho service ngoài
+      Async, timer, cleanup, platform-safe
+    Migration order
+      1. Giữ startup và data flow ổn định
+      2. Tách shared/core khỏi feature
+      3. Home đã được chuyển sang `lib/features/home/ui/`
+      4. Migrate từng feature sang Riverpod
+      5. Chuẩn hóa state/result bằng sealed classes
+      6. Cập nhật tests và docs sau mỗi lát cắt
 ```
 
-## How to use it
+## Cách đọc
 
-- Use `App Shell` when checking startup, tab layout, and main navigation.
-- Use `Layering` when placing new code or refactoring existing modules.
-- Use `Data Flow` and `Sync Startup` when changing cache, sync, auth, or restore behavior.
-- Use `Testing` when adding fixtures, timers, or platform-sensitive logic.
-- Use `Backend` when working in `cloudflare-worker/`.
-- Use `Standards` as the checklist for naming, API compatibility, and docs updates.
+- `Hiện trạng repo` mô tả đúng cấu trúc hiện tại của source tree.
+- `Đích chuẩn hóa theo dev` là hình hài mục tiêu khi chuẩn hóa dần dự án.
+- `Bản đồ tính năng` giúp gắn file thật vào từng domain để dễ refactor.
+- `Luồng dữ liệu` giữ các quy tắc local-first và sync cloud không bị lệch.
+- `Migration order` là thứ tự làm an toàn nhất để không phá startup hiện có.
 
-## Standardization priorities
+## Ưu tiên chuẩn hóa
 
-1. Keep startup deterministic: local cache should not overwrite a newer remote payload.
-2. Keep tests aligned with model changes: update fixtures whenever required fields change.
-3. Keep UI labels and docs in sync with the current navigation and page names.
-4. Keep attachment and device-effect cleanup best-effort so tests stay platform-safe.
-5. Keep architecture boundaries clear: UI in `views/`, orchestration in `controllers/`, business helpers in `utils/`, and integrations in `services/`.
+1. Giữ startup deterministic: local cache không được ghi đè payload cloud mới
+   hơn.
+2. Tách `HomeController` trước vì đây là điểm điều phối trung tâm hiện tại.
+3. Chuyển state holder sang Riverpod theo từng feature, không refactor ồ ạt.
+4. Giữ naming, typing và file structure nhất quán theo Effective Dart.
+5. Cập nhật test và docs ngay khi đổi shape model hoặc luồng sync.
 
-## Related docs
+## Tài liệu liên quan
 
 - [Project Overview](./project-overview.md)
-- [Project Structure MVC](./project-structure.md)
-- [Integration Architecture](./integration-architecture.md)
 - [Source Tree Analysis](./source-tree-analysis.md)
+- [Feature-First Target Tree](./feature-first-target-tree.md)
+
+---
+
+_Mindmap này được cập nhật để bám đúng source tree hiện tại và định hướng chuẩn
+hóa theo skill `dev`._
