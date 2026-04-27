@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/event_attachment.dart';
 import '../../../models/home_action_result.dart';
@@ -18,21 +19,18 @@ import 'widgets/home_common_widgets.dart';
 import 'widgets/home_dialogs.dart';
 import 'widgets/home_editors.dart';
 
-class HomeShell extends StatefulWidget {
-  const HomeShell({super.key, this.controller});
-
-  final HomeController? controller;
+class HomeShell extends ConsumerStatefulWidget {
+  const HomeShell({super.key});
 
   @override
-  State<HomeShell> createState() => _HomeShellState();
+  ConsumerState<HomeShell> createState() => _HomeShellState();
 }
 
-class _HomeShellState extends State<HomeShell> {
+class _HomeShellState extends ConsumerState<HomeShell> {
   static const double _dayTileWidth = 72;
   static const double _dayTileSpacing = 10;
 
-  late final HomeController _controller = widget.controller ?? HomeController();
-  late final bool _ownsController = widget.controller == null;
+  late final HomeController _controller;
   late final ScrollController _dayStripController = ScrollController();
   late DateTime _lastSelectedDate;
   late bool _wasLoadingLocalCache;
@@ -40,12 +38,13 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void initState() {
     super.initState();
+    _controller = ref.read(homeControllerProvider);
     _lastSelectedDate = _normalizedDate(_controller.selectedDate);
     _wasLoadingLocalCache = _controller.isLoadingLocalCache;
     _controller.addListener(_handleControllerChanged);
-    _controller.initialize();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      _controller.initialize();
       _jumpDayStripToDate(_controller.selectedDate);
     });
   }
@@ -54,9 +53,6 @@ class _HomeShellState extends State<HomeShell> {
   void dispose() {
     _controller.removeListener(_handleControllerChanged);
     _dayStripController.dispose();
-    if (_ownsController) {
-      _controller.dispose();
-    }
     super.dispose();
   }
 

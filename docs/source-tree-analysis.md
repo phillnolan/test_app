@@ -51,7 +51,7 @@ sinhvien-app/
 
 **Mục đích:** giữ state UI và điều phối flow  
 **Chứa:** `home_controller.dart`, `features/auth/ui/account_auth_controller.dart`  
-**Ghi chú tích hợp:** kết nối trực tiếp tới `services/*` và `features/auth/data/auth_service.dart`, cập nhật UI qua `ChangeNotifier`
+**Ghi chú tích hợp:** kết nối trực tiếp tới `services/*` và `features/auth/data/auth_service.dart`, còn `HomeController` được bọc bởi Riverpod provider để cập nhật UI qua `ChangeNotifier`
 
 ### `lib/services/`
 

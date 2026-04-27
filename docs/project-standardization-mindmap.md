@@ -15,13 +15,14 @@ mindmap
     Hiện trạng repo
       Flutter app ở repo root
       Pattern hiện tại
-        controllers + ChangeNotifier
+        controllers + ChangeNotifier / Riverpod provider
         services tích hợp ngoại vi
         models dữ liệu dùng chung
         utils tính toán và presenter
       Home đã split sang feature-first
         lib/features/home/ui/home_controller.dart
         lib/features/home/ui/home_shell.dart
+        homeControllerProvider
         lib/features/home/ui/pages/*
         lib/features/home/ui/widgets/*
         lib/features/home/domain/home_flow_models.dart

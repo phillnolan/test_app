@@ -25,7 +25,7 @@ App đi theo mô hình MVC thực dụng:
 - **Model:** nằm trong `lib/models/**`
 - **Service/infrastructure:** nằm trong `lib/services/**`
 
-Không có state management framework riêng như Provider/Bloc/Redux; thay vào đó `HomeController` kế thừa `ChangeNotifier` và được nối thẳng vào UI bằng `ListenableBuilder`.
+App hiện dùng Riverpod để quản lý ownership cho `HomeController`: logic vẫn nằm trong `HomeController` kế thừa `ChangeNotifier`, nhưng controller được cấp qua `ChangeNotifierProvider` và được nối vào UI bằng `ListenableBuilder`.
 
 ## Bootstrap
 
@@ -49,7 +49,7 @@ Firebase failure không chặn app chạy trên nền tảng chưa cấu hình; 
 
 ### `HomeShell`
 
-- Tạo một `HomeController` duy nhất.
+- Đọc `HomeController` từ `homeControllerProvider`.
 - Dựng 4 tab qua `IndexedStack`:
   - Lịch
   - Điểm
@@ -59,7 +59,8 @@ Firebase failure không chặn app chạy trên nền tảng chưa cấu hình; 
 
 ### `HomeController`
 
-Đây là trung tâm điều phối của app. Nó chịu trách nhiệm:
+Đây là trung tâm điều phối của app, nhưng lifecycle được Riverpod quản lý.
+Nó chịu trách nhiệm:
 
 - load cache cục bộ lúc khởi động,
 - tải thời tiết,
@@ -101,7 +102,7 @@ Firebase failure không chặn app chạy trên nền tảng chưa cấu hình; 
 ### Chiến lược cập nhật
 
 - Controller mutate state và gọi `notifyListeners()`
-- UI đọc state trực tiếp qua controller
+- UI đọc state qua controller được cấp bởi Riverpod provider
 - Không có lớp repository hoặc use case riêng
 
 ### Đánh giá
@@ -117,8 +118,8 @@ Mô hình này dễ theo dõi ở quy mô hiện tại, nhưng `HomeController` 
 
 ### Luồng khởi động
 
-1. `main()` khởi tạo Firebase và notification.
-2. `HomeShell` tạo `HomeController` và gọi `initialize()`.
+1. `main()` khởi tạo Firebase, notification và bọc app bằng `ProviderScope`.
+2. `HomeShell` đọc `homeControllerProvider` và gọi `initialize()`.
 3. `HomeController`:
    - load cache local,
    - load weather,

@@ -133,7 +133,7 @@ lib/
 
 ### `views/home`
 
-- `home_shell.dart`: entry view chinh, bind `HomeController`, dung `IndexedStack`, mo dialog/sheet/snackbar, so huu `ScrollController` cua day strip, va xu ly `post-frame` jump/animate cho lich ngang.
+- `home_shell.dart`: entry view chinh, lay `HomeController` tu Riverpod provider, dung `IndexedStack`, mo dialog/sheet/snackbar, so huu `ScrollController` cua day strip, va xu ly `post-frame` jump/animate cho lich ngang.
 - `pages/account_page.dart`: UI tab tai khoan.
 - `pages/schedule_page.dart`: UI tab lich, weather card, day strip, danh sach event.
 - `pages/sync_page.dart`: UI tab dong bo va metric profile.

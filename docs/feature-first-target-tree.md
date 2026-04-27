@@ -6,7 +6,8 @@ This document describes the target folder structure for standardizing
 ## Current migration status
 
 - `home` has already been split into `lib/features/home/ui/`,
-  `lib/features/home/domain/`, and `lib/features/home/data/`.
+  `lib/features/home/domain/`, and `lib/features/home/data/`, with
+  `HomeController` now owned by Riverpod.
 - `grades` has already been split into `lib/features/grades/ui/`,
   `lib/features/grades/domain/`, and `lib/features/grades/data/` scaffold.
 - `auth` has already been split into `lib/features/auth/data/` and

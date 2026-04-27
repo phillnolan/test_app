@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sinhvien_app/features/auth/data/auth_service.dart';
 import 'package:sinhvien_app/features/auth/ui/account_auth_controller.dart';
 import 'package:sinhvien_app/features/home/ui/home_controller.dart';
@@ -28,7 +29,15 @@ void main() {
     final controller = _buildController();
 
     await tester.pumpWidget(
-      MaterialApp(home: HomeShell(controller: controller)),
+      ProviderScope(
+        overrides: [
+          homeControllerProvider.overrideWith(
+            (_) => controller,
+            disposeNotifier: false,
+          ),
+        ],
+        child: const MaterialApp(home: HomeShell()),
+      ),
     );
     await tester.pump();
 
@@ -48,7 +57,15 @@ void main() {
     final tomorrow = controller.dateForIndex(HomeController.pastDayRange + 1);
 
     await tester.pumpWidget(
-      MaterialApp(home: HomeShell(controller: controller)),
+      ProviderScope(
+        overrides: [
+          homeControllerProvider.overrideWith(
+            (_) => controller,
+            disposeNotifier: false,
+          ),
+        ],
+        child: const MaterialApp(home: HomeShell()),
+      ),
     );
     await tester.pumpAndSettle();
 

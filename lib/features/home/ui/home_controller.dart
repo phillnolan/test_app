@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../models/event_attachment.dart';
 import '../../../models/home_action_result.dart';
@@ -25,7 +27,12 @@ import '../../sync/data/school_api_service.dart';
 import '../../sync/domain/school_sync_coordinator.dart';
 import '../../sync/data/student_sync_credentials_service.dart';
 
-class HomeController extends ChangeNotifier {
+/// Provides the shared [HomeController] used by the home shell.
+final homeControllerProvider = ChangeNotifierProvider<HomeController>((ref) {
+  return HomeController();
+});
+
+final class HomeController extends ChangeNotifier {
   HomeController({
     AccountAuthController? accountAuthController,
     SchoolApiService? schoolApiService,
