@@ -23,8 +23,8 @@ lib/
 |   |-- school_sync_snapshot.dart
 |   |-- student_event.dart
 |   |-- student_profile.dart
-|   |-- weather_forecast.dart
-|   `-- weather_presentation.dart
+|   |-- features/weather/data/weather_forecast.dart
+|   `-- features/weather/domain/weather_presentation.dart
 |-- services/
 |   |-- features/auth/data/auth_service.dart
 |   |-- cloud_sync_service.dart
@@ -39,7 +39,7 @@ lib/
 |   |-- notification_service.dart
 |   |-- school_api_service.dart
 |   |-- school_sync_coordinator.dart
-|   |-- weather_service.dart
+|   |-- features/weather/data/weather_service.dart
 |   `-- widget_sync_service.dart
 |-- theme/
 |   `-- app_theme.dart
@@ -121,13 +121,13 @@ lib/
 - `school_sync_snapshot.dart`: goi du lieu tra ve sau mot lan sync truong.
 - `student_event.dart`: mo ta su kien lich hoc, lich thi, task ca nhan.
 - `student_profile.dart`: thong tin tai khoan sinh vien.
-- `weather_forecast.dart`: du lieu du bao thoi tiet thuan.
+- `features/weather/data/weather_forecast.dart`: du lieu du bao thoi tiet thuan.
 
 ### Payload / result / presentation
 
 - `local_cache_payload.dart`: snapshot local-first cua dashboard, duoc dung chung boi controller, local cache va cloud sync.
 - `home_action_result.dart`: `HomeActionResult` va `AttachmentOpenResult` cho cac flow controller -> view.
-- `weather_presentation.dart`: du lieu presentation tra ve cho UI thoi tiet.
+- `features/weather/domain/weather_presentation.dart`: du lieu presentation tra ve cho UI thoi tiet.
 
 ## Views
 
@@ -147,6 +147,13 @@ lib/
 - `widgets/curriculum_subjects_section.dart`: render chuong trinh dao tao dua tren filter state cua controller.
 - `widgets/goal_planner_section.dart`: render planner GPA va gui input typed len controller.
 - View grades chi render va mo dialog; state co the test duoc nam o `grades_controller.dart`.
+
+### `lib/features/weather/`
+
+- `data/weather_service.dart`: lay va parse du bao Open-Meteo.
+- `data/weather_forecast.dart`: model du bao theo ngay.
+- `domain/weather_presentation.dart`: model presentation cho UI thoi tiet.
+- `ui/` la scaffold cho slice weather khi can them UI rieng.
 
 ### `lib/features/attachments/`
 
@@ -197,7 +204,7 @@ lib/
 - `widget_sync_service.dart`
 - `device_effects_service.dart`
 
-### Du lieu phu tro
+### `lib/features/weather/data/`
 
 - `weather_service.dart`
 

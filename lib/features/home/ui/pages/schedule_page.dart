@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../models/event_attachment.dart';
 import '../../../../models/student_event.dart';
 import '../../../../models/student_profile.dart';
-import '../../../../models/weather_presentation.dart';
+import '../../../weather/domain/weather_presentation.dart';
 import '../widgets/home_common_widgets.dart';
 
 class SchedulePage extends StatelessWidget {

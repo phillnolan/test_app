@@ -57,7 +57,7 @@ sinhvien-app/
 
 **Mục đích:** tích hợp hệ ngoài, local storage, notification và cloud sync  
 **Chứa:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `notification_service.dart`, `widget_sync_service.dart`  
-**Ghi chú tích hợp:** là giao điểm giữa app và API trường/Firebase/Cloudflare/Open-Meteo
+**Ghi chú tích hợp:** là giao điểm giữa app và API trường/Firebase/Cloudflare
 
 ### `lib/views/home/`
 
@@ -75,6 +75,12 @@ sinhvien-app/
 **Má»¥c Ä‘Ã­ch:** nháº­p, lÆ°u, má»Ÿ vÃ  chá»‰nh sá»­a tá»‡p Ä‘Ã­nh kÃ¨m  
 **Chá»©a:** `data/attachment_storage_service.dart`, `data/attachment_import_service.dart`, `data/attachment_opener*.dart`, `data/file_bytes_reader*.dart`, `data/image_edit_service.dart`, `ui/image_attachment_editor.dart`, `ui/attachment_editing_helpers.dart`  
 **Entry points:** `ui/image_attachment_editor.dart`
+
+### `lib/features/weather/`
+
+**Mục đích:** lấy, chuyển đổi và hiển thị dự báo thời tiết  
+**Chứa:** `data/weather_service.dart`, `data/weather_forecast.dart`, `domain/weather_presentation.dart`, `ui/`  
+**Entry points:** `data/weather_service.dart`
 
 ### `android/app/src/main/kotlin/com/example/sinhvien_app/`
 

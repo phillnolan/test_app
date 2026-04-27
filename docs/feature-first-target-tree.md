@@ -15,6 +15,8 @@ This document describes the target folder structure for standardizing
   `lib/features/sync/domain/`, and `lib/features/sync/ui/` scaffold.
 - `attachments` has already been split into
   `lib/features/attachments/data/` and `lib/features/attachments/ui/`.
+- `weather` has already been split into `lib/features/weather/data/`,
+  `lib/features/weather/domain/`, and `lib/features/weather/ui/` scaffold.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 
@@ -59,6 +61,7 @@ lib/
     |   `-- ui/
     |-- weather/
     |   |-- data/
+    |   |-- domain/
     |   `-- ui/
     `-- widget/
         |-- data/
@@ -90,7 +93,9 @@ lib/
 | `lib/features/attachments/data/image_edit_service.dart` | `lib/features/attachments/data/` |
 | `lib/features/attachments/ui/image_attachment_editor.dart` | `lib/features/attachments/ui/` |
 | `lib/features/attachments/ui/attachment_editing_helpers.dart` | `lib/features/attachments/ui/` |
-| `lib/services/weather_service.dart` | `lib/features/weather/data/` |
+| `lib/features/weather/data/weather_service.dart` | `lib/features/weather/data/` |
+| `lib/features/weather/data/weather_forecast.dart` | `lib/features/weather/data/` |
+| `lib/features/weather/domain/weather_presentation.dart` | `lib/features/weather/domain/` |
 | `lib/services/notification_service.dart` | `lib/features/notifications/data/` |
 | `lib/services/widget_sync_service.dart` | `lib/features/widget/data/` |
 | `lib/theme/app_theme.dart` | `lib/core/theme/` |

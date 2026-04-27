@@ -11,7 +11,9 @@ Future<bool> openAttachmentFile({
 }) async {
   Uint8List? effectiveBytes = bytes;
 
-  if (effectiveBytes == null && localPath != null && localPath.startsWith('data:')) {
+  if (effectiveBytes == null &&
+      localPath != null &&
+      localPath.startsWith('data:')) {
     final commaIndex = localPath.indexOf(',');
     if (commaIndex != -1) {
       effectiveBytes = base64Decode(localPath.substring(commaIndex + 1));

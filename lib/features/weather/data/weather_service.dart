@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/weather_forecast.dart';
+import 'weather_forecast.dart';
 
 class WeatherService {
   WeatherService({http.Client? client}) : _client = client ?? http.Client();
@@ -49,18 +49,25 @@ class WeatherService {
       throw const WeatherException('Thiếu dữ liệu dự báo theo ngày.');
     }
 
-    final times = (daily['time'] as List? ?? const []).map((e) => e.toString()).toList();
-    final weatherCodes =
-        (daily['weather_code'] as List? ?? const []).map((e) => e as num).toList();
-    final maxTemps =
-        (daily['temperature_2m_max'] as List? ?? const []).map((e) => e as num).toList();
-    final minTemps =
-        (daily['temperature_2m_min'] as List? ?? const []).map((e) => e as num).toList();
-    final rainProbabilities = (daily['precipitation_probability_max'] as List? ?? const [])
+    final times = (daily['time'] as List? ?? const [])
+        .map((e) => e.toString())
+        .toList();
+    final weatherCodes = (daily['weather_code'] as List? ?? const [])
         .map((e) => e as num)
         .toList();
-    final windSpeeds =
-        (daily['wind_speed_10m_max'] as List? ?? const []).map((e) => e as num).toList();
+    final maxTemps = (daily['temperature_2m_max'] as List? ?? const [])
+        .map((e) => e as num)
+        .toList();
+    final minTemps = (daily['temperature_2m_min'] as List? ?? const [])
+        .map((e) => e as num)
+        .toList();
+    final rainProbabilities =
+        (daily['precipitation_probability_max'] as List? ?? const [])
+            .map((e) => e as num)
+            .toList();
+    final windSpeeds = (daily['wind_speed_10m_max'] as List? ?? const [])
+        .map((e) => e as num)
+        .toList();
 
     final itemCount = [
       times.length,

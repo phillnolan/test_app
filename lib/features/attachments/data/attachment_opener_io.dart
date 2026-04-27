@@ -9,9 +9,12 @@ Future<bool> openAttachmentFile({
   Uint8List? bytes,
 }) async {
   var targetPath = localPath ?? '';
-  if ((targetPath.isEmpty || !await File(targetPath).exists()) && bytes != null) {
+  if ((targetPath.isEmpty || !await File(targetPath).exists()) &&
+      bytes != null) {
     final safeName = fileName.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-    final file = File('${Directory.systemTemp.path}${Platform.pathSeparator}$safeName');
+    final file = File(
+      '${Directory.systemTemp.path}${Platform.pathSeparator}$safeName',
+    );
     await file.writeAsBytes(bytes, flush: true);
     targetPath = file.path;
   }

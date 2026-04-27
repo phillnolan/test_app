@@ -21,7 +21,9 @@ class NotificationService {
     tz_data.initializeTimeZones();
     tz.setLocalLocation(tz.getLocation('Asia/Ho_Chi_Minh'));
 
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSettings = AndroidInitializationSettings(
+      '@mipmap/ic_launcher',
+    );
     const settings = InitializationSettings(android: androidSettings);
     await _plugin.initialize(settings);
 
@@ -40,11 +42,15 @@ class NotificationService {
     await _plugin.cancelAll();
 
     final now = DateTime.now();
-    final futureEvents = events
-        .where((event) => event.start.isAfter(now))
-        .where((event) => event.start.isBefore(now.add(const Duration(days: 14))))
-        .toList()
-      ..sort((a, b) => a.start.compareTo(b.start));
+    final futureEvents =
+        events
+            .where((event) => event.start.isAfter(now))
+            .where(
+              (event) =>
+                  event.start.isBefore(now.add(const Duration(days: 14))),
+            )
+            .toList()
+          ..sort((a, b) => a.start.compareTo(b.start));
 
     for (final event in futureEvents) {
       final scheduledTime = _scheduledReminderTime(event);

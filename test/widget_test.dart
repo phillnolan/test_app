@@ -7,6 +7,8 @@ import 'package:sinhvien_app/features/auth/data/auth_service.dart';
 import 'package:sinhvien_app/features/auth/ui/account_auth_controller.dart';
 import 'package:sinhvien_app/features/home/ui/home_controller.dart';
 import 'package:sinhvien_app/features/home/domain/home_flow_models.dart';
+import 'package:sinhvien_app/features/weather/data/weather_forecast.dart';
+import 'package:sinhvien_app/features/weather/data/weather_service.dart';
 import 'package:sinhvien_app/features/sync/data/cloud_sync_service.dart';
 import 'package:sinhvien_app/features/sync/data/local_cache_service.dart';
 import 'package:sinhvien_app/features/sync/data/school_api_service.dart';
@@ -15,9 +17,7 @@ import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';
 import 'package:sinhvien_app/models/student_event.dart';
 import 'package:sinhvien_app/models/student_profile.dart';
-import 'package:sinhvien_app/models/weather_forecast.dart';
 import 'package:sinhvien_app/features/attachments/data/attachment_storage_service.dart';
-import 'package:sinhvien_app/services/weather_service.dart';
 import 'package:sinhvien_app/services/widget_sync_service.dart';
 import 'package:sinhvien_app/features/home/ui/home_shell.dart';
 

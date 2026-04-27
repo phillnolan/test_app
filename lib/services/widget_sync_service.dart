@@ -15,10 +15,9 @@ class WidgetSyncService {
   }) async {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now();
-    final todayEvents = events
-        .where((event) => _isSameDate(event.start, today))
-        .toList()
-      ..sort((a, b) => a.start.compareTo(b.start));
+    final todayEvents =
+        events.where((event) => _isSameDate(event.start, today)).toList()
+          ..sort((a, b) => a.start.compareTo(b.start));
 
     final title = profile == null
         ? 'Lịch hôm nay'
@@ -27,8 +26,12 @@ class WidgetSyncService {
         ? 'Không có sự kiện nào trong hôm nay'
         : '${todayEvents.length} sự kiện trong hôm nay';
 
-    final line1 = todayEvents.isNotEmpty ? _formatEventLine(todayEvents[0]) : '';
-    final line2 = todayEvents.length > 1 ? _formatEventLine(todayEvents[1]) : '';
+    final line1 = todayEvents.isNotEmpty
+        ? _formatEventLine(todayEvents[0])
+        : '';
+    final line2 = todayEvents.length > 1
+        ? _formatEventLine(todayEvents[1])
+        : '';
     final line3 = todayEvents.length > 2
         ? '+${todayEvents.length - 2} sự kiện khác'
         : '';

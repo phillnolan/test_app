@@ -52,6 +52,11 @@ mindmap
         lib/features/attachments/data/image_edit_service.dart
         lib/features/attachments/ui/image_attachment_editor.dart
         lib/features/attachments/ui/attachment_editing_helpers.dart
+      Weather da split sang feature-first
+        lib/features/weather/data/weather_service.dart
+        lib/features/weather/data/weather_forecast.dart
+        lib/features/weather/domain/weather_presentation.dart
+        lib/features/weather/ui/.gitkeep
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/features/grades/ui/grades_controller.dart
@@ -80,6 +85,9 @@ mindmap
         lib/features/sync
         lib/features/attachments
         lib/features/weather
+          lib/features/weather/data
+          lib/features/weather/domain
+          lib/features/weather/ui
         lib/features/notifications
         lib/features/widget
       Layered architecture
@@ -141,8 +149,11 @@ mindmap
         lib/features/attachments/data/file_bytes_reader_io.dart
         lib/features/attachments/data/file_bytes_reader_stub.dart
         lib/features/attachments/data/image_edit_service.dart
-      Thời tiết và tiện ích
-        lib/services/weather_service.dart
+      Thời tiết
+        lib/features/weather/data/weather_service.dart
+        lib/features/weather/data/weather_forecast.dart
+        lib/features/weather/domain/weather_presentation.dart
+      Tiện ích
         lib/services/widget_sync_service.dart
         lib/services/notification_service.dart
       Học phí

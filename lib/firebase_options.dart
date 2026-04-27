@@ -66,5 +66,4 @@ class DefaultFirebaseOptions {
     projectId: 'sinhvien-a9d4e',
     storageBucket: 'sinhvien-a9d4e.firebasestorage.app',
   );
-
 }

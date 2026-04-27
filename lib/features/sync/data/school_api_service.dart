@@ -19,7 +19,7 @@ class SchoolApiService {
   static const Duration _requestTimeout = Duration(minutes: 1);
 
   static const _baseHost = 'https://sinhvien1.tlu.edu.vn/education';
-  static const List<int> _examStudentRouteIds = [13,14];
+  static const List<int> _examStudentRouteIds = [13, 14];
   static const int _examSemesterStart = 50;
   static const int _examSemesterEnd = 80;
 
@@ -172,9 +172,7 @@ class SchoolApiService {
         .get(Uri.parse(url), headers: headers)
         .timeout(_requestTimeout);
     if (response.statusCode >= 400) {
-      throw SchoolApiException(
-        'Không tải được dữ liệu từ cổng trường.',
-      );
+      throw SchoolApiException('Không tải được dữ liệu từ cổng trường.');
     }
     return _decodeJson(_decodeBody(response));
   }
@@ -198,9 +196,7 @@ class SchoolApiService {
       }
     }
     throw lastError ??
-        SchoolApiException(
-          'Không tải được dữ liệu từ cổng trường.',
-        );
+        SchoolApiException('Không tải được dữ liệu từ cổng trường.');
   }
 
   List<int> _resolveCurriculumProgramIds(dynamic studentJson) {
@@ -254,14 +250,17 @@ class SchoolApiService {
         '';
     final registerPeriodLabel =
         current['registerPeriod']?['name']?.toString().trim() ?? 'Học kỳ chính';
-    final details = payables
-        .expand(
-          (item) => _normalizeList(item['details']).whereType<Map<String, dynamic>>(),
-        )
-        .map(_parseTuitionSubjectCharge)
-        .where((item) => item.subjectName.isNotEmpty && item.amount > 0)
-        .toList()
-      ..sort((a, b) => b.amount.compareTo(a.amount));
+    final details =
+        payables
+            .expand(
+              (item) => _normalizeList(
+                item['details'],
+              ).whereType<Map<String, dynamic>>(),
+            )
+            .map(_parseTuitionSubjectCharge)
+            .where((item) => item.subjectName.isNotEmpty && item.amount > 0)
+            .toList()
+          ..sort((a, b) => b.amount.compareTo(a.amount));
 
     final totalAmount = _toDouble(map['totalReceiveAble']);
     final paidAmount = _toDouble(map['totalReceived']);
@@ -332,9 +331,7 @@ class SchoolApiService {
       data,
     ).whereType<Map<String, dynamic>>()) {
       final title =
-          (rawCourse['subjectCode'] ??
-                  rawCourse['subjectName'] ??
-                  'Lịch học')
+          (rawCourse['subjectCode'] ?? rawCourse['subjectName'] ?? 'Lịch học')
               .toString();
       final teacher =
           rawCourse['courseSubject']?['teacher']?['displayName']?.toString() ??
