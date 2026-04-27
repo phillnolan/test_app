@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/event_attachment.dart';
-import '../models/local_cache_payload.dart';
-import '../models/student_event.dart';
-import 'file_bytes_reader_stub.dart'
-    if (dart.library.io) 'file_bytes_reader_io.dart';
+import '../../../models/event_attachment.dart';
+import '../../../models/local_cache_payload.dart';
+import '../../../models/student_event.dart';
+import '../../../services/file_bytes_reader_stub.dart'
+    if (dart.library.io) '../../../services/file_bytes_reader_io.dart';
 
 class CloudSyncService {
   CloudSyncService({http.Client? client}) : _client = client ?? http.Client();

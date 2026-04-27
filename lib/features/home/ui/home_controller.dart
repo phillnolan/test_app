@@ -11,19 +11,19 @@ import '../../../models/student_sync_credentials.dart';
 import '../../../models/weather_forecast.dart';
 import '../../../models/weather_presentation.dart';
 import '../../../services/attachment_storage_service.dart';
-import '../../../services/cloud_sync_service.dart';
-import '../../../services/dashboard_persistence_service.dart';
 import '../../../services/device_effects_service.dart';
-import '../../../services/local_cache_service.dart';
-import '../../../services/school_api_service.dart';
-import '../../../services/school_sync_coordinator.dart';
-import '../../../services/student_sync_credentials_service.dart';
 import '../../../services/weather_service.dart';
 import '../../../services/widget_sync_service.dart';
 import '../../../controllers/account_auth_controller.dart';
 import '../data/event_mutation_service.dart';
 import '../domain/home_calendar_utils.dart';
 import '../domain/home_flow_models.dart';
+import '../../sync/data/cloud_sync_service.dart';
+import '../../sync/data/dashboard_persistence_service.dart';
+import '../../sync/data/local_cache_service.dart';
+import '../../sync/data/school_api_service.dart';
+import '../../sync/domain/school_sync_coordinator.dart';
+import '../../sync/data/student_sync_credentials_service.dart';
 
 class HomeController extends ChangeNotifier {
   HomeController({

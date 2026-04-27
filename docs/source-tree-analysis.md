@@ -130,8 +130,8 @@ cloudflare-worker/
 
 ## Điểm tích hợp giữa các phần
 
-- `mobile-app` -> `worker-api`: qua `lib/services/cloud_sync_service.dart`
-- `mobile-app` -> TLU education API: qua `lib/services/school_api_service.dart`
+- `mobile-app` -> `worker-api`: qua `lib/features/sync/data/cloud_sync_service.dart`
+- `mobile-app` -> TLU education API: qua `lib/features/sync/data/school_api_service.dart`
 - `mobile-app` -> Android host widget: qua `lib/services/widget_sync_service.dart`
 
 ## File cấu hình cần chú ý

@@ -9,6 +9,8 @@ This document describes the target folder structure for standardizing
   `lib/features/home/domain/`, and `lib/features/home/data/`.
 - `grades` has already been split into `lib/features/grades/ui/`,
   `lib/features/grades/domain/`, and `lib/features/grades/data/` scaffold.
+- `sync` has already been split into `lib/features/sync/data/`,
+  `lib/features/sync/domain/`, and `lib/features/sync/ui/` scaffold.
 - The remaining legacy app code still lives under `lib/controllers/`,
   `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
 

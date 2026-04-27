@@ -34,6 +34,14 @@ mindmap
         lib/features/grades/ui/widgets/*
         lib/features/grades/domain/curriculum_presenter.dart
         lib/features/grades/domain/grade_metrics.dart
+
+      Sync da split sang feature-first
+        lib/features/sync/data/cloud_sync_service.dart
+        lib/features/sync/data/dashboard_persistence_service.dart
+        lib/features/sync/data/local_cache_service.dart
+        lib/features/sync/data/school_api_service.dart
+        lib/features/sync/data/student_sync_credentials_service.dart
+        lib/features/sync/domain/school_sync_coordinator.dart
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/features/grades/ui/grades_controller.dart
@@ -98,11 +106,14 @@ mindmap
         lib/features/grades/ui/grades_controller.dart
         lib/features/grades/domain/curriculum_presenter.dart
         lib/features/grades/domain/grade_metrics.dart
+
       Đồng bộ sinh viên
-        lib/services/school_api_service.dart
-        lib/services/school_sync_coordinator.dart
-        lib/services/local_cache_service.dart
-        lib/services/dashboard_persistence_service.dart
+        lib/features/sync/data/school_api_service.dart
+        lib/features/sync/domain/school_sync_coordinator.dart
+        lib/features/sync/data/local_cache_service.dart
+        lib/features/sync/data/dashboard_persistence_service.dart
+        lib/features/sync/data/cloud_sync_service.dart
+        lib/features/sync/data/student_sync_credentials_service.dart
         lib/features/home/ui/pages/sync_page.dart
       Tài khoản và xác thực
         lib/controllers/account_auth_controller.dart

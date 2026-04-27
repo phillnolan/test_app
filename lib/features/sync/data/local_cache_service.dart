@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/local_cache_payload.dart';
+import '../../../models/local_cache_payload.dart';
 
 class LocalCacheService {
   static const _cacheKey = 'student_planner_local_cache_v1';

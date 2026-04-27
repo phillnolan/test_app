@@ -9,8 +9,8 @@ import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
 import '../../../services/attachment_opener.dart';
 import '../../../services/attachment_storage_service.dart';
-import '../../../services/cloud_sync_service.dart';
-import '../../../services/dashboard_persistence_service.dart';
+import '../../sync/data/cloud_sync_service.dart';
+import '../../sync/data/dashboard_persistence_service.dart';
 import '../domain/home_flow_models.dart';
 
 enum PendingEventSyncAction { saving, deleting }

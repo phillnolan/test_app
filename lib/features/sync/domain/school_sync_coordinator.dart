@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/local_cache_payload.dart';
-import '../models/school_sync_snapshot.dart';
-import '../models/student_event.dart';
-import 'school_api_service.dart';
+import '../../../models/local_cache_payload.dart';
+import '../../../models/school_sync_snapshot.dart';
+import '../../../models/student_event.dart';
+import '../data/school_api_service.dart';
 
 class SchoolSyncResult {
   const SchoolSyncResult({required this.payload, required this.selectedDate});

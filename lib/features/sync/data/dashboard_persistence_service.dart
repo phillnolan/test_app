@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import '../models/event_attachment.dart';
-import '../models/local_cache_payload.dart';
-import '../models/student_event.dart';
+import '../../../models/event_attachment.dart';
+import '../../../models/local_cache_payload.dart';
+import '../../../models/student_event.dart';
+import '../../../services/device_effects_service.dart';
 import 'cloud_sync_service.dart';
-import 'device_effects_service.dart';
 import 'local_cache_service.dart';
 
 class DashboardRestoreResult {

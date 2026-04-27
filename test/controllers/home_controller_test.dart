@@ -15,14 +15,14 @@ import 'package:sinhvien_app/models/student_profile.dart';
 import 'package:sinhvien_app/models/weather_forecast.dart';
 import 'package:sinhvien_app/services/attachment_storage_service.dart';
 import 'package:sinhvien_app/services/auth_service.dart';
-import 'package:sinhvien_app/services/cloud_sync_service.dart';
-import 'package:sinhvien_app/services/dashboard_persistence_service.dart';
 import 'package:sinhvien_app/services/device_effects_service.dart';
-import 'package:sinhvien_app/services/local_cache_service.dart';
-import 'package:sinhvien_app/services/school_api_service.dart';
-import 'package:sinhvien_app/services/school_sync_coordinator.dart';
 import 'package:sinhvien_app/services/weather_service.dart';
 import 'package:sinhvien_app/services/widget_sync_service.dart';
+import 'package:sinhvien_app/features/sync/data/cloud_sync_service.dart';
+import 'package:sinhvien_app/features/sync/data/dashboard_persistence_service.dart';
+import 'package:sinhvien_app/features/sync/data/local_cache_service.dart';
+import 'package:sinhvien_app/features/sync/data/school_api_service.dart';
+import 'package:sinhvien_app/features/sync/domain/school_sync_coordinator.dart';
 
 void main() {
   testWidgets(

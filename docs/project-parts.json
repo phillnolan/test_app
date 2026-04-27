@@ -38,14 +38,14 @@
       "from_part": "mobile-app",
       "to_part": "worker-api",
       "type": "REST + Firebase ID token",
-      "path": "lib/services/cloud_sync_service.dart",
+      "path": "lib/features/sync/data/cloud_sync_service.dart",
       "description": "Đồng bộ note, task, snapshot và attachment."
     },
     {
       "from_part": "mobile-app",
       "to_part": "TLU education API",
       "type": "REST",
-      "path": "lib/services/school_api_service.dart",
+      "path": "lib/features/sync/data/school_api_service.dart",
       "description": "Đồng bộ profile, bảng điểm, lịch học, lịch thi, chương trình đào tạo."
     }
   ]

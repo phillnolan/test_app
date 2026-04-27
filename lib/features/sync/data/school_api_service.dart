@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../models/current_tuition.dart';
-import '../models/grade_item.dart';
-import '../models/program_subject.dart';
-import '../models/school_sync_snapshot.dart';
-import '../models/student_event.dart';
-import '../models/student_profile.dart';
-import 'http_client_factory.dart';
+import '../../../models/current_tuition.dart';
+import '../../../models/grade_item.dart';
+import '../../../models/program_subject.dart';
+import '../../../models/school_sync_snapshot.dart';
+import '../../../models/student_event.dart';
+import '../../../models/student_profile.dart';
+import '../../../services/http_client_factory.dart';
 
 class SchoolApiService {
   SchoolApiService({http.Client? client})

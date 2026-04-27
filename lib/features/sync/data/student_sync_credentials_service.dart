@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/student_sync_credentials.dart';
+import '../../../models/student_sync_credentials.dart';
 
 class StudentSyncCredentialsService {
   static const _credentialsKey = 'student_sync_credentials_v1';
