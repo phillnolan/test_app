@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'app.dart';
+import 'features/auth/data/auth_service.dart';
 import 'firebase_options.dart';
-import 'services/auth_service.dart';
 import 'services/notification_service.dart';
 
 Future<void> main() async {

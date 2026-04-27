@@ -14,7 +14,7 @@ import '../../../services/attachment_storage_service.dart';
 import '../../../services/device_effects_service.dart';
 import '../../../services/weather_service.dart';
 import '../../../services/widget_sync_service.dart';
-import '../../../controllers/account_auth_controller.dart';
+import '../../auth/ui/account_auth_controller.dart';
 import '../data/event_mutation_service.dart';
 import '../domain/home_calendar_utils.dart';
 import '../domain/home_flow_models.dart';

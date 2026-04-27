@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
-import '../models/home_action_result.dart';
-import '../features/home/domain/home_flow_models.dart';
-import '../services/auth_service.dart';
+import '../../../models/home_action_result.dart';
+import '../../home/domain/home_flow_models.dart';
+import '../data/auth_service.dart';
 
 class AccountAuthController {
   AccountAuthController({AuthService? authService})

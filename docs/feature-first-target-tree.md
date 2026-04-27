@@ -9,6 +9,8 @@ This document describes the target folder structure for standardizing
   `lib/features/home/domain/`, and `lib/features/home/data/`.
 - `grades` has already been split into `lib/features/grades/ui/`,
   `lib/features/grades/domain/`, and `lib/features/grades/data/` scaffold.
+- `auth` has already been split into `lib/features/auth/data/` and
+  `lib/features/auth/ui/`.
 - `sync` has already been split into `lib/features/sync/data/`,
   `lib/features/sync/domain/`, and `lib/features/sync/ui/` scaffold.
 - The remaining legacy app code still lives under `lib/controllers/`,
@@ -66,13 +68,13 @@ lib/
 | Current path | Target path |
 | --- | --- |
 | `lib/controllers/home_controller.dart` | `lib/features/home/ui/` |
-| `lib/controllers/account_auth_controller.dart` | `lib/features/auth/ui/` |
+| `lib/features/auth/ui/account_auth_controller.dart` | `lib/features/auth/ui/` |
 | `lib/controllers/grades_controller.dart` | `lib/features/grades/ui/` |
 | `lib/views/home/home_shell.dart` | `lib/features/home/ui/` |
 | `lib/views/home/pages/*` | `lib/features/home/ui/pages/` |
 | `lib/views/home/widgets/*` | `lib/features/home/ui/widgets/` |
 | `lib/views/grades/*` | `lib/features/grades/ui/` |
-| `lib/services/auth_service.dart` | `lib/features/auth/data/` |
+| `lib/features/auth/data/auth_service.dart` | `lib/features/auth/data/` |
 | `lib/services/school_api_service.dart` | `lib/features/sync/data/` |
 | `lib/services/school_sync_coordinator.dart` | `lib/features/sync/domain/` |
 | `lib/services/local_cache_service.dart` | `lib/features/sync/data/` |

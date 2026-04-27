@@ -42,10 +42,13 @@ mindmap
         lib/features/sync/data/school_api_service.dart
         lib/features/sync/data/student_sync_credentials_service.dart
         lib/features/sync/domain/school_sync_coordinator.dart
+      Auth da split sang feature-first
+        lib/features/auth/data/auth_service.dart
+        lib/features/auth/ui/account_auth_controller.dart
       Điều phối trung tâm
         lib/features/home/ui/home_controller.dart
         lib/features/grades/ui/grades_controller.dart
-        lib/controllers/account_auth_controller.dart
+        lib/features/auth/ui/account_auth_controller.dart
       Entry points
         lib/main.dart
         lib/app.dart
@@ -116,8 +119,8 @@ mindmap
         lib/features/sync/data/student_sync_credentials_service.dart
         lib/features/home/ui/pages/sync_page.dart
       Tài khoản và xác thực
-        lib/controllers/account_auth_controller.dart
-        lib/services/auth_service.dart
+        lib/features/auth/ui/account_auth_controller.dart
+        lib/features/auth/data/auth_service.dart
         lib/features/home/ui/pages/account_page.dart
         Firebase Auth
         Google Sign-In

@@ -10,7 +10,7 @@ lib/
 |-- firebase_options.dart
 |-- main.dart
 |-- controllers/
-|   |-- account_auth_controller.dart
+|   |-- features/auth/ui/account_auth_controller.dart
 |   |-- grades_controller.dart
 |   |-- home_controller.dart
 |   `-- home_flow_models.dart
@@ -32,7 +32,7 @@ lib/
 |   |-- attachment_opener_web.dart
 |   |-- attachment_import_service.dart
 |   |-- attachment_storage_service.dart
-|   |-- auth_service.dart
+|   |-- features/auth/data/auth_service.dart
 |   |-- cloud_sync_service.dart
 |   |-- dashboard_persistence_service.dart
 |   |-- device_effects_service.dart
@@ -91,9 +91,9 @@ lib/
 
 ## Controllers
 
-### `account_auth_controller.dart`
+### `features/auth/ui/account_auth_controller.dart`
 
-- Boc `AuthService`.
+- Boc `AuthService` tu `features/auth/data/auth_service.dart`.
 - Xu ly sign in email, Google va sign out.
 - Lang nghe auth state.
 - Khong mo UI truc tiep; view tu quyet dinh snackbar hay sheet.
@@ -163,9 +163,9 @@ lib/
 
 ## Services
 
-### Auth
+### `features/auth/data/auth_service.dart`
 
-- `auth_service.dart`
+- `AuthService` bao boc FirebaseAuth va GoogleSignIn.
 
 ### Sync, API, cache
 
@@ -233,7 +233,7 @@ lib/
 
 `views/home/*`
 -> `controllers/home_controller.dart`
--> `controllers/account_auth_controller.dart` hoac `services/*`
+-> `features/auth/ui/account_auth_controller.dart` hoac `features/auth/data/auth_service.dart`
 -> `models/*`
 
 ### Luong Grades
