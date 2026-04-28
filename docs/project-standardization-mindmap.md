@@ -15,7 +15,7 @@ mindmap
     Hiện trạng repo
       Flutter app ở repo root
       Pattern hiện tại
-        controllers + ChangeNotifier / Riverpod provider
+        controllers + Riverpod Notifier / provider
         services tích hợp ngoại vi
         models dữ liệu dùng chung
         utils tính toán và presenter

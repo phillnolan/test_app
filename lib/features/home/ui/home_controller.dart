@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 
 import '../../../models/event_attachment.dart';
 import '../../../models/home_action_result.dart';
@@ -27,12 +26,53 @@ import '../../sync/data/school_api_service.dart';
 import '../../sync/domain/school_sync_coordinator.dart';
 import '../../sync/data/student_sync_credentials_service.dart';
 
-/// Provides the shared [HomeController] used by the home shell.
-final homeControllerProvider = ChangeNotifierProvider<HomeController>((ref) {
-  return HomeController();
-});
+/// Immutable snapshot of the Home feature state.
+final class HomeState {
+  const HomeState({
+    required this.today,
+    required this.selectedDate,
+    required this.payload,
+    required this.isSyncing,
+    required this.isLoadingLocalCache,
+    required this.isLoadingWeather,
+    required this.isLinkingStudent,
+    required this.isRestoringCloudData,
+    required this.isSigningOut,
+    required this.showCloudRestoreWarning,
+    required this.showSyncReminder,
+    required this.currentTab,
+    required this.signedInUser,
+    required this.linkedStudentUsername,
+    required this.savedSyncCredentials,
+    required this.pendingEventSyncVersion,
+    this.weatherForecast,
+  });
 
-final class HomeController extends ChangeNotifier {
+  final DateTime today;
+  final DateTime selectedDate;
+  final LocalCachePayload payload;
+  final WeatherForecast? weatherForecast;
+  final bool isSyncing;
+  final bool isLoadingLocalCache;
+  final bool isLoadingWeather;
+  final bool isLinkingStudent;
+  final bool isRestoringCloudData;
+  final bool isSigningOut;
+  final bool showCloudRestoreWarning;
+  final bool showSyncReminder;
+  final int currentTab;
+  final User? signedInUser;
+  final String? linkedStudentUsername;
+  final StudentSyncCredentials? savedSyncCredentials;
+  final int pendingEventSyncVersion;
+}
+
+/// Provides the shared [HomeController] used by the home shell.
+final homeControllerProvider = NotifierProvider<HomeController, HomeState>(
+  HomeController.new,
+);
+
+final class HomeController extends Notifier<HomeState> {
   HomeController({
     AccountAuthController? accountAuthController,
     SchoolApiService? schoolApiService,
@@ -87,6 +127,12 @@ final class HomeController extends ChangeNotifier {
     _selectedDate = _today;
   }
 
+  @override
+  HomeState build() {
+    ref.onDispose(_disposeInternal);
+    return _snapshot();
+  }
+
   static const int pastDayRange = 365;
   static const int futureDayRange = 365;
 
@@ -118,6 +164,7 @@ final class HomeController extends ChangeNotifier {
   StudentSyncCredentials? _savedSyncCredentials;
   int _localMutationVersion = 0;
   final Map<String, _PendingEventSyncEntry> _pendingEventSyncs = {};
+  int _pendingEventSyncVersion = 0;
 
   Timer? _syncReminderTimer;
   StreamSubscription<User?>? _authSubscription;
@@ -205,14 +252,14 @@ final class HomeController extends ChangeNotifier {
     }
 
     _showCloudRestoreWarning = false;
-    notifyListeners();
+    _emit();
   }
 
   void initialize() {
     _syncReminderTimer = Timer(const Duration(seconds: 5), () {
       if (_isDisposed) return;
       _showSyncReminder = false;
-      notifyListeners();
+      _emit();
     });
 
     final localCacheFuture = _loadLocalCache();
@@ -224,7 +271,7 @@ final class HomeController extends ChangeNotifier {
       _authSubscription = _accountAuthController.listenAuthState((user) {
         if (_isDisposed) return;
         _updateSignedInUser(user);
-        notifyListeners();
+        _emit();
       });
 
       if (_signedInUser != null) {
@@ -242,17 +289,17 @@ final class HomeController extends ChangeNotifier {
 
   void setCurrentTab(int index) {
     _currentTab = index;
-    notifyListeners();
+    _emit();
   }
 
   void hideSyncReminder() {
     _showSyncReminder = false;
-    notifyListeners();
+    _emit();
   }
 
   void selectDate(DateTime date) {
     _selectedDate = _normalizedDate(date);
-    notifyListeners();
+    _emit();
   }
 
   DateTime dateForIndex(int index) {
@@ -269,9 +316,39 @@ final class HomeController extends ChangeNotifier {
     );
   }
 
+  void _emit() {
+    if (_isDisposed) {
+      return;
+    }
+
+    state = _snapshot();
+  }
+
+  HomeState _snapshot() {
+    return HomeState(
+      today: _today,
+      selectedDate: _selectedDate,
+      payload: _payload,
+      weatherForecast: _weatherForecast,
+      isSyncing: _isSyncing,
+      isLoadingLocalCache: _isLoadingLocalCache,
+      isLoadingWeather: _isLoadingWeather,
+      isLinkingStudent: _isLinkingStudent,
+      isRestoringCloudData: _isRestoringCloudData,
+      isSigningOut: _isSigningOut,
+      showCloudRestoreWarning: _showCloudRestoreWarning,
+      showSyncReminder: _showSyncReminder,
+      currentTab: _currentTab,
+      signedInUser: _signedInUser,
+      linkedStudentUsername: _linkedStudentUsername,
+      savedSyncCredentials: _savedSyncCredentials,
+      pendingEventSyncVersion: _pendingEventSyncVersion,
+    );
+  }
+
   Future<void> reloadWeather() async {
     _isLoadingWeather = true;
-    notifyListeners();
+    _emit();
 
     try {
       _weatherForecast = await _weatherService.fetchForecast();
@@ -283,7 +360,7 @@ final class HomeController extends ChangeNotifier {
 
     if (_isDisposed) return;
     _isLoadingWeather = false;
-    notifyListeners();
+    _emit();
   }
 
   Future<AuthFlowResult> emailAuthAndResolve(EmailAuthResult result) async {
@@ -294,7 +371,7 @@ final class HomeController extends ChangeNotifier {
 
     _updateSignedInUser(_accountAuthController.currentUser);
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
 
     final session = _beginCloudRestoreSession();
@@ -314,7 +391,7 @@ final class HomeController extends ChangeNotifier {
 
     _updateSignedInUser(_accountAuthController.currentUser);
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
 
     final session = _beginCloudRestoreSession();
@@ -342,7 +419,7 @@ final class HomeController extends ChangeNotifier {
 
     _isLinkingStudent = true;
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
 
     try {
@@ -368,7 +445,7 @@ final class HomeController extends ChangeNotifier {
     } finally {
       if (!_isDisposed) {
         _isLinkingStudent = false;
-        notifyListeners();
+        _emit();
       }
     }
   }
@@ -475,7 +552,7 @@ final class HomeController extends ChangeNotifier {
     }
 
     _isSyncing = value;
-    notifyListeners();
+    _emit();
   }
 
   Future<HomeActionResult> applyPreparedSync(
@@ -516,7 +593,7 @@ final class HomeController extends ChangeNotifier {
 
       _showSyncReminder = false;
       _currentTab = 0;
-      notifyListeners();
+      _emit();
 
       return const HomeActionResult.success('Đồng bộ thành công!');
     } catch (error, stackTrace) {
@@ -569,7 +646,7 @@ final class HomeController extends ChangeNotifier {
       action: mutationResult.pendingAction,
       completion: mutationResult.cloudSyncCompletion,
     );
-    notifyListeners();
+    _emit();
   }
 
   Future<void> editEvent(StudentEvent event, NoteEditorResult result) async {
@@ -593,7 +670,7 @@ final class HomeController extends ChangeNotifier {
       action: mutationResult.pendingAction,
       completion: mutationResult.cloudSyncCompletion,
     );
-    notifyListeners();
+    _emit();
   }
 
   Future<void> deletePersonalEvent(StudentEvent event) async {
@@ -614,7 +691,7 @@ final class HomeController extends ChangeNotifier {
       action: mutationResult.pendingAction,
       completion: mutationResult.cloudSyncCompletion,
     );
-    notifyListeners();
+    _emit();
   }
 
   Future<void> toggleDone(String id) async {
@@ -632,7 +709,7 @@ final class HomeController extends ChangeNotifier {
       action: mutationResult.pendingAction,
       completion: mutationResult.cloudSyncCompletion,
     );
-    notifyListeners();
+    _emit();
   }
 
   Future<AttachmentOpenResult> openAttachment(
@@ -658,7 +735,7 @@ final class HomeController extends ChangeNotifier {
 
     _isSigningOut = true;
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
 
     try {
@@ -687,7 +764,7 @@ final class HomeController extends ChangeNotifier {
       _currentTab = 0;
       _showSyncReminder = true;
       _savedSyncCredentials = null;
-      notifyListeners();
+      _emit();
 
       return const HomeActionResult.success(
         'Đã đăng xuất và dọn sạch dữ liệu trên thiết bị.',
@@ -699,7 +776,7 @@ final class HomeController extends ChangeNotifier {
     } finally {
       if (!_isDisposed) {
         _isSigningOut = false;
-        notifyListeners();
+        _emit();
       }
     }
   }
@@ -710,7 +787,7 @@ final class HomeController extends ChangeNotifier {
 
     if (cached == null) {
       _isLoadingLocalCache = false;
-      notifyListeners();
+      _emit();
       return;
     }
 
@@ -724,7 +801,7 @@ final class HomeController extends ChangeNotifier {
       );
     }
     _isLoadingLocalCache = false;
-    notifyListeners();
+    _emit();
   }
 
   Future<void> _loadSavedSyncCredentials() async {
@@ -734,7 +811,7 @@ final class HomeController extends ChangeNotifier {
     }
 
     _savedSyncCredentials = saved;
-    notifyListeners();
+    _emit();
   }
 
   Future<void> _restoreAndSyncCloudState({
@@ -755,7 +832,7 @@ final class HomeController extends ChangeNotifier {
     _linkedStudentUsername = remoteStudent;
 
     if (remotePayload == null) {
-      notifyListeners();
+      _emit();
       return;
     }
 
@@ -880,7 +957,7 @@ final class HomeController extends ChangeNotifier {
     _isRestoringCloudData = true;
     _showCloudRestoreWarning = true;
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
     return (_cloudRestoreGeneration, userId);
   }
@@ -899,7 +976,7 @@ final class HomeController extends ChangeNotifier {
     _isRestoringCloudData = false;
     _showCloudRestoreWarning = false;
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
   }
 
@@ -930,7 +1007,7 @@ final class HomeController extends ChangeNotifier {
       final localStudent = _studentUsernameForPayload(_payload);
       final remoteStudent = _studentUsernameForPayload(remotePayload);
       _linkedStudentUsername = remoteStudent;
-      notifyListeners();
+      _emit();
 
       if (localStudent == null) {
         if (remotePayload != null && remoteStudent != null) {
@@ -1034,7 +1111,7 @@ final class HomeController extends ChangeNotifier {
     }
     _linkedStudentUsername = linkedStudentUsername;
     _isLoadingLocalCache = false;
-    notifyListeners();
+    _emit();
     return persistedPayload;
   }
 
@@ -1291,7 +1368,7 @@ final class HomeController extends ChangeNotifier {
     }
 
     _savedSyncCredentials = saved;
-    notifyListeners();
+    _emit();
   }
 
   void _registerPendingEventSync({
@@ -1312,7 +1389,7 @@ final class HomeController extends ChangeNotifier {
       state: _PendingEventSyncState.syncing,
     );
     if (!_isDisposed) {
-      notifyListeners();
+      _emit();
     }
 
     final timeout = _estimatedPendingSyncTimeout(event, action);
@@ -1329,7 +1406,7 @@ final class HomeController extends ChangeNotifier {
           state: _PendingEventSyncState.deferred,
         );
         if (!_isDisposed) {
-          notifyListeners();
+          _emit();
         }
       }),
     );
@@ -1343,7 +1420,7 @@ final class HomeController extends ChangeNotifier {
 
         _pendingEventSyncs.remove(event.id);
         if (!_isDisposed) {
-          notifyListeners();
+          _emit();
         }
       }),
     );
@@ -1374,12 +1451,15 @@ final class HomeController extends ChangeNotifier {
     return Duration(milliseconds: clampedMs);
   }
 
-  @override
-  void dispose() {
+  void _disposeInternal() {
     _isDisposed = true;
     _syncReminderTimer?.cancel();
     _authSubscription?.cancel();
-    super.dispose();
+  }
+
+  @visibleForTesting
+  void disposeForTesting() {
+    _disposeInternal();
   }
 }
 

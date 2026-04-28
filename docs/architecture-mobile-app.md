@@ -1,171 +1,171 @@
-# Kiến trúc - mobile-app
+﻿# Kiáº¿n trÃºc - mobile-app
 
 **Part ID:** `mobile-app`  
-**Loại:** `mobile`  
+**Loáº¡i:** `mobile`  
 **Root:** `.`  
 **Entry point:** `lib/main.dart`
 
-## Mục đích
+## Má»¥c Ä‘Ã­ch
 
-`mobile-app` là ứng dụng Flutter cho sinh viên:
+`mobile-app` lÃ  á»©ng dá»¥ng Flutter cho sinh viÃªn:
 
-- đồng bộ dữ liệu học tập từ cổng trường,
-- xem lịch học/lịch thi theo ngày,
-- xem bảng điểm và chương trình đào tạo,
-- tạo task cá nhân và ghi chú gắn vào sự kiện,
-- đính kèm ảnh/PDF/tài liệu,
-- đồng bộ dữ liệu cá nhân lên cloud khi đăng nhập Firebase.
+- Ä‘á»“ng bá»™ dá»¯ liá»‡u há»c táº­p tá»« cá»•ng trÆ°á»ng,
+- xem lá»‹ch há»c/lá»‹ch thi theo ngÃ y,
+- xem báº£ng Ä‘iá»ƒm vÃ  chÆ°Æ¡ng trÃ¬nh Ä‘Ã o táº¡o,
+- táº¡o task cÃ¡ nhÃ¢n vÃ  ghi chÃº gáº¯n vÃ o sá»± kiá»‡n,
+- Ä‘Ã­nh kÃ¨m áº£nh/PDF/tÃ i liá»‡u,
+- Ä‘á»“ng bá»™ dá»¯ liá»‡u cÃ¡ nhÃ¢n lÃªn cloud khi Ä‘Äƒng nháº­p Firebase.
 
-## Kiến trúc tổng thể
+## Kiáº¿n trÃºc tá»•ng thá»ƒ
 
-App đi theo mô hình MVC thực dụng:
+App Ä‘i theo mÃ´ hÃ¬nh MVC thá»±c dá»¥ng:
 
-- **View:** nằm trong `lib/views/**`
-- **Controller:** nằm trong `lib/controllers/**`
-- **Model:** nằm trong `lib/models/**`
-- **Service/infrastructure:** nằm trong `lib/services/**`
+- **View:** náº±m trong `lib/views/**`
+- **Controller:** náº±m trong `lib/controllers/**`
+- **Model:** náº±m trong `lib/models/**`
+- **Service/infrastructure:** náº±m trong `lib/services/**`
 
-App hiện dùng Riverpod để quản lý ownership cho `HomeController`: logic vẫn nằm trong `HomeController` kế thừa `ChangeNotifier`, nhưng controller được cấp qua `ChangeNotifierProvider` và được nối vào UI bằng `ListenableBuilder`.
+App hiện dùng Riverpod để quản lý ownership cho `HomeController`: logic nằm trong `HomeController` kế thừa `Notifier<HomeState>`, được cấp qua `NotifierProvider` và UI đọc state bằng `ref.watch` / `ref.listen`.
 
 ## Bootstrap
 
 ### 1. `lib/main.dart`
 
-- khởi tạo Flutter binding,
-- thử khởi tạo Firebase bằng `DefaultFirebaseOptions.currentPlatform`,
-- khởi tạo `NotificationService`,
-- chạy `StudentPlannerApp`.
+- khá»Ÿi táº¡o Flutter binding,
+- thá»­ khá»Ÿi táº¡o Firebase báº±ng `DefaultFirebaseOptions.currentPlatform`,
+- khá»Ÿi táº¡o `NotificationService`,
+- cháº¡y `StudentPlannerApp`.
 
-Firebase failure không chặn app chạy trên nền tảng chưa cấu hình; đây là lựa chọn hỗ trợ chế độ offline/local-only.
+Firebase failure khÃ´ng cháº·n app cháº¡y trÃªn ná»n táº£ng chÆ°a cáº¥u hÃ¬nh; Ä‘Ã¢y lÃ  lá»±a chá»n há»— trá»£ cháº¿ Ä‘á»™ offline/local-only.
 
 ### 2. `lib/app.dart`
 
-- tạo `MaterialApp`,
+- táº¡o `MaterialApp`,
 - set `Locale('vi', 'VN')`,
-- nạp theme từ `buildAppTheme()`,
-- chọn `HomeShell` làm màn hình gốc.
+- náº¡p theme tá»« `buildAppTheme()`,
+- chá»n `HomeShell` lÃ m mÃ n hÃ¬nh gá»‘c.
 
-## Các lớp và vai trò chính
+## CÃ¡c lá»›p vÃ  vai trÃ² chÃ­nh
 
 ### `HomeShell`
 
-- Đọc `HomeController` từ `homeControllerProvider`.
-- Dựng 4 tab qua `IndexedStack`:
-  - Lịch
-  - Điểm
-  - Đồng bộ
-  - Tài khoản
-- Nối callback UI sang controller.
+- Äá»c `HomeController` tá»« `homeControllerProvider`.
+- Dá»±ng 4 tab qua `IndexedStack`:
+  - Lá»‹ch
+  - Äiá»ƒm
+  - Äá»“ng bá»™
+  - TÃ i khoáº£n
+- Ná»‘i callback UI sang controller.
 
 ### `HomeController`
 
-Đây là trung tâm điều phối của app, nhưng lifecycle được Riverpod quản lý.
-Nó chịu trách nhiệm:
+ÄÃ¢y lÃ  trung tÃ¢m Ä‘iá»u phá»‘i cá»§a app, nhÆ°ng lifecycle Ä‘Æ°á»£c Riverpod quáº£n lÃ½.
+NÃ³ chá»‹u trÃ¡ch nhiá»‡m:
 
-- load cache cục bộ lúc khởi động,
-- tải thời tiết,
-- giữ `selectedDate`, `currentTab`, `payload`,
-- xử lý đồng bộ cổng trường,
+- load cache cá»¥c bá»™ lÃºc khá»Ÿi Ä‘á»™ng,
+- táº£i thá»i tiáº¿t,
+- giá»¯ `selectedDate`, `currentTab`, `payload`,
+- xá»­ lÃ½ Ä‘á»“ng bá»™ cá»•ng trÆ°á»ng,
 - merge payload local/remote,
 - persist attachments,
-- đồng bộ note/task/attachments/snapshot lên cloud,
+- Ä‘á»“ng bá»™ note/task/attachments/snapshot lÃªn cloud,
 - reschedule local notifications,
-- cập nhật Android widget,
-- phản ứng khi auth state Firebase thay đổi.
+- cáº­p nháº­t Android widget,
+- pháº£n á»©ng khi auth state Firebase thay Ä‘á»•i.
 
 ### `AccountAuthController`
 
-- Bọc `AuthService`
-- Mở bottom sheet đăng nhập email/password
-- Gọi đăng nhập Google
-- Xử lý sign out
+- Bá»c `AuthService`
+- Má»Ÿ bottom sheet Ä‘Äƒng nháº­p email/password
+- Gá»i Ä‘Äƒng nháº­p Google
+- Xá»­ lÃ½ sign out
 
 ### Service layer
 
-- `SchoolApiService`: gọi API trường
-- `LocalCacheService`: lưu/tải `LocalCachePayload`
-- `CloudSyncService`: giao tiếp với Worker
-- `AttachmentStorageService`: persist file về local storage
+- `SchoolApiService`: gá»i API trÆ°á»ng
+- `LocalCacheService`: lÆ°u/táº£i `LocalCachePayload`
+- `CloudSyncService`: giao tiáº¿p vá»›i Worker
+- `AttachmentStorageService`: persist file vá» local storage
 - `NotificationService`: notification Android
 - `WidgetSyncService`: update home widget qua `MethodChannel`
-- `WeatherService`: gọi Open-Meteo
+- `WeatherService`: gá»i Open-Meteo
 
 ## State management
 
-### Kiểu state
+### Kiá»ƒu state
 
 - UI state: `currentTab`, `showSyncReminder`, `isLoading*`
 - Domain state: `LocalCachePayload`, `WeatherForecast`
 - Auth state: `User? signedInUser`
-- Derived state: `allEvents`, indicator màu theo ngày, selected day events
+- Derived state: `allEvents`, indicator mÃ u theo ngÃ y, selected day events
 
-### Chiến lược cập nhật
+### Chiáº¿n lÆ°á»£c cáº­p nháº­t
 
-- Controller mutate state và gọi `notifyListeners()`
-- UI đọc state qua controller được cấp bởi Riverpod provider
-- Không có lớp repository hoặc use case riêng
+- Controller mutate private fields và emit snapshot `HomeState` qua Riverpod notifier
+- UI đọc state qua `NotifierProvider` được cấp bởi Riverpod
+- KhÃ´ng cÃ³ lá»›p repository hoáº·c use case riÃªng
 
-### Đánh giá
+### ÄÃ¡nh giÃ¡
 
-Mô hình này dễ theo dõi ở quy mô hiện tại, nhưng `HomeController` đang ôm khá nhiều trách nhiệm. Nếu app tiếp tục lớn lên, điểm đầu tiên nên tách là:
+MÃ´ hÃ¬nh nÃ y dá»… theo dÃµi á»Ÿ quy mÃ´ hiá»‡n táº¡i, nhÆ°ng `HomeController` Ä‘ang Ã´m khÃ¡ nhiá»u trÃ¡ch nhiá»‡m. Náº¿u app tiáº¿p tá»¥c lá»›n lÃªn, Ä‘iá»ƒm Ä‘áº§u tiÃªn nÃªn tÃ¡ch lÃ :
 
 - sync school data,
 - cloud sync,
 - event/task editing,
 - weather/notifier widget orchestration.
 
-## Các luồng chính
+## CÃ¡c luá»“ng chÃ­nh
 
-### Luồng khởi động
+### Luá»“ng khá»Ÿi Ä‘á»™ng
 
-1. `main()` khởi tạo Firebase, notification và bọc app bằng `ProviderScope`.
-2. `HomeShell` đọc `homeControllerProvider` và gọi `initialize()`.
+1. `main()` khá»Ÿi táº¡o Firebase, notification vÃ  bá»c app báº±ng `ProviderScope`.
+2. `HomeShell` Ä‘á»c `homeControllerProvider` vÃ  gá»i `initialize()`.
 3. `HomeController`:
    - load cache local,
    - load weather,
    - subscribe auth state,
-   - căn day strip tới ngày hiện tại.
+   - cÄƒn day strip tá»›i ngÃ y hiá»‡n táº¡i.
 
-### Luồng đồng bộ dữ liệu trường
+### Luá»“ng Ä‘á»“ng bá»™ dá»¯ liá»‡u trÆ°á»ng
 
-1. Người dùng mở tab `Đồng bộ`.
-2. `SyncPage` gọi `HomeController.openSyncDialog()`.
-3. App thu username/password sinh viên.
+1. NgÆ°á»i dÃ¹ng má»Ÿ tab `Äá»“ng bá»™`.
+2. `SyncPage` gá»i `HomeController.openSyncDialog()`.
+3. App thu username/password sinh viÃªn.
 4. `SchoolApiService.sync()`:
-   - login lấy access token,
-   - gọi profile/marks/timetable/exams/curriculum,
-   - chuẩn hóa thành `SchoolSyncSnapshot`.
-5. `HomeController` ghi vào `LocalCachePayload`.
-6. App cập nhật lịch, điểm, notification và widget.
+   - login láº¥y access token,
+   - gá»i profile/marks/timetable/exams/curriculum,
+   - chuáº©n hÃ³a thÃ nh `SchoolSyncSnapshot`.
+5. `HomeController` ghi vÃ o `LocalCachePayload`.
+6. App cáº­p nháº­t lá»‹ch, Ä‘iá»ƒm, notification vÃ  widget.
 
-### Luồng local-first + cloud sync
+### Luá»“ng local-first + cloud sync
 
-1. Mọi thay đổi event/task/note trước tiên được lưu local.
-2. `HomeController._persistPayload()` gọi:
+1. Má»i thay Ä‘á»•i event/task/note trÆ°á»›c tiÃªn Ä‘Æ°á»£c lÆ°u local.
+2. `HomeController._persistPayload()` gá»i:
    - `LocalCacheService.save()`
    - `NotificationService.rescheduleForEvents()`
    - `WidgetSyncService.updateTodayWidget()`
-3. Nếu có Firebase user, `CloudSyncService`:
-   - upload attachment thiếu,
+3. Náº¿u cÃ³ Firebase user, `CloudSyncService`:
+   - upload attachment thiáº¿u,
    - upsert note/task,
-   - lưu snapshot dashboard lên Worker.
+   - lÆ°u snapshot dashboard lÃªn Worker.
 
-### Luồng khôi phục cloud
+### Luá»“ng khÃ´i phá»¥c cloud
 
-1. Khi auth state đổi sang signed-in, controller gọi `_restoreAndSyncCloudState()`.
-2. App đọc `/sync-cache?key=dashboard` từ Worker.
-3. Nếu snapshot remote mới hơn local, app ưu tiên dùng remote payload.
+1. Khi auth state Ä‘á»•i sang signed-in, controller gá»i `_restoreAndSyncCloudState()`.
+2. App Ä‘á»c `/sync-cache?key=dashboard` tá»« Worker.
+3. Náº¿u snapshot remote má»›i hÆ¡n local, app Æ°u tiÃªn dÃ¹ng remote payload.
 
-### Luồng attachment
+### Luá»“ng attachment
 
-1. Editor tạo `EventAttachment` chứa bytes/path.
-2. `AttachmentStorageService` persist file về documents directory trên mobile.
-3. `CloudSyncService.uploadAttachment()` upload file qua Worker nếu user đã đăng nhập.
-4. `EventAttachment.remoteKey` được lưu lại để tải về sau này.
+1. Editor táº¡o `EventAttachment` chá»©a bytes/path.
+2. `AttachmentStorageService` persist file vá» documents directory trÃªn mobile.
+3. `CloudSyncService.uploadAttachment()` upload file qua Worker náº¿u user Ä‘Ã£ Ä‘Äƒng nháº­p.
+4. `EventAttachment.remoteKey` Ä‘Æ°á»£c lÆ°u láº¡i Ä‘á»ƒ táº£i vá» sau nÃ y.
 
-## UI và component structure
+## UI vÃ  component structure
 
-### Tab Lịch
+### Tab Lá»‹ch
 
 - `SchedulePage`
 - hero card + weather card
@@ -174,77 +174,79 @@ Mô hình này dễ theo dõi ở quy mô hiện tại, nhưng `HomeController` 
 - note/task editors
 - image attachment editor
 
-### Tab Điểm
+### Tab Äiá»ƒm
 
 - `GradesPage`
 - `GradesHeroCard`
 - `GoalPlannerSection`
 - `CurriculumSubjectsDialog`
 
-### Tab Đồng bộ
+### Tab Äá»“ng bá»™
 
 - `SyncPage`
 - profile card
 - metric cards
 
-### Tab Tài khoản
+### Tab TÃ i khoáº£n
 
 - `AccountPage`
-- đăng nhập Google/email-password
-- trạng thái offline và cloud sync
+- Ä‘Äƒng nháº­p Google/email-password
+- tráº¡ng thÃ¡i offline vÃ  cloud sync
 
-## Tích hợp ngoài
+## TÃ­ch há»£p ngoÃ i
 
 ### TLU education API
 
 - Host: `https://sinhvien1.tlu.edu.vn/education`
-- Dùng trực tiếp từ app
-- Không đi qua Worker
+- DÃ¹ng trá»±c tiáº¿p tá»« app
+- KhÃ´ng Ä‘i qua Worker
 
 ### Firebase
 
-- Android và Web đã có `firebase_options.dart`
-- App có thể chạy cả khi Firebase chưa sẵn sàng
-- Cloud sync yêu cầu `FirebaseAuth.instance.currentUser`
+- Android vÃ  Web Ä‘Ã£ cÃ³ `firebase_options.dart`
+- App cÃ³ thá»ƒ cháº¡y cáº£ khi Firebase chÆ°a sáºµn sÃ ng
+- Cloud sync yÃªu cáº§u `FirebaseAuth.instance.currentUser`
 
 ### Cloudflare Worker
 
-- URL mặc định hard-code: `https://sinhvien-worker.nkocpk99012.workers.dev`
-- Có thể override bằng `--dart-define=CLOUDFLARE_WORKER_URL=...`
+- URL máº·c Ä‘á»‹nh hard-code: `https://sinhvien-worker.nkocpk99012.workers.dev`
+- CÃ³ thá»ƒ override báº±ng `--dart-define=CLOUDFLARE_WORKER_URL=...`
 
 ### Open-Meteo
 
-- Dùng cho forecast 7 ngày ở Hà Nội
+- DÃ¹ng cho forecast 7 ngÃ y á»Ÿ HÃ  Ná»™i
 
-## Nền tảng và khác biệt runtime
+## Ná»n táº£ng vÃ  khÃ¡c biá»‡t runtime
 
 ### Android
 
-- hỗ trợ camera
+- há»— trá»£ camera
 - local notifications
 - home widget
-- persist attachment về file system
+- persist attachment vá» file system
 
 ### Web
 
-- có cấu hình Firebase Web
-- không có notification Android/widget
-- một số xử lý file dùng conditional import hoặc degrade gracefully
+- cÃ³ cáº¥u hÃ¬nh Firebase Web
+- khÃ´ng cÃ³ notification Android/widget
+- má»™t sá»‘ xá»­ lÃ½ file dÃ¹ng conditional import hoáº·c degrade gracefully
 
-## Rủi ro và lưu ý
+## Rá»§i ro vÃ  lÆ°u Ã½
 
-- `HomeController` khá lớn, dễ trở thành điểm nghẽn maintainability.
-- App gọi trực tiếp API trường bằng tài khoản sinh viên, nên timeout/retry/error UX rất quan trọng.
-- Đồng bộ cloud hiện không chặn theo kết quả response chi tiết; nếu Worker lỗi, local UX vẫn ổn nhưng đồng bộ có thể âm thầm không hoàn tất.
-- `StudentPlannerApp` được test widget cơ bản, nhưng chưa có test sâu cho controller/service.
+- `HomeController` khÃ¡ lá»›n, dá»… trá»Ÿ thÃ nh Ä‘iá»ƒm ngháº½n maintainability.
+- App gá»i trá»±c tiáº¿p API trÆ°á»ng báº±ng tÃ i khoáº£n sinh viÃªn, nÃªn timeout/retry/error UX ráº¥t quan trá»ng.
+- Äá»“ng bá»™ cloud hiá»‡n khÃ´ng cháº·n theo káº¿t quáº£ response chi tiáº¿t; náº¿u Worker lá»—i, local UX váº«n á»•n nhÆ°ng Ä‘á»“ng bá»™ cÃ³ thá»ƒ Ã¢m tháº§m khÃ´ng hoÃ n táº¥t.
+- `StudentPlannerApp` Ä‘Æ°á»£c test widget cÆ¡ báº£n, nhÆ°ng chÆ°a cÃ³ test sÃ¢u cho controller/service.
 
-## Hướng mở rộng hợp lý
+## HÆ°á»›ng má»Ÿ rá»™ng há»£p lÃ½
 
-- Tách `HomeController` thành nhiều controller/use-case theo module.
-- Chuẩn hóa lớp repository cho local + remote sync.
-- Thêm test cho parsing API trường, cloud sync, planner GPA.
-- Tách attachment pipeline và weather ra service có interface rõ hơn để test.
+- TÃ¡ch `HomeController` thÃ nh nhiá»u controller/use-case theo module.
+- Chuáº©n hÃ³a lá»›p repository cho local + remote sync.
+- ThÃªm test cho parsing API trÆ°á»ng, cloud sync, planner GPA.
+- TÃ¡ch attachment pipeline vÃ  weather ra service cÃ³ interface rÃµ hÆ¡n Ä‘á»ƒ test.
 
 ---
 
 _Generated using BMAD Method `document-project` workflow_
+
+

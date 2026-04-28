@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/features/auth/data/auth_service.dart';
 import 'package:sinhvien_app/features/auth/ui/account_auth_controller.dart';
@@ -28,8 +29,7 @@ void main() {
   testWidgets(
     'HomeController exposes weather presentation for the selected day',
     (WidgetTester tester) async {
-      final controller = _buildController();
-
+      final controller = _attachController(_buildController());
       controller.initialize();
       await tester.pump();
 
@@ -41,7 +41,7 @@ void main() {
       expect(weather.precipitationLabel, 'Mưa 20%');
       expect(weather.suggestions, isNotEmpty);
 
-      controller.dispose();
+      controller.disposeForTesting();
     },
   );
 
@@ -57,33 +57,34 @@ void main() {
           personalEvents: [_personalTask(id: 'task-1')],
         ),
       );
-      final controller = _buildController(
-        localCacheService: localCacheService,
-        schoolApiService: _FakeSchoolApiService(
-          snapshot: SchoolSyncSnapshot(
-            profile: const StudentProfile(
-              username: 'new-user',
-              displayName: 'New User',
-            ),
-            currentTuition: null,
-            grades: const [],
-            curriculumSubjects: const [],
-            curriculumRawItems: const [],
-            events: [
-              StudentEvent(
-                id: 'exam-1',
-                title: 'Thi giua ky',
-                start: DateTime(2026, 4, 10, 7, 0),
-                end: DateTime(2026, 4, 10, 9, 0),
-                type: StudentEventType.exam,
-                color: const Color(0xFFFFDAD6),
+      final controller = _attachController(
+        _buildController(
+          localCacheService: localCacheService,
+          schoolApiService: _FakeSchoolApiService(
+            snapshot: SchoolSyncSnapshot(
+              profile: const StudentProfile(
+                username: 'new-user',
+                displayName: 'New User',
               ),
-            ],
-            syncedAt: DateTime(2026, 4, 10, 9, 0),
+              currentTuition: null,
+              grades: const [],
+              curriculumSubjects: const [],
+              curriculumRawItems: const [],
+              events: [
+                StudentEvent(
+                  id: 'exam-1',
+                  title: 'Thi giua ky',
+                  start: DateTime(2026, 4, 10, 7, 0),
+                  end: DateTime(2026, 4, 10, 9, 0),
+                  type: StudentEventType.exam,
+                  color: const Color(0xFFFFDAD6),
+                ),
+              ],
+              syncedAt: DateTime(2026, 4, 10, 9, 0),
+            ),
           ),
         ),
       );
-
       controller.initialize();
       await tester.pump();
       final initialSelectedDate = controller.selectedDate;
@@ -104,7 +105,7 @@ void main() {
       expect(controller.selectedDate, initialSelectedDate);
       expect(localCacheService.savedPayloads, isEmpty);
 
-      controller.dispose();
+      controller.disposeForTesting();
     },
   );
 
@@ -120,8 +121,9 @@ void main() {
         personalEvents: [_personalTask(id: 'task-1', isDone: false)],
       ),
     );
-    final controller = _buildController(localCacheService: localCacheService);
-
+    final controller = _attachController(
+      _buildController(localCacheService: localCacheService),
+    );
     controller.initialize();
     await tester.pump();
     await controller.toggleDone('task-1');
@@ -134,7 +136,7 @@ void main() {
       isTrue,
     );
 
-    controller.dispose();
+    controller.disposeForTesting();
   });
 
   testWidgets('deletePersonalEvent ignores synced events', (
@@ -158,8 +160,9 @@ void main() {
         personalEvents: [_personalTask(id: 'task-1')],
       ),
     );
-    final controller = _buildController(localCacheService: localCacheService);
-
+    final controller = _attachController(
+      _buildController(localCacheService: localCacheService),
+    );
     controller.initialize();
     await tester.pump();
     await controller.deletePersonalEvent(syncedExam);
@@ -168,7 +171,7 @@ void main() {
     expect(controller.payload.personalEvents, hasLength(1));
     expect(localCacheService.savedPayloads, isEmpty);
 
-    controller.dispose();
+    controller.disposeForTesting();
   });
 
   testWidgets('auth restore prefers newer remote payload', (
@@ -214,17 +217,18 @@ void main() {
     final cloudSyncService = _FakeCloudSyncService(
       remotePayload: remotePayload,
     );
-    final controller = _buildController(
-      accountAuthController: AccountAuthController(
-        authService: _StreamAuthService(
-          currentUser: _FakeUser(),
-          authStates: Stream<User?>.value(_FakeUser()),
+    final controller = _attachController(
+      _buildController(
+        accountAuthController: AccountAuthController(
+          authService: _StreamAuthService(
+            currentUser: _FakeUser(),
+            authStates: Stream<User?>.value(_FakeUser()),
+          ),
         ),
+        localCacheService: localCacheService,
+        cloudSyncService: cloudSyncService,
       ),
-      localCacheService: localCacheService,
-      cloudSyncService: cloudSyncService,
     );
-
     controller.initialize();
     await tester.pump();
     await tester.pump(const Duration(seconds: 6));
@@ -237,7 +241,7 @@ void main() {
       'remote-user',
     );
 
-    controller.dispose();
+    controller.disposeForTesting();
   });
 
   testWidgets('auth restore keeps local payload when cloud fetch fails', (
@@ -251,17 +255,20 @@ void main() {
       personalEvents: [_personalTask(id: 'task-1')],
       lastSyncedAt: DateTime(2026, 4, 2, 8, 0),
     );
-    final controller = _buildController(
-      accountAuthController: AccountAuthController(
-        authService: _StreamAuthService(
-          currentUser: _FakeUser(),
-          authStates: Stream<User?>.value(_FakeUser()),
+    final controller = _attachController(
+      _buildController(
+        accountAuthController: AccountAuthController(
+          authService: _StreamAuthService(
+            currentUser: _FakeUser(),
+            authStates: Stream<User?>.value(_FakeUser()),
+          ),
         ),
+        localCacheService: _MemoryLocalCacheService(
+          initialPayload: localPayload,
+        ),
+        cloudSyncService: _FakeCloudSyncService(throwOnFetch: true),
       ),
-      localCacheService: _MemoryLocalCacheService(initialPayload: localPayload),
-      cloudSyncService: _FakeCloudSyncService(throwOnFetch: true),
     );
-
     controller.initialize();
     await tester.pump();
     await tester.pump(const Duration(seconds: 6));
@@ -270,7 +277,7 @@ void main() {
     expect(controller.payload.profile?.username, 'local-user');
     expect(controller.payload.personalEvents, hasLength(1));
 
-    controller.dispose();
+    controller.disposeForTesting();
   });
 }
 
@@ -312,6 +319,20 @@ HomeController _buildController({
     ),
     weatherService: weatherService ?? _FixedWeatherService(),
   );
+}
+
+HomeController _attachController(HomeController controller) {
+  final container = ProviderContainer(
+    overrides: [homeControllerProvider.overrideWith(() => controller)],
+  );
+  final subscription = container.listen<HomeState>(
+    homeControllerProvider,
+    (_, __) {},
+    fireImmediately: true,
+  );
+  addTearDown(container.dispose);
+  addTearDown(subscription.close);
+  return container.read(homeControllerProvider.notifier);
 }
 
 StudentEvent _personalTask({required String id, bool isDone = false}) {

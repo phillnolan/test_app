@@ -33,15 +33,12 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   late final HomeController _controller;
   late final ScrollController _dayStripController = ScrollController();
   late DateTime _lastSelectedDate;
-  late bool _wasLoadingLocalCache;
 
   @override
   void initState() {
     super.initState();
-    _controller = ref.read(homeControllerProvider);
+    _controller = ref.read(homeControllerProvider.notifier);
     _lastSelectedDate = _normalizedDate(_controller.selectedDate);
-    _wasLoadingLocalCache = _controller.isLoadingLocalCache;
-    _controller.addListener(_handleControllerChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _controller.initialize();
@@ -51,70 +48,67 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
   @override
   void dispose() {
-    _controller.removeListener(_handleControllerChanged);
     _dayStripController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: _controller,
-      builder: (context, _) {
-        final pages = <Widget>[
-          _buildGradesPage(),
-          _buildQuizPage(),
-          _buildSchedulePage(context),
-          _buildTuitionPage(),
-          _buildAccountPage(),
-        ];
+    ref.watch(homeControllerProvider);
+    ref.listen<HomeState>(homeControllerProvider, _handleControllerChanged);
 
-        return Scaffold(
-          body: SafeArea(
-            child: IndexedStack(index: _controller.currentTab, children: pages),
+    final pages = <Widget>[
+      _buildGradesPage(),
+      _buildQuizPage(),
+      _buildSchedulePage(context),
+      _buildTuitionPage(),
+      _buildAccountPage(),
+    ];
+
+    return Scaffold(
+      body: SafeArea(
+        child: IndexedStack(index: _controller.currentTab, children: pages),
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _controller.currentTab,
+        onDestinationSelected: _controller.setCurrentTab,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.school_outlined),
+            selectedIcon: Icon(Icons.school),
+            label: 'Điểm',
           ),
-          bottomNavigationBar: NavigationBar(
-            selectedIndex: _controller.currentTab,
-            onDestinationSelected: _controller.setCurrentTab,
-            destinations: const [
-              NavigationDestination(
-                icon: Icon(Icons.school_outlined),
-                selectedIcon: Icon(Icons.school),
-                label: 'Điểm',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.quiz_outlined),
-                selectedIcon: Icon(Icons.quiz),
-                label: 'Quiz',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.calendar_today_outlined),
-                selectedIcon: Icon(Icons.calendar_today),
-                label: 'Lịch',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.receipt_long_outlined),
-                selectedIcon: Icon(Icons.receipt_long),
-                label: 'Học phí',
-              ),
-              NavigationDestination(
-                icon: Icon(Icons.person_outline),
-                selectedIcon: Icon(Icons.person),
-                label: 'Tài khoản',
-              ),
-            ],
+          NavigationDestination(
+            icon: Icon(Icons.quiz_outlined),
+            selectedIcon: Icon(Icons.quiz),
+            label: 'Quiz',
           ),
-          floatingActionButton: _controller.currentTab == 2
-              ? FloatingActionButton(
-                  onPressed: () {
-                    unawaited(_openTaskEditor());
-                  },
-                  tooltip: 'Thêm việc',
-                  child: const Icon(Icons.add),
-                )
-              : null,
-        );
-      },
+          NavigationDestination(
+            icon: Icon(Icons.calendar_today_outlined),
+            selectedIcon: Icon(Icons.calendar_today),
+            label: 'Lịch',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.receipt_long_outlined),
+            selectedIcon: Icon(Icons.receipt_long),
+            label: 'Học phí',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Tài khoản',
+          ),
+        ],
+      ),
+      floatingActionButton: _controller.currentTab == 2
+          ? FloatingActionButton(
+              onPressed: () {
+                unawaited(_openTaskEditor());
+              },
+              tooltip: 'Thêm việc',
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -640,11 +634,10 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void _handleControllerChanged() {
-    final selectedDate = _normalizedDate(_controller.selectedDate);
+  void _handleControllerChanged(HomeState? previous, HomeState next) {
+    final selectedDate = _normalizedDate(next.selectedDate);
     final localCacheJustLoaded =
-        _wasLoadingLocalCache && !_controller.isLoadingLocalCache;
-    _wasLoadingLocalCache = _controller.isLoadingLocalCache;
+        previous?.isLoadingLocalCache == true && !next.isLoadingLocalCache;
 
     if (localCacheJustLoaded &&
         !HomeCalendarUtils.isSameDate(_lastSelectedDate, selectedDate)) {

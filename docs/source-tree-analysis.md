@@ -1,152 +1,152 @@
-# sinhvien-app - Phân tích source tree
+﻿# sinhvien-app - PhÃ¢n tÃ­ch source tree
 
-**Ngày quét:** 2026-04-02T14:13:05+07:00
+**NgÃ y quÃ©t:** 2026-04-02T14:13:05+07:00
 
-## Tổng quan
+## Tá»•ng quan
 
-Repo là monorepo nhỏ với app Flutter ở thư mục gốc và một backend Cloudflare Worker ở `cloudflare-worker/`. Cấu trúc hiện nghiêng về dễ tìm entry point và mô đun nghiệp vụ hơn là chia quá nhiều lớp.
+Repo lÃ  monorepo nhá» vá»›i app Flutter á»Ÿ thÆ° má»¥c gá»‘c vÃ  má»™t backend Cloudflare Worker á»Ÿ `cloudflare-worker/`. Cáº¥u trÃºc hiá»‡n nghiÃªng vá» dá»… tÃ¬m entry point vÃ  mÃ´ Ä‘un nghiá»‡p vá»¥ hÆ¡n lÃ  chia quÃ¡ nhiá»u lá»›p.
 
-## Cấu trúc tổng thể
+## Cáº¥u trÃºc tá»•ng thá»ƒ
 
 ```text
 sinhvien-app/
-├── README.md                           # Tài liệu giới thiệu dự án
-├── pubspec.yaml                        # Manifest Flutter/Dart
-├── firebase.json                       # Cấu hình FlutterFire/Firebase
-├── lib/                                # Mã nguồn app Flutter
-│   ├── main.dart                       # Bootstrap Flutter + Firebase + notification
-│   ├── app.dart                        # MaterialApp, locale, theme, home shell
-│   ├── controllers/                    # Điều phối state và flow UI
-│   ├── models/                         # Model dữ liệu dùng chung
-│   ├── services/                       # Tầng hạ tầng và tích hợp ngoài
-│   ├── theme/                          # Theme ứng dụng
-│   ├── utils/                          # Hàm thuần hỗ trợ lịch
-│   └── views/                          # Màn hình và widget UI
-├── android/                            # Android host app + home widget
-├── web/                                # Web shell của Flutter
-├── test/                               # Widget test cơ bản
-├── cloudflare-worker/                  # Backend serverless
-│   ├── package.json                    # Scripts dev/deploy Worker
-│   ├── wrangler.toml                   # Bindings D1/KV/R2 và vars
-│   ├── schema.sql                      # Schema D1
-│   └── src/index.ts                    # REST API chính
-├── docs/                               # Tài liệu dự án và tài liệu cũ
-└── _bmad-output/                       # Artifact của BMAD
+â”œâ”€â”€ README.md                           # TÃ i liá»‡u giá»›i thiá»‡u dá»± Ã¡n
+â”œâ”€â”€ pubspec.yaml                        # Manifest Flutter/Dart
+â”œâ”€â”€ firebase.json                       # Cáº¥u hÃ¬nh FlutterFire/Firebase
+â”œâ”€â”€ lib/                                # MÃ£ nguá»“n app Flutter
+â”‚   â”œâ”€â”€ main.dart                       # Bootstrap Flutter + Firebase + notification
+â”‚   â”œâ”€â”€ app.dart                        # MaterialApp, locale, theme, home shell
+â”‚   â”œâ”€â”€ controllers/                    # Äiá»u phá»‘i state vÃ  flow UI
+â”‚   â”œâ”€â”€ models/                         # Model dá»¯ liá»‡u dÃ¹ng chung
+â”‚   â”œâ”€â”€ services/                       # Táº§ng háº¡ táº§ng vÃ  tÃ­ch há»£p ngoÃ i
+â”‚   â”œâ”€â”€ theme/                          # Theme á»©ng dá»¥ng
+â”‚   â”œâ”€â”€ utils/                          # HÃ m thuáº§n há»— trá»£ lá»‹ch
+â”‚   â””â”€â”€ views/                          # MÃ n hÃ¬nh vÃ  widget UI
+â”œâ”€â”€ android/                            # Android host app + home widget
+â”œâ”€â”€ web/                                # Web shell cá»§a Flutter
+â”œâ”€â”€ test/                               # Widget test cÆ¡ báº£n
+â”œâ”€â”€ cloudflare-worker/                  # Backend serverless
+â”‚   â”œâ”€â”€ package.json                    # Scripts dev/deploy Worker
+â”‚   â”œâ”€â”€ wrangler.toml                   # Bindings D1/KV/R2 vÃ  vars
+â”‚   â”œâ”€â”€ schema.sql                      # Schema D1
+â”‚   â””â”€â”€ src/index.ts                    # REST API chÃ­nh
+â”œâ”€â”€ docs/                               # TÃ i liá»‡u dá»± Ã¡n vÃ  tÃ i liá»‡u cÅ©
+â””â”€â”€ _bmad-output/                       # Artifact cá»§a BMAD
 ```
 
-## Cấu trúc nhiều phần
+## Cáº¥u trÃºc nhiá»u pháº§n
 
-- **mobile-app** (`.`): app Flutter, bao trùm `lib/`, `android/`, `web/`, `test/`
+- **mobile-app** (`.`): app Flutter, bao trÃ¹m `lib/`, `android/`, `web/`, `test/`
 - **worker-api** (`cloudflare-worker/`): Worker + persistence bindings
 
-## Thư mục quan trọng
+## ThÆ° má»¥c quan trá»ng
 
 ### `lib/`
 
-**Mục đích:** mã nguồn nghiệp vụ và UI của ứng dụng Flutter  
-**Chứa:** controllers, models, services, views  
+**Má»¥c Ä‘Ã­ch:** mÃ£ nguá»“n nghiá»‡p vá»¥ vÃ  UI cá»§a á»©ng dá»¥ng Flutter  
+**Chá»©a:** controllers, models, services, views  
 **Entry points:** `lib/main.dart`, `lib/app.dart`
 
 ### `lib/controllers/`
 
-**Mục đích:** giữ state UI và điều phối flow  
-**Chứa:** `home_controller.dart`, `features/auth/ui/account_auth_controller.dart`  
-**Ghi chú tích hợp:** kết nối trực tiếp tới `services/*` và `features/auth/data/auth_service.dart`, còn `HomeController` được bọc bởi Riverpod provider để cập nhật UI qua `ChangeNotifier`
+**Má»¥c Ä‘Ã­ch:** giá»¯ state UI vÃ  Ä‘iá»u phá»‘i flow  
+**Chá»©a:** `home_controller.dart`, `features/auth/ui/account_auth_controller.dart`  
+**Ghi chú tích hợp:** kết nối trực tiếp tới `services/*` và `features/auth/data/auth_service.dart`, còn `HomeController` được bọc bởi `NotifierProvider` để cập nhật UI qua `HomeState`
 
 ### `lib/services/`
 
-**Mục đích:** tích hợp hệ ngoài, local storage, notification và cloud sync  
-**Chứa:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `features/notifications/data/notification_service.dart`, `features/widget/data/widget_sync_service.dart`  
-**Ghi chú tích hợp:** là giao điểm giữa app và API trường/Firebase/Cloudflare
+**Má»¥c Ä‘Ã­ch:** tÃ­ch há»£p há»‡ ngoÃ i, local storage, notification vÃ  cloud sync  
+**Chá»©a:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `features/notifications/data/notification_service.dart`, `features/widget/data/widget_sync_service.dart`  
+**Ghi chÃº tÃ­ch há»£p:** lÃ  giao Ä‘iá»ƒm giá»¯a app vÃ  API trÆ°á»ng/Firebase/Cloudflare
 
 ### `lib/views/home/`
 
-**Mục đích:** shell và tab lịch/đồng bộ/tài khoản  
-**Chứa:** `home_shell.dart`, `pages/`, `widgets/`  
+**Má»¥c Ä‘Ã­ch:** shell vÃ  tab lá»‹ch/Ä‘á»“ng bá»™/tÃ i khoáº£n  
+**Chá»©a:** `home_shell.dart`, `pages/`, `widgets/`  
 **Entry points:** `home_shell.dart`
 
 ### `lib/features/grades/`
 
-**Mục đích:** tab bảng điểm và lập kế hoạch GPA  
-**Chứa:** `grades_page.dart`, `widgets/curriculum_subjects_section.dart`, `widgets/goal_planner_section.dart`
+**Má»¥c Ä‘Ã­ch:** tab báº£ng Ä‘iá»ƒm vÃ  láº­p káº¿ hoáº¡ch GPA  
+**Chá»©a:** `grades_page.dart`, `widgets/curriculum_subjects_section.dart`, `widgets/goal_planner_section.dart`
 
 ### `lib/features/attachments/`
 
-**Má»¥c Ä‘Ã­ch:** nháº­p, lÆ°u, má»Ÿ vÃ  chá»‰nh sá»­a tá»‡p Ä‘Ã­nh kÃ¨m  
-**Chá»©a:** `data/attachment_storage_service.dart`, `data/attachment_import_service.dart`, `data/attachment_opener*.dart`, `data/file_bytes_reader*.dart`, `data/image_edit_service.dart`, `ui/image_attachment_editor.dart`, `ui/attachment_editing_helpers.dart`  
+**MÃ¡Â»Â¥c Ã„â€˜ÃƒÂ­ch:** nhÃ¡ÂºÂ­p, lÃ†Â°u, mÃ¡Â»Å¸ vÃƒÂ  chÃ¡Â»â€°nh sÃ¡Â»Â­a tÃ¡Â»â€¡p Ã„â€˜ÃƒÂ­nh kÃƒÂ¨m  
+**ChÃ¡Â»Â©a:** `data/attachment_storage_service.dart`, `data/attachment_import_service.dart`, `data/attachment_opener*.dart`, `data/file_bytes_reader*.dart`, `data/image_edit_service.dart`, `ui/image_attachment_editor.dart`, `ui/attachment_editing_helpers.dart`  
 **Entry points:** `ui/image_attachment_editor.dart`
 
 ### `lib/features/weather/`
 
-**Mục đích:** lấy, chuyển đổi và hiển thị dự báo thời tiết  
-**Chứa:** `data/weather_service.dart`, `data/weather_forecast.dart`, `domain/weather_presentation.dart`, `ui/`  
+**Má»¥c Ä‘Ã­ch:** láº¥y, chuyá»ƒn Ä‘á»•i vÃ  hiá»ƒn thá»‹ dá»± bÃ¡o thá»i tiáº¿t  
+**Chá»©a:** `data/weather_service.dart`, `data/weather_forecast.dart`, `domain/weather_presentation.dart`, `ui/`  
 **Entry points:** `data/weather_service.dart`
 
 ### `android/app/src/main/kotlin/com/example/sinhvien_app/`
 
-**Mục đích:** cầu nối Android native cho widget màn hình chính  
-**Chứa:** `MainActivity.kt`, `TodayScheduleWidgetProvider.kt`  
+**Má»¥c Ä‘Ã­ch:** cáº§u ná»‘i Android native cho widget mÃ n hÃ¬nh chÃ­nh  
+**Chá»©a:** `MainActivity.kt`, `TodayScheduleWidgetProvider.kt`  
 **Entry points:** `MainActivity.kt`
 
 ### `cloudflare-worker/src/`
 
-**Mục đích:** REST API serverless  
-**Chứa:** `index.ts`  
+**Má»¥c Ä‘Ã­ch:** REST API serverless  
+**Chá»©a:** `index.ts`  
 **Entry points:** `src/index.ts`
 
 ### `docs/`
 
-**Mục đích:** tài liệu sinh ra cho AI và tài liệu lịch sử của team  
-**Chứa:** bộ docs mới, cùng các file cũ như `cloudflare_architecture.md`, `firebase_cloudflare_setup.md`, `project-structure.md`
+**Má»¥c Ä‘Ã­ch:** tÃ i liá»‡u sinh ra cho AI vÃ  tÃ i liá»‡u lá»‹ch sá»­ cá»§a team  
+**Chá»©a:** bá»™ docs má»›i, cÃ¹ng cÃ¡c file cÅ© nhÆ° `cloudflare_architecture.md`, `firebase_cloudflare_setup.md`, `project-structure.md`
 
-## Cây theo part
+## CÃ¢y theo part
 
 ### mobile-app
 
 ```text
 ./
-├── lib/
-│   ├── main.dart
-│   ├── app.dart
-│   ├── controllers/
-│   ├── models/
-│   ├── services/
-│   ├── theme/
-│   ├── utils/
-│   └── views/
-├── android/
-│   └── app/src/main/
-│       ├── AndroidManifest.xml
-│       ├── kotlin/com/example/sinhvien_app/
-│       └── res/
-├── web/
-│   ├── index.html
-│   └── manifest.json
-└── test/
-    └── widget_test.dart
+â”œâ”€â”€ lib/
+â”‚   â”œâ”€â”€ main.dart
+â”‚   â”œâ”€â”€ app.dart
+â”‚   â”œâ”€â”€ controllers/
+â”‚   â”œâ”€â”€ models/
+â”‚   â”œâ”€â”€ services/
+â”‚   â”œâ”€â”€ theme/
+â”‚   â”œâ”€â”€ utils/
+â”‚   â””â”€â”€ views/
+â”œâ”€â”€ android/
+â”‚   â””â”€â”€ app/src/main/
+â”‚       â”œâ”€â”€ AndroidManifest.xml
+â”‚       â”œâ”€â”€ kotlin/com/example/sinhvien_app/
+â”‚       â””â”€â”€ res/
+â”œâ”€â”€ web/
+â”‚   â”œâ”€â”€ index.html
+â”‚   â””â”€â”€ manifest.json
+â””â”€â”€ test/
+    â””â”€â”€ widget_test.dart
 ```
 
 ### worker-api
 
 ```text
 cloudflare-worker/
-├── package.json
-├── package-lock.json
-├── tsconfig.json
-├── wrangler.toml
-├── schema.sql
-├── README.md
-└── src/
-    └── index.ts
+â”œâ”€â”€ package.json
+â”œâ”€â”€ package-lock.json
+â”œâ”€â”€ tsconfig.json
+â”œâ”€â”€ wrangler.toml
+â”œâ”€â”€ schema.sql
+â”œâ”€â”€ README.md
+â””â”€â”€ src/
+    â””â”€â”€ index.ts
 ```
 
-## Điểm tích hợp giữa các phần
+## Äiá»ƒm tÃ­ch há»£p giá»¯a cÃ¡c pháº§n
 
 - `mobile-app` -> `worker-api`: qua `lib/features/sync/data/cloud_sync_service.dart`
 - `mobile-app` -> TLU education API: qua `lib/features/sync/data/school_api_service.dart`
 - `mobile-app` -> Android host widget: qua `lib/features/widget/data/widget_sync_service.dart`
 
-## File cấu hình cần chú ý
+## File cáº¥u hÃ¬nh cáº§n chÃº Ã½
 
 - `pubspec.yaml`
 - `firebase.json`
@@ -155,12 +155,13 @@ cloudflare-worker/
 - `android/app/src/main/AndroidManifest.xml`
 - `cloudflare-worker/wrangler.toml`
 
-## Ghi chú phát triển
+## Ghi chÃº phÃ¡t triá»ƒn
 
-- Thư mục sinh build như `build/`, `.dart_tool/`, `android/.gradle/`, `cloudflare-worker/node_modules/` không nên dùng làm nguồn tài liệu kiến trúc.
-- `cloudflare-worker/README.md` và một số file trong `docs/` phản ánh thiết kế cũ, không còn khớp hoàn toàn với `src/index.ts`.
-- Nếu backend tiếp tục mở rộng, nên tách Worker thành router/auth/storage modules thay vì để toàn bộ logic trong một file.
+- ThÆ° má»¥c sinh build nhÆ° `build/`, `.dart_tool/`, `android/.gradle/`, `cloudflare-worker/node_modules/` khÃ´ng nÃªn dÃ¹ng lÃ m nguá»“n tÃ i liá»‡u kiáº¿n trÃºc.
+- `cloudflare-worker/README.md` vÃ  má»™t sá»‘ file trong `docs/` pháº£n Ã¡nh thiáº¿t káº¿ cÅ©, khÃ´ng cÃ²n khá»›p hoÃ n toÃ n vá»›i `src/index.ts`.
+- Náº¿u backend tiáº¿p tá»¥c má»Ÿ rá»™ng, nÃªn tÃ¡ch Worker thÃ nh router/auth/storage modules thay vÃ¬ Ä‘á»ƒ toÃ n bá»™ logic trong má»™t file.
 
 ---
 
 _Generated using BMAD Method `document-project` workflow_
+

@@ -30,12 +30,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          homeControllerProvider.overrideWith(
-            (_) => controller,
-            disposeNotifier: false,
-          ),
-        ],
+        overrides: [homeControllerProvider.overrideWith(() => controller)],
         child: const MaterialApp(home: HomeShell()),
       ),
     );
@@ -46,7 +41,6 @@ void main() {
     expect(find.text('Học phí'), findsOneWidget);
     expect(find.text('Tài khoản'), findsOneWidget);
 
-    controller.dispose();
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
@@ -58,12 +52,7 @@ void main() {
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          homeControllerProvider.overrideWith(
-            (_) => controller,
-            disposeNotifier: false,
-          ),
-        ],
+        overrides: [homeControllerProvider.overrideWith(() => controller)],
         child: const MaterialApp(home: HomeShell()),
       ),
     );
@@ -77,7 +66,6 @@ void main() {
       DateTime(tomorrow.year, tomorrow.month, tomorrow.day),
     );
 
-    controller.dispose();
     await tester.pumpWidget(const SizedBox.shrink());
   });
 
@@ -94,7 +82,7 @@ void main() {
           personalEvents: [personalTask],
         ),
       );
-      final controller = _buildController(
+      var controller = _buildController(
         localCacheService: localCache,
         schoolApiService: FakeSchoolApiService(
           snapshot: SchoolSyncSnapshot(
@@ -121,6 +109,7 @@ void main() {
         ),
       );
 
+      controller = _attachController(controller);
       controller.initialize();
       await tester.pump();
 
@@ -139,7 +128,7 @@ void main() {
       expect(controller.currentTab, 2);
       expect(localCache.savedPayloads, isEmpty);
 
-      controller.dispose();
+      controller.disposeForTesting();
     },
   );
 
@@ -155,7 +144,7 @@ void main() {
       color: const Color(0xFFFFDAD6),
     );
     final personalTask = _personalTask(id: 'task-1');
-    final controller = _buildController(
+    var controller = _buildController(
       localCacheService: FakeLocalCacheService(
         payload: LocalCachePayload(
           profile: const StudentProfile(
@@ -168,6 +157,7 @@ void main() {
       ),
     );
 
+    controller = _attachController(controller);
     controller.initialize();
     await tester.pump();
     await controller.deletePersonalEvent(syncedExam);
@@ -175,7 +165,7 @@ void main() {
     expect(controller.payload.syncedEvents, [syncedExam]);
     expect(controller.payload.personalEvents, [personalTask]);
 
-    controller.dispose();
+    controller.disposeForTesting();
   });
 
   test('account auth controller returns typed failure result', () async {
@@ -251,6 +241,20 @@ HomeController _buildController({
     weatherService: FakeWeatherService(),
     widgetSyncService: FakeWidgetSyncService(),
   );
+}
+
+HomeController _attachController(HomeController controller) {
+  final container = ProviderContainer(
+    overrides: [homeControllerProvider.overrideWith(() => controller)],
+  );
+  final subscription = container.listen<HomeState>(
+    homeControllerProvider,
+    (_, __) {},
+    fireImmediately: true,
+  );
+  addTearDown(container.dispose);
+  addTearDown(subscription.close);
+  return container.read(homeControllerProvider.notifier);
 }
 
 StudentEvent _personalTask({required String id}) {
