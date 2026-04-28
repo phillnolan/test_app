@@ -8,6 +8,7 @@ import 'package:sinhvien_app/features/auth/data/auth_service.dart';
 import 'package:sinhvien_app/features/auth/ui/account_auth_controller.dart';
 import 'package:sinhvien_app/features/home/ui/home_controller.dart';
 import 'package:sinhvien_app/features/home/data/event_mutation_service.dart';
+import 'package:sinhvien_app/features/home/domain/home_calendar_types.dart';
 import 'package:sinhvien_app/features/home/domain/home_flow_models.dart';
 import 'package:sinhvien_app/features/weather/data/weather_forecast.dart';
 import 'package:sinhvien_app/features/weather/data/weather_service.dart';
@@ -40,6 +41,66 @@ void main() {
       expect(weather.temperatureRangeLabel, '24° - 31°');
       expect(weather.precipitationLabel, 'Mưa 20%');
       expect(weather.suggestions, isNotEmpty);
+
+      controller.disposeForTesting();
+    },
+  );
+
+  testWidgets(
+    'HomeController caches calendar lookups by day',
+    (WidgetTester tester) async {
+      final controller = _attachController(
+        _buildController(
+          localCacheService: _MemoryLocalCacheService(
+            initialPayload: LocalCachePayload(
+              syncedEvents: [
+                StudentEvent(
+                  id: 'class-1',
+                  title: 'Lop hoc sang',
+                  start: DateTime(2026, 4, 3, 8, 0),
+                  end: DateTime(2026, 4, 3, 9, 0),
+                  type: StudentEventType.classSchedule,
+                  color: const Color(0xFFDDE7FF),
+                ),
+                StudentEvent(
+                  id: 'exam-1',
+                  title: 'Thi giua ky',
+                  start: DateTime(2026, 4, 3, 9, 30),
+                  end: DateTime(2026, 4, 3, 11, 0),
+                  type: StudentEventType.exam,
+                  color: const Color(0xFFFFDAD6),
+                ),
+                StudentEvent(
+                  id: 'task-1',
+                  title: 'On bai',
+                  start: DateTime(2026, 4, 4, 8, 0),
+                  end: DateTime(2026, 4, 4, 9, 0),
+                  type: StudentEventType.personalTask,
+                  color: const Color(0xFFDDF4E4),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      controller.initialize();
+      await tester.pump();
+
+      final eventsOnThird = controller.eventsForDate(DateTime(2026, 4, 3));
+      expect(eventsOnThird, hasLength(2));
+      expect(eventsOnThird.first.id, 'class-1');
+      expect(
+        controller.indicatorsForDate(DateTime(2026, 4, 3)),
+        hasLength(2),
+      );
+      expect(
+        controller.eventLevelForDate(DateTime(2026, 4, 3)),
+        CalendarEventLevel.important,
+      );
+      expect(
+        controller.eventLevelForDate(DateTime(2026, 4, 4)),
+        CalendarEventLevel.normal,
+      );
 
       controller.disposeForTesting();
     },
@@ -330,7 +391,7 @@ HomeController _attachController(
   );
   final subscription = container.listen<HomeState>(
     homeControllerProvider,
-    (_, __) {},
+    (previous, next) {},
     fireImmediately: true,
   );
   addTearDown(container.dispose);
@@ -348,17 +409,6 @@ StudentEvent _personalTask({required String id, bool isDone = false}) {
     color: const Color(0xFFDDF4E4),
     isDone: isDone,
   );
-}
-
-class _FakeAuthService extends AuthService {
-  @override
-  bool get isAvailable => false;
-
-  @override
-  User? get currentUser => null;
-
-  @override
-  Stream<User?> authStateChanges() => const Stream<User?>.empty();
 }
 
 class _StreamAuthService extends AuthService {

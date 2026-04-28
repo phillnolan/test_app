@@ -123,26 +123,24 @@ class _CurriculumSubjectsDialogState extends State<CurriculumSubjectsDialog> {
                         : LayoutBuilder(
                             builder: (context, constraints) {
                               final isNarrow = constraints.maxWidth < 560;
-                              final itemWidth = isNarrow
-                                  ? constraints.maxWidth
-                                  : (constraints.maxWidth - 12) / 2;
-                              return SingleChildScrollView(
-                                child: Wrap(
-                                  spacing: 12,
-                                  runSpacing: 12,
-                                  children: subjects
-                                      .map(
-                                        (item) => SizedBox(
-                                          width: itemWidth,
-                                          child: _CurriculumSubjectCard(
-                                            subject: item.subject,
-                                            isCompleted: item.isCompleted,
-                                            gradeLetter: item.gradeLetter,
-                                          ),
-                                        ),
-                                      )
-                                      .toList(),
-                                ),
+                              return GridView.builder(
+                                padding: EdgeInsets.zero,
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: isNarrow ? 1 : 2,
+                                      mainAxisSpacing: 12,
+                                      crossAxisSpacing: 12,
+                                      mainAxisExtent: 126,
+                                    ),
+                                itemCount: subjects.length,
+                                itemBuilder: (context, index) {
+                                  final item = subjects[index];
+                                  return _CurriculumSubjectCard(
+                                    subject: item.subject,
+                                    isCompleted: item.isCompleted,
+                                    gradeLetter: item.gradeLetter,
+                                  );
+                                },
                               );
                             },
                           ),

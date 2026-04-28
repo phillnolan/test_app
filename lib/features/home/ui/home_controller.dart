@@ -9,6 +9,7 @@ import '../../../models/home_action_result.dart';
 import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
 import '../../../models/student_sync_credentials.dart';
+import '../domain/home_calendar_types.dart';
 import '../../weather/data/weather_forecast.dart';
 import '../../weather/data/weather_service.dart';
 import '../../weather/domain/weather_presentation.dart';
@@ -145,6 +146,11 @@ final class HomeController extends Notifier<HomeState> {
 
   LocalCachePayload _payload = const LocalCachePayload();
   WeatherForecast? _weatherForecast;
+  bool _eventCacheDirty = true;
+  List<StudentEvent> _cachedAllEvents = const <StudentEvent>[];
+  final Map<int, List<StudentEvent>> _cachedEventsByDay = <int, List<StudentEvent>>{};
+  final Map<int, List<Color>> _cachedIndicatorColorsByDay = <int, List<Color>>{};
+  final Map<int, CalendarEventLevel> _cachedEventLevelsByDay = <int, CalendarEventLevel>{};
 
   bool _isSyncing = false;
   bool _isLoadingLocalCache = true;
@@ -214,23 +220,13 @@ final class HomeController extends Notifier<HomeState> {
   }
 
   List<StudentEvent> get allEvents {
-    final merged = <String, StudentEvent>{};
-    for (final event in [
-      ..._payload.syncedEvents,
-      ..._payload.personalEvents,
-    ]) {
-      merged[event.id] = event;
-    }
-    for (final entry in _pendingEventSyncs.values) {
-      if (!entry.isDeleting) {
-        continue;
-      }
-      merged.putIfAbsent(entry.event.id, () => entry.event);
-    }
+    _ensureEventCache();
+    return _cachedAllEvents;
+  }
 
-    final events = merged.values.toList()
-      ..sort((a, b) => a.start.compareTo(b.start));
-    return events;
+  List<StudentEvent> eventsForDate(DateTime date) {
+    _ensureEventCache();
+    return _cachedEventsByDay[_dateKey(date)] ?? const <StudentEvent>[];
   }
 
   bool isEventCloudSyncPending(String eventId) {
@@ -310,9 +306,13 @@ final class HomeController extends Notifier<HomeState> {
   }
 
   List<Color> indicatorsForDate(DateTime date) {
-    return HomeCalendarUtils.indicatorColors(
-      HomeCalendarUtils.eventsForDay(allEvents, date),
-    );
+    _ensureEventCache();
+    return _cachedIndicatorColorsByDay[_dateKey(date)] ?? const <Color>[];
+  }
+
+  CalendarEventLevel eventLevelForDate(DateTime date) {
+    _ensureEventCache();
+    return _cachedEventLevelsByDay[_dateKey(date)] ?? CalendarEventLevel.none;
   }
 
   void _emit() {
@@ -321,6 +321,96 @@ final class HomeController extends Notifier<HomeState> {
     }
 
     state = _snapshot();
+  }
+
+  void _markEventCacheDirty() {
+    _eventCacheDirty = true;
+  }
+
+  void _setPayload(LocalCachePayload payload) {
+    _payload = payload;
+    _markEventCacheDirty();
+  }
+
+  void _markPendingEventSyncsChanged() {
+    _pendingEventSyncVersion++;
+    _markEventCacheDirty();
+  }
+
+  void _ensureEventCache() {
+    if (!_eventCacheDirty) {
+      return;
+    }
+
+    final merged = <String, StudentEvent>{};
+    for (final event in _payload.syncedEvents) {
+      merged[event.id] = event;
+    }
+    for (final event in _payload.personalEvents) {
+      merged[event.id] = event;
+    }
+    for (final entry in _pendingEventSyncs.values) {
+      if (!entry.isDeleting) {
+        continue;
+      }
+      merged.putIfAbsent(entry.event.id, () => entry.event);
+    }
+
+    final events = merged.values.toList()
+      ..sort((left, right) => left.start.compareTo(right.start));
+
+    final eventsByDay = <int, List<StudentEvent>>{};
+    final indicatorColorsByDay = <int, List<Color>>{};
+    final eventLevelsByDay = <int, CalendarEventLevel>{};
+    for (final event in events) {
+      final dateKey = _dateKey(event.start);
+      (eventsByDay[dateKey] ??= <StudentEvent>[]).add(event);
+
+      final indicatorColors = indicatorColorsByDay[dateKey] ??= <Color>[];
+      final indicatorColor = event.type == StudentEventType.exam
+          ? const Color(0xFFC62828)
+          : const Color(0xFF9AA0A6);
+      if (indicatorColors.length < 2 &&
+          !indicatorColors.contains(indicatorColor)) {
+        indicatorColors.add(indicatorColor);
+      }
+
+      if (event.type == StudentEventType.exam) {
+        eventLevelsByDay[dateKey] = CalendarEventLevel.important;
+      } else {
+        eventLevelsByDay.putIfAbsent(dateKey, () => CalendarEventLevel.normal);
+      }
+    }
+
+    _cachedAllEvents = List<StudentEvent>.unmodifiable(events);
+    _cachedEventsByDay
+      ..clear()
+      ..addEntries(
+        eventsByDay.entries.map(
+          (entry) => MapEntry(
+            entry.key,
+            List<StudentEvent>.unmodifiable(entry.value),
+          ),
+        ),
+      );
+    _cachedIndicatorColorsByDay
+      ..clear()
+      ..addEntries(
+        indicatorColorsByDay.entries.map(
+          (entry) => MapEntry(
+            entry.key,
+            List<Color>.unmodifiable(entry.value),
+          ),
+        ),
+      );
+    _cachedEventLevelsByDay
+      ..clear()
+      ..addAll(eventLevelsByDay);
+    _eventCacheDirty = false;
+  }
+
+  int _dateKey(DateTime date) {
+    return date.year * 10000 + date.month * 100 + date.day;
   }
 
   HomeState _snapshot() {
@@ -634,7 +724,7 @@ final class HomeController extends Notifier<HomeState> {
       currentPayload: _payload,
       result: result,
     );
-    _payload = mutationResult.payload;
+    _setPayload(mutationResult.payload);
     if (_isDisposed) return;
 
     _markLocalMutation();
@@ -659,7 +749,7 @@ final class HomeController extends Notifier<HomeState> {
       event: event,
       result: result,
     );
-    _payload = mutationResult.payload;
+    _setPayload(mutationResult.payload);
     if (_isDisposed) return;
 
     _markLocalMutation();
@@ -680,7 +770,7 @@ final class HomeController extends Notifier<HomeState> {
     final nextPayload = mutationResult.payload;
     if (identical(nextPayload, _payload)) return;
 
-    _payload = nextPayload;
+    _setPayload(nextPayload);
     if (_isDisposed) return;
 
     _markLocalMutation();
@@ -698,7 +788,7 @@ final class HomeController extends Notifier<HomeState> {
       currentPayload: _payload,
       id: id,
     );
-    _payload = mutationResult.payload;
+    _setPayload(mutationResult.payload);
     if (_isDisposed) return;
 
     _markLocalMutation();
@@ -753,7 +843,7 @@ final class HomeController extends Notifier<HomeState> {
         );
       }
 
-      _payload = const LocalCachePayload();
+      _setPayload(const LocalCachePayload());
       _selectedDate = _today;
       _updateSignedInUser(null);
       _isSyncing = false;
@@ -793,7 +883,7 @@ final class HomeController extends Notifier<HomeState> {
     // Keep the newer payload if cloud restore already applied or if the
     // current in-memory state was mutated after the cache request started.
     if (_dashboardPersistenceService.shouldUseRemotePayload(_payload, cached)) {
-      _payload = cached;
+      _setPayload(cached);
       _selectedDate = _dashboardPersistenceService.selectedDateForPayload(
         cached,
         _today,
@@ -935,6 +1025,7 @@ final class HomeController extends Notifier<HomeState> {
     if (previousUserId != nextUserId) {
       _cloudRestoreGeneration++;
       _pendingEventSyncs.clear();
+      _markPendingEventSyncsChanged();
     }
 
     _signedInUser = user;
@@ -1104,7 +1195,7 @@ final class HomeController extends Notifier<HomeState> {
       return persistedPayload;
     }
 
-    _payload = persistedPayload;
+    _setPayload(persistedPayload);
     if (selectedDate != null) {
       _selectedDate = _normalizedDate(selectedDate);
     }
@@ -1387,6 +1478,7 @@ final class HomeController extends Notifier<HomeState> {
       syncToken: syncToken,
       state: _PendingEventSyncState.syncing,
     );
+    _markPendingEventSyncsChanged();
     if (!_isDisposed) {
       _emit();
     }
@@ -1404,6 +1496,7 @@ final class HomeController extends Notifier<HomeState> {
         _pendingEventSyncs[event.id] = current.copyWith(
           state: _PendingEventSyncState.deferred,
         );
+        _markPendingEventSyncsChanged();
         if (!_isDisposed) {
           _emit();
         }
@@ -1418,6 +1511,7 @@ final class HomeController extends Notifier<HomeState> {
         }
 
         _pendingEventSyncs.remove(event.id);
+        _markPendingEventSyncsChanged();
         if (!_isDisposed) {
           _emit();
         }

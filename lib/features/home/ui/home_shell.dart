@@ -113,10 +113,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   }
 
   Widget _buildSchedulePage(BuildContext context) {
-    final eventsForDay = HomeCalendarUtils.eventsForDay(
-      _controller.allEvents,
-      _controller.selectedDate,
-    );
+    final eventsForDay = _controller.eventsForDate(_controller.selectedDate);
 
     return SchedulePage(
       eventsForDay: eventsForDay,
@@ -254,9 +251,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         lastDate: _controller.today.add(
           const Duration(days: HomeController.futureDayRange),
         ),
-        eventLevelForDate: (date) => HomeCalendarUtils.eventLevelForEvents(
-          HomeCalendarUtils.eventsForDay(_controller.allEvents, date),
-        ),
+        eventLevelForDate: _controller.eventLevelForDate,
       ),
     );
 

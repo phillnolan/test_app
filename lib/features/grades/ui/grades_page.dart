@@ -55,34 +55,56 @@ class _GradesPageState extends State<GradesPage> {
       listenable: _controller,
       builder: (context, _) {
         final metrics = _controller.metrics;
-
-        return ListView(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-          children: [
-            _GradesHeader(
-              controller: _controller,
-              curriculumRawItems: widget.curriculumRawItems,
-            ),
-            const SizedBox(height: 16),
-            if (_controller.grades.isEmpty)
-              widget.emptyState
-            else ...[
-              GradesHeroCard(
-                gpa: metrics.gpa,
-                totalCredits: metrics.totalCredits,
-                gradeCount: _controller.grades.length,
+        final grades = _controller.grades;
+        if (grades.isEmpty) {
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+            children: [
+              _GradesHeader(
+                controller: _controller,
+                curriculumRawItems: widget.curriculumRawItems,
               ),
               const SizedBox(height: 16),
-              GoalPlannerSection(controller: _controller),
-              const SizedBox(height: 16),
-              ..._controller.grades.map(
-                (grade) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: GradeCard(grade: grade),
-                ),
-              ),
+              widget.emptyState,
             ],
-          ],
+          );
+        }
+
+        final gradeCount = grades.length;
+        return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+          itemCount: gradeCount + 6,
+          itemBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return _GradesHeader(
+                  controller: _controller,
+                  curriculumRawItems: widget.curriculumRawItems,
+                );
+              case 1:
+                return const SizedBox(height: 16);
+              case 2:
+                return GradesHeroCard(
+                  gpa: metrics.gpa,
+                  totalCredits: metrics.totalCredits,
+                  gradeCount: gradeCount,
+                );
+              case 3:
+                return const SizedBox(height: 16);
+              case 4:
+                return GoalPlannerSection(controller: _controller);
+              case 5:
+                return const SizedBox(height: 16);
+              default:
+                final gradeIndex = index - 6;
+                final grade = grades[gradeIndex];
+                final isLastGrade = gradeIndex == gradeCount - 1;
+                return Padding(
+                  padding: EdgeInsets.only(bottom: isLastGrade ? 0 : 12),
+                  child: GradeCard(grade: grade),
+                );
+            }
+          },
         );
       },
     );

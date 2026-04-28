@@ -56,10 +56,10 @@ void main() {
         child: const MaterialApp(home: HomeShell()),
       ),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
 
     await tester.tap(find.text('${tomorrow.day}').first);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
     expect(
       controller.selectedDate,
@@ -246,7 +246,7 @@ HomeController _attachController(HomeController controller) {
   );
   final subscription = container.listen<HomeState>(
     homeControllerProvider,
-    (_, __) {},
+    (previous, next) {},
     fireImmediately: true,
   );
   addTearDown(container.dispose);
