@@ -1,29 +1,24 @@
 # Feature-First Target Tree
 
-This document describes the target folder structure for standardizing
-`sinhvien-app` toward the `architecture-feature-first` + `riverpod` workflow.
+Tai lieu nay mo ta cay thu muc muc tieu cho `sinhvien-app` sau khi chuan hoa
+theo `architecture-feature-first` + `riverpod`.
 
 ## Current migration status
 
-- `home` has already been split into `lib/features/home/ui/`,
-  `lib/features/home/domain/`, and `lib/features/home/data/`, with
-  `HomeController` now owned by Riverpod.
-- `grades` has already been split into `lib/features/grades/ui/`,
-  `lib/features/grades/domain/`, and `lib/features/grades/data/` scaffold.
-- `auth` has already been split into `lib/features/auth/data/` and
-  `lib/features/auth/ui/`.
-- `sync` has already been split into `lib/features/sync/data/`,
-  `lib/features/sync/domain/`, and `lib/features/sync/ui/` scaffold.
-- `attachments` has already been split into
-  `lib/features/attachments/data/` and `lib/features/attachments/ui/`.
-- `weather` has already been split into `lib/features/weather/data/`,
-  `lib/features/weather/domain/`, and `lib/features/weather/ui/` scaffold.
-- `notifications` has already been split into
-  `lib/features/notifications/data/` and `lib/features/notifications/ui/`.
-- `widget` has already been split into
-  `lib/features/widget/data/` and `lib/features/widget/ui/` scaffold.
-- The remaining legacy app code still lives under `lib/controllers/`,
-  `lib/views/`, `lib/services/`, and `lib/utils/` until the next slices land.
+- `home` da split sang `lib/features/home/ui/`, `lib/features/home/domain/`
+  va `lib/features/home/data/`; `HomeController` duoc cung cap qua Riverpod.
+- `grades` da split sang `lib/features/grades/ui/` va
+  `lib/features/grades/domain/`.
+- `auth` da split sang `lib/features/auth/data/` va `lib/features/auth/ui/`.
+- `sync` da split sang `lib/features/sync/data/` va `lib/features/sync/domain/`.
+- `attachments` da split sang `lib/features/attachments/data/` va
+  `lib/features/attachments/ui/`.
+- `weather` da split sang `lib/features/weather/data/` va
+  `lib/features/weather/domain/`.
+- `notifications` da co `lib/features/notifications/data/` va scaffold UI.
+- `widget` da co `lib/features/widget/data/` va scaffold UI.
+- Shared code con lai nam o `lib/models/`, `lib/services/`, `lib/theme/` va
+  `lib/utils/`.
 
 ## Target tree
 
@@ -73,47 +68,41 @@ lib/
         `-- ui/
 ```
 
-## Mapping from current code
+## Mapping from historical code to target path
 
-| Current path | Target path |
+| Historical path | Target path |
 | --- | --- |
 | `lib/controllers/home_controller.dart` | `lib/features/home/ui/` |
-| `lib/features/auth/ui/account_auth_controller.dart` | `lib/features/auth/ui/` |
-| `lib/controllers/grades_controller.dart` | `lib/features/grades/ui/` |
 | `lib/views/home/home_shell.dart` | `lib/features/home/ui/` |
 | `lib/views/home/pages/*` | `lib/features/home/ui/pages/` |
 | `lib/views/home/widgets/*` | `lib/features/home/ui/widgets/` |
+| `lib/controllers/grades_controller.dart` | `lib/features/grades/ui/` |
 | `lib/views/grades/*` | `lib/features/grades/ui/` |
 | `lib/features/auth/data/auth_service.dart` | `lib/features/auth/data/` |
+| `lib/features/auth/ui/account_auth_controller.dart` | `lib/features/auth/ui/` |
 | `lib/services/school_api_service.dart` | `lib/features/sync/data/` |
 | `lib/services/school_sync_coordinator.dart` | `lib/features/sync/domain/` |
 | `lib/services/local_cache_service.dart` | `lib/features/sync/data/` |
 | `lib/services/dashboard_persistence_service.dart` | `lib/features/sync/data/` |
 | `lib/services/cloud_sync_service.dart` | `lib/features/sync/data/` |
 | `lib/services/event_mutation_service.dart` | `lib/features/home/data/` |
-| `lib/features/attachments/data/attachment_storage_service.dart` | `lib/features/attachments/data/` |
-| `lib/features/attachments/data/attachment_import_service.dart` | `lib/features/attachments/data/` |
-| `lib/features/attachments/data/attachment_opener*.dart` | `lib/features/attachments/data/` |
-| `lib/features/attachments/data/file_bytes_reader*.dart` | `lib/features/attachments/data/` |
-| `lib/features/attachments/data/image_edit_service.dart` | `lib/features/attachments/data/` |
-| `lib/features/attachments/ui/image_attachment_editor.dart` | `lib/features/attachments/ui/` |
-| `lib/features/attachments/ui/attachment_editing_helpers.dart` | `lib/features/attachments/ui/` |
-| `lib/features/weather/data/weather_service.dart` | `lib/features/weather/data/` |
-| `lib/features/weather/data/weather_forecast.dart` | `lib/features/weather/data/` |
-| `lib/features/weather/domain/weather_presentation.dart` | `lib/features/weather/domain/` |
-| `lib/features/notifications/data/notification_service.dart` | `lib/features/notifications/data/` |
-| `lib/features/widget/data/widget_sync_service.dart` | `lib/features/widget/data/` |
+| `lib/features/attachments/data/*` | `lib/features/attachments/data/` |
+| `lib/features/attachments/ui/*` | `lib/features/attachments/ui/` |
+| `lib/features/weather/data/*` | `lib/features/weather/data/` |
+| `lib/features/weather/domain/*` | `lib/features/weather/domain/` |
+| `lib/features/notifications/data/*` | `lib/features/notifications/data/` |
+| `lib/features/widget/data/*` | `lib/features/widget/data/` |
 | `lib/theme/app_theme.dart` | `lib/core/theme/` |
 | `lib/utils/*` | `lib/core/utils/` |
 | `lib/models/*` | `lib/core/models/` or feature-local `data/` |
 
 ## Standardization rules
 
-- Keep shared concerns in `lib/core/`.
-- Keep feature-specific UI, data, and optional domain logic together.
-- Move one feature at a time; do not migrate all controllers at once.
-- Use Riverpod notifiers/providers in the target UI layer after migration.
-- Preserve current runtime behavior until each slice is fully migrated.
+- Keep shared concerns in `lib/core/` when we decide to migrate them out of
+  the old root folders.
+- Keep feature-specific UI, data and optional domain logic together.
+- Use Riverpod providers/notifiers in the target UI layer after migration.
+- Preserve current runtime behavior until each slice is fully stabilized.
 
 ## Migration order
 
@@ -125,3 +114,4 @@ lib/
 6. `weather`
 7. `notifications`
 8. `widget`
+

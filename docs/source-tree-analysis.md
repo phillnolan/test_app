@@ -1,152 +1,171 @@
-﻿# sinhvien-app - PhÃ¢n tÃ­ch source tree
+# sinhvien-app - Phan tich source tree
 
-**NgÃ y quÃ©t:** 2026-04-02T14:13:05+07:00
+**Last updated:** 2026-04-28
 
-## Tá»•ng quan
+## Tong quan
 
-Repo lÃ  monorepo nhá» vá»›i app Flutter á»Ÿ thÆ° má»¥c gá»‘c vÃ  má»™t backend Cloudflare Worker á»Ÿ `cloudflare-worker/`. Cáº¥u trÃºc hiá»‡n nghiÃªng vá» dá»… tÃ¬m entry point vÃ  mÃ´ Ä‘un nghiá»‡p vá»¥ hÆ¡n lÃ  chia quÃ¡ nhiá»u lá»›p.
+Repo gom 2 phan chinh:
 
-## Cáº¥u trÃºc tá»•ng thá»ƒ
+- app Flutter o root;
+- backend Cloudflare Worker trong `cloudflare-worker/`.
+
+Code mobile da chuyen sang feature-first + Riverpod. Khong con `lib/controllers/`
+hay `lib/views/` o cay nguon hien tai.
+
+## Cay tong the
 
 ```text
 sinhvien-app/
-â”œâ”€â”€ README.md                           # TÃ i liá»‡u giá»›i thiá»‡u dá»± Ã¡n
-â”œâ”€â”€ pubspec.yaml                        # Manifest Flutter/Dart
-â”œâ”€â”€ firebase.json                       # Cáº¥u hÃ¬nh FlutterFire/Firebase
-â”œâ”€â”€ lib/                                # MÃ£ nguá»“n app Flutter
-â”‚   â”œâ”€â”€ main.dart                       # Bootstrap Flutter + Firebase + notification
-â”‚   â”œâ”€â”€ app.dart                        # MaterialApp, locale, theme, home shell
-â”‚   â”œâ”€â”€ controllers/                    # Äiá»u phá»‘i state vÃ  flow UI
-â”‚   â”œâ”€â”€ models/                         # Model dá»¯ liá»‡u dÃ¹ng chung
-â”‚   â”œâ”€â”€ services/                       # Táº§ng háº¡ táº§ng vÃ  tÃ­ch há»£p ngoÃ i
-â”‚   â”œâ”€â”€ theme/                          # Theme á»©ng dá»¥ng
-â”‚   â”œâ”€â”€ utils/                          # HÃ m thuáº§n há»— trá»£ lá»‹ch
-â”‚   â””â”€â”€ views/                          # MÃ n hÃ¬nh vÃ  widget UI
-â”œâ”€â”€ android/                            # Android host app + home widget
-â”œâ”€â”€ web/                                # Web shell cá»§a Flutter
-â”œâ”€â”€ test/                               # Widget test cÆ¡ báº£n
-â”œâ”€â”€ cloudflare-worker/                  # Backend serverless
-â”‚   â”œâ”€â”€ package.json                    # Scripts dev/deploy Worker
-â”‚   â”œâ”€â”€ wrangler.toml                   # Bindings D1/KV/R2 vÃ  vars
-â”‚   â”œâ”€â”€ schema.sql                      # Schema D1
-â”‚   â””â”€â”€ src/index.ts                    # REST API chÃ­nh
-â”œâ”€â”€ docs/                               # TÃ i liá»‡u dá»± Ã¡n vÃ  tÃ i liá»‡u cÅ©
-â””â”€â”€ _bmad-output/                       # Artifact cá»§a BMAD
+├── README.md
+├── pubspec.yaml
+├── firebase.json
+├── lib/
+│   ├── main.dart
+│   ├── app.dart
+│   ├── firebase_options.dart
+│   ├── models/
+│   ├── services/
+│   ├── theme/
+│   ├── utils/
+│   └── features/
+│       ├── home/
+│       │   ├── data/
+│       │   ├── domain/
+│       │   └── ui/
+│       │       ├── pages/
+│       │       └── widgets/
+│       ├── grades/
+│       │   ├── domain/
+│       │   └── ui/
+│       │       └── widgets/
+│       ├── auth/
+│       │   ├── data/
+│       │   └── ui/
+│       ├── sync/
+│       │   ├── data/
+│       │   └── domain/
+│       ├── attachments/
+│       │   ├── data/
+│       │   └── ui/
+│       ├── weather/
+│       │   ├── data/
+│       │   └── domain/
+│       ├── notifications/
+│       │   └── data/
+│       └── widget/
+│           └── data/
+├── android/
+├── web/
+├── test/
+├── cloudflare-worker/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── tsconfig.json
+│   ├── wrangler.toml
+│   ├── schema.sql
+│   └── src/
+│       └── index.ts
+└── docs/
 ```
 
-## Cáº¥u trÃºc nhiá»u pháº§n
-
-- **mobile-app** (`.`): app Flutter, bao trÃ¹m `lib/`, `android/`, `web/`, `test/`
-- **worker-api** (`cloudflare-worker/`): Worker + persistence bindings
-
-## ThÆ° má»¥c quan trá»ng
+## Phan tich theo khu vuc
 
 ### `lib/`
 
-**Má»¥c Ä‘Ã­ch:** mÃ£ nguá»“n nghiá»‡p vá»¥ vÃ  UI cá»§a á»©ng dá»¥ng Flutter  
-**Chá»©a:** controllers, models, services, views  
-**Entry points:** `lib/main.dart`, `lib/app.dart`
+`lib/` la ma nguon mobile. Cac nhom chinh:
 
-### `lib/controllers/`
+- `main.dart`: bootstrap Flutter, Firebase, notification, ProviderScope.
+- `app.dart`: MaterialApp, theme, locale va home shell.
+- `features/`: toan bo feature-specific UI, data va domain logic.
+- `models/`: DTO va model dung chung giua cac feature.
+- `services/`: service cross-feature va platform integration.
+- `theme/`: theme app.
+- `utils/`: helper/presenter tuan thu pure function.
 
-**Má»¥c Ä‘Ã­ch:** giá»¯ state UI vÃ  Ä‘iá»u phá»‘i flow  
-**Chá»©a:** `home_controller.dart`, `features/auth/ui/account_auth_controller.dart`  
-**Ghi chú tích hợp:** kết nối trực tiếp tới `services/*` và `features/auth/data/auth_service.dart`, còn `HomeController` được bọc bởi `NotifierProvider` để cập nhật UI qua `HomeState`
+### `lib/features/home/`
 
-### `lib/services/`
-
-**Má»¥c Ä‘Ã­ch:** tÃ­ch há»£p há»‡ ngoÃ i, local storage, notification vÃ  cloud sync  
-**Chá»©a:** `school_api_service.dart`, `cloud_sync_service.dart`, `local_cache_service.dart`, `features/notifications/data/notification_service.dart`, `features/widget/data/widget_sync_service.dart`  
-**Ghi chÃº tÃ­ch há»£p:** lÃ  giao Ä‘iá»ƒm giá»¯a app vÃ  API trÆ°á»ng/Firebase/Cloudflare
-
-### `lib/views/home/`
-
-**Má»¥c Ä‘Ã­ch:** shell vÃ  tab lá»‹ch/Ä‘á»“ng bá»™/tÃ i khoáº£n  
-**Chá»©a:** `home_shell.dart`, `pages/`, `widgets/`  
-**Entry points:** `home_shell.dart`
+- `ui/home_controller.dart`: `Notifier<HomeState>` duoc cung cap qua
+  `homeControllerProvider`.
+- `ui/home_shell.dart`: shell UI, tab navigation, dialog/sheet orchestration.
+- `ui/pages/`: schedule, sync, account, quiz, tuition.
+- `ui/widgets/`: dialog, editor va widget dung chung cho home.
+- `data/event_mutation_service.dart`: mutation cho note/task/event.
+- `domain/`: calendar utils, flow models va calendar types.
 
 ### `lib/features/grades/`
 
-**Má»¥c Ä‘Ã­ch:** tab báº£ng Ä‘iá»ƒm vÃ  láº­p káº¿ hoáº¡ch GPA  
-**Chá»©a:** `grades_page.dart`, `widgets/curriculum_subjects_section.dart`, `widgets/goal_planner_section.dart`
+- `ui/grades_controller.dart`: controller cho tab diem.
+- `ui/grades_page.dart`: page chinh.
+- `ui/widgets/`: GPA planner va curriculum sections.
+- `domain/`: `grade_metrics.dart`, `curriculum_presenter.dart`.
+
+### `lib/features/auth/`
+
+- `data/auth_service.dart`: FirebaseAuth + GoogleSignIn wrapper.
+- `ui/account_auth_controller.dart`: provider-backed auth controller.
+
+### `lib/features/sync/`
+
+- `data/`: `SchoolApiService`, `CloudSyncService`, `LocalCacheService`,
+  `DashboardPersistenceService`, `StudentSyncCredentialsService`.
+- `domain/school_sync_coordinator.dart`: dieu phoi sync truong.
 
 ### `lib/features/attachments/`
 
-**MÃ¡Â»Â¥c Ã„â€˜ÃƒÂ­ch:** nhÃ¡ÂºÂ­p, lÃ†Â°u, mÃ¡Â»Å¸ vÃƒÂ  chÃ¡Â»â€°nh sÃ¡Â»Â­a tÃ¡Â»â€¡p Ã„â€˜ÃƒÂ­nh kÃƒÂ¨m  
-**ChÃ¡Â»Â©a:** `data/attachment_storage_service.dart`, `data/attachment_import_service.dart`, `data/attachment_opener*.dart`, `data/file_bytes_reader*.dart`, `data/image_edit_service.dart`, `ui/image_attachment_editor.dart`, `ui/attachment_editing_helpers.dart`  
-**Entry points:** `ui/image_attachment_editor.dart`
+- `data/`: storage, import, opener, image edit va byte readers.
+- `ui/`: image attachment editor va helper cho picker/camera flow.
 
 ### `lib/features/weather/`
 
-**Má»¥c Ä‘Ã­ch:** láº¥y, chuyá»ƒn Ä‘á»•i vÃ  hiá»ƒn thá»‹ dá»± bÃ¡o thá»i tiáº¿t  
-**Chá»©a:** `data/weather_service.dart`, `data/weather_forecast.dart`, `domain/weather_presentation.dart`, `ui/`  
-**Entry points:** `data/weather_service.dart`
+- `data/weather_service.dart`: fetch Open-Meteo.
+- `data/weather_forecast.dart`: forecast model.
+- `domain/weather_presentation.dart`: presentation model cho UI.
 
-### `android/app/src/main/kotlin/com/example/sinhvien_app/`
+### `lib/features/notifications/` va `lib/features/widget/`
 
-**Má»¥c Ä‘Ã­ch:** cáº§u ná»‘i Android native cho widget mÃ n hÃ¬nh chÃ­nh  
-**Chá»©a:** `MainActivity.kt`, `TodayScheduleWidgetProvider.kt`  
-**Entry points:** `MainActivity.kt`
+- `notifications/data/notification_service.dart`: local notifications.
+- `widget/data/widget_sync_service.dart`: Android home widget bridge.
 
-### `cloudflare-worker/src/`
+### `lib/services/`
 
-**Má»¥c Ä‘Ã­ch:** REST API serverless  
-**Chá»©a:** `index.ts`  
-**Entry points:** `src/index.ts`
+Shared services hien tai van nam o day va chua vao `lib/core/`:
 
-### `docs/`
+- `device_effects_service.dart`
+- `http_client_factory*.dart`
+- cac adapter cross-feature va platform helper con lai cho den khi duoc
+  chuan hoa vao `lib/core/` hoac feature tuong ung.
 
-**Má»¥c Ä‘Ã­ch:** tÃ i liá»‡u sinh ra cho AI vÃ  tÃ i liá»‡u lá»‹ch sá»­ cá»§a team  
-**Chá»©a:** bá»™ docs má»›i, cÃ¹ng cÃ¡c file cÅ© nhÆ° `cloudflare_architecture.md`, `firebase_cloudflare_setup.md`, `project-structure.md`
+### `lib/models/`
 
-## CÃ¢y theo part
+Chua cac model dung chung hien co:
 
-### mobile-app
+- `local_cache_payload.dart`
+- `school_sync_snapshot.dart`
+- `student_event.dart`
+- `student_profile.dart`
+- `grade_item.dart`
+- `program_subject.dart`
+- `event_attachment.dart`
+- `home_action_result.dart`
+- `current_tuition.dart`
+- `student_sync_credentials.dart`
 
-```text
-./
-â”œâ”€â”€ lib/
-â”‚   â”œâ”€â”€ main.dart
-â”‚   â”œâ”€â”€ app.dart
-â”‚   â”œâ”€â”€ controllers/
-â”‚   â”œâ”€â”€ models/
-â”‚   â”œâ”€â”€ services/
-â”‚   â”œâ”€â”€ theme/
-â”‚   â”œâ”€â”€ utils/
-â”‚   â””â”€â”€ views/
-â”œâ”€â”€ android/
-â”‚   â””â”€â”€ app/src/main/
-â”‚       â”œâ”€â”€ AndroidManifest.xml
-â”‚       â”œâ”€â”€ kotlin/com/example/sinhvien_app/
-â”‚       â””â”€â”€ res/
-â”œâ”€â”€ web/
-â”‚   â”œâ”€â”€ index.html
-â”‚   â””â”€â”€ manifest.json
-â””â”€â”€ test/
-    â””â”€â”€ widget_test.dart
-```
+## Backend tree
 
-### worker-api
+`cloudflare-worker/` la backend serverless:
 
-```text
-cloudflare-worker/
-â”œâ”€â”€ package.json
-â”œâ”€â”€ package-lock.json
-â”œâ”€â”€ tsconfig.json
-â”œâ”€â”€ wrangler.toml
-â”œâ”€â”€ schema.sql
-â”œâ”€â”€ README.md
-â””â”€â”€ src/
-    â””â”€â”€ index.ts
-```
+- `src/index.ts`: entry point REST API.
+- `schema.sql`: schema D1.
+- `wrangler.toml`: bindings D1/KV/R2 va env.
+- `package.json`, `tsconfig.json`: runtime config.
 
-## Äiá»ƒm tÃ­ch há»£p giá»¯a cÃ¡c pháº§n
+## Integration points
 
-- `mobile-app` -> `worker-api`: qua `lib/features/sync/data/cloud_sync_service.dart`
-- `mobile-app` -> TLU education API: qua `lib/features/sync/data/school_api_service.dart`
-- `mobile-app` -> Android host widget: qua `lib/features/widget/data/widget_sync_service.dart`
+- App -> TLU education API: qua `lib/features/sync/data/school_api_service.dart`
+- App -> Cloudflare Worker: qua `lib/features/sync/data/cloud_sync_service.dart`
+- App -> Android widget: qua `lib/features/widget/data/widget_sync_service.dart`
 
-## File cáº¥u hÃ¬nh cáº§n chÃº Ã½
+## Config files can chuyen
 
 - `pubspec.yaml`
 - `firebase.json`
@@ -155,13 +174,11 @@ cloudflare-worker/
 - `android/app/src/main/AndroidManifest.xml`
 - `cloudflare-worker/wrangler.toml`
 
-## Ghi chÃº phÃ¡t triá»ƒn
+## Ghi chu source tree
 
-- ThÆ° má»¥c sinh build nhÆ° `build/`, `.dart_tool/`, `android/.gradle/`, `cloudflare-worker/node_modules/` khÃ´ng nÃªn dÃ¹ng lÃ m nguá»“n tÃ i liá»‡u kiáº¿n trÃºc.
-- `cloudflare-worker/README.md` vÃ  má»™t sá»‘ file trong `docs/` pháº£n Ã¡nh thiáº¿t káº¿ cÅ©, khÃ´ng cÃ²n khá»›p hoÃ n toÃ n vá»›i `src/index.ts`.
-- Náº¿u backend tiáº¿p tá»¥c má»Ÿ rá»™ng, nÃªn tÃ¡ch Worker thÃ nh router/auth/storage modules thay vÃ¬ Ä‘á»ƒ toÃ n bá»™ logic trong má»™t file.
-
----
-
-_Generated using BMAD Method `document-project` workflow_
-
+- Thu muc sinh build nhu `build/`, `.dart_tool/`, `android/.gradle/` va
+  `cloudflare-worker/node_modules/` khong phai source doc.
+- `docs/` hien chi giu tai lieu dang dung; cac tai lieu MVC/scan cu da bi loai
+  bo khoi repo.
+- `HomeController` va `AccountAuthController` da duoc cung cap qua Riverpod,
+  khong con la ChangeNotifier/Provider thu cong.

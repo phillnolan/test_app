@@ -1,139 +1,136 @@
-﻿# sinhvien-app - Tá»•ng quan dá»± Ã¡n
+# sinhvien-app - Tong quan du an
 
-**NgÃ y quÃ©t:** 2026-04-02T14:13:05+07:00  
-**Loáº¡i repo:** Monorepo 2 pháº§n  
-**Loáº¡i dá»± Ã¡n:** Mobile client + backend serverless  
-**Máº«u kiáº¿n trÃºc:** Flutter MVC thá»±c dá»¥ng + Cloudflare Worker REST API
+**Last updated:** 2026-04-28  
+**Repository type:** monorepo with 2 parts  
+**Project type:** mobile client + backend serverless  
+**Architecture:** feature-first Flutter app + Riverpod + Cloudflare Worker REST API
 
-## TÃ³m táº¯t Ä‘iá»u hÃ nh
+## Executive summary
 
-`sinhvien-app` lÃ  á»©ng dá»¥ng há»— trá»£ sinh viÃªn theo dÃµi lá»‹ch há»c, lá»‹ch thi, báº£ng Ä‘iá»ƒm, chÆ°Æ¡ng trÃ¬nh Ä‘Ã o táº¡o vÃ  ghi chÃº cÃ¡ nhÃ¢n trong má»™t giao diá»‡n thá»‘ng nháº¥t. Repo hiá»‡n gá»“m hai pháº§n tÃ­ch há»£p cháº·t cháº½:
+`sinhvien-app` la ung dung ho tro sinh vien theo doi lich hoc, lich thi, diem,
+chuong trinh dao tao, ghi chu va tep dinh kem trong mot UX local-first.
 
-- á»¨ng dá»¥ng Flutter á»Ÿ thÆ° má»¥c gá»‘c, cháº¡y chÃ­nh trÃªn Android vÃ  cÃ³ cáº¥u hÃ¬nh web.
-- Cloudflare Worker trong `cloudflare-worker/`, dÃ¹ng Ä‘á»ƒ Ä‘á»“ng bá»™ ghi chÃº, task, tá»‡p Ä‘Ã­nh kÃ¨m vÃ  snapshot dá»¯ liá»‡u qua D1, KV, R2.
+Repo co hai phan chinh:
 
-Äiá»ƒm máº¡nh kiáº¿n trÃºc hiá»‡n táº¡i lÃ  tráº£i nghiá»‡m local-first: dá»¯ liá»‡u trÆ°á»ng Ä‘Æ°á»£c táº£i tá»« cá»•ng sinh viÃªn, lÆ°u cache cá»¥c bá»™ báº±ng `SharedPreferences`, sau Ä‘Ã³ cÃ¡c pháº§n dá»¯ liá»‡u cÃ¡ nhÃ¢n Ä‘Æ°á»£c Ä‘á»“ng bá»™ lÃªn cloud khi ngÆ°á»i dÃ¹ng Ä‘Äƒng nháº­p Firebase. Äiá»u nÃ y cho phÃ©p app váº«n dÃ¹ng Ä‘Æ°á»£c khi offline, trong khi váº«n cÃ³ kháº£ nÄƒng khÃ´i phá»¥c ghi chÃº vÃ  tá»‡p giá»¯a cÃ¡c thiáº¿t bá»‹.
+- App Flutter o root, chiu trach nhiem UI chinh, cache cuc bo, dong bo du lieu
+  truong, quan ly ghi chu va dong bo cloud.
+- Cloudflare Worker o `cloudflare-worker/`, luu note, task, snapshot va file
+  dinh kem bang REST API authenticated qua Firebase ID token.
 
-## PhÃ¢n loáº¡i dá»± Ã¡n
+## Project classification
 
-- **Repository type:** Monorepo
-- **CÃ¡c part chÃ­nh:** `mobile-app`, `worker-api`
-- **NgÃ´n ngá»¯ chÃ­nh:** Dart, TypeScript
-- **NgÃ´n ngá»¯ phá»¥:** Kotlin, SQL, JSON, TOML
-- **Phá»¥ thuá»™c háº¡ táº§ng:** Firebase Auth, Cloudflare Worker, D1, KV, R2, Open-Meteo, API cá»•ng sinh viÃªn TLU
+- **Repository type:** monorepo
+- **Main parts:** `mobile-app`, `worker-api`
+- **Main languages:** Dart, TypeScript
+- **Supporting languages:** Kotlin, SQL, JSON, TOML
+- **Infrastructure:** Firebase Auth, Cloudflare Worker, D1, KV, R2, Open-Meteo,
+  TLU education API
 
-## Cáº¥u trÃºc nhiá»u pháº§n
+## Parts
 
 ### 1. mobile-app
 
-- **Loáº¡i:** `mobile`
-- **Vá»‹ trÃ­:** `.`
-- **Má»¥c Ä‘Ã­ch:** á»¨ng dá»¥ng Flutter cho sinh viÃªn xem lá»‹ch, Ä‘iá»ƒm, Ä‘á»“ng bá»™ dá»¯ liá»‡u trÆ°á»ng, quáº£n lÃ½ ghi chÃº vÃ  tá»‡p Ä‘Ã­nh kÃ¨m
-- **Stack:** Flutter 3 / Dart 3.11, Firebase Core/Auth, Google Sign-In, local notifications, SharedPreferences
+- **Type:** `mobile`
+- **Location:** `.`
+- **Purpose:** Flutter client cho sinh vien xem lich, diem, dong bo du lieu
+  truong, quan ly ghi chu, attachment va widget Android
+- **Current stack:** Flutter 3, Dart 3, Riverpod, Firebase Core/Auth,
+  Google Sign-In, SharedPreferences, local notifications
+- **Entry point:** `lib/main.dart`
 
 ### 2. worker-api
 
-- **Loáº¡i:** `backend`
-- **Vá»‹ trÃ­:** `cloudflare-worker/`
-- **Má»¥c Ä‘Ã­ch:** API serverless xÃ¡c thá»±c Firebase token vÃ  lÆ°u dá»¯ liá»‡u ngÆ°á»i dÃ¹ng vÃ o Cloudflare
-- **Stack:** Cloudflare Worker, TypeScript, `jose`, D1, KV, R2, Wrangler
+- **Type:** `backend`
+- **Location:** `cloudflare-worker/`
+- **Purpose:** API serverless xac thuc Firebase token va luu du lieu ca nhan
+  vao Cloudflare
+- **Current stack:** Cloudflare Worker, TypeScript, `jose`, D1, KV, R2
+- **Entry point:** `cloudflare-worker/src/index.ts`
 
-## CÃ¡ch cÃ¡c pháº§n tÃ­ch há»£p vá»›i nhau
+## How the parts fit together
 
-1. NgÆ°á»i dÃ¹ng dÃ¹ng tab `Äá»“ng bá»™` Ä‘á»ƒ nháº­p tÃ i khoáº£n cá»•ng sinh viÃªn.
-2. `SchoolApiService` gá»i trá»±c tiáº¿p API trÆ°á»ng, chuáº©n hÃ³a dá»¯ liá»‡u thÃ nh `SchoolSyncSnapshot`.
-3. `HomeController` ghi payload vÃ o cache cá»¥c bá»™, cáº­p nháº­t notification vÃ  Android widget.
-4. Khi Ä‘Ã£ Ä‘Äƒng nháº­p Firebase, `CloudSyncService` láº¥y Firebase ID token vÃ  gá»i Worker.
-5. Worker xÃ¡c thá»±c token báº±ng JWKS cá»§a Google, sau Ä‘Ã³:
-   - ghi note vÃ  personal task vÃ o D1,
-   - ghi snapshot dashboard vÃ o KV vÃ  Ä‘á»“ng thá»i log sang D1,
-   - upload/download tá»‡p Ä‘Ã­nh kÃ¨m qua R2.
+1. User dang nhap vao tab tai khoan tren app Flutter.
+2. `SchoolApiService` lay profile, diem, lich hoc, lich thi va chuong trinh dao
+   tao truc tiep tu TLU education API.
+3. `HomeController` luu snapshot local truoc, cap nhat notification va Android
+   widget, sau do phat dong cloud sync neu co Firebase user.
+4. `CloudSyncService` gui Firebase ID token len Worker de luu note, task,
+   attachment va dashboard snapshot.
+5. Worker xac thuc token, ghi D1 cho metadata, dung KV cho snapshot nhanh va
+   R2 cho file dinh kem.
 
-## TÃ³m táº¯t stack cÃ´ng nghá»‡
+## Technology snapshot
 
 ### mobile-app
 
-| NhÃ³m | CÃ´ng nghá»‡ | Ghi chÃº |
+| Area | Technology | Note |
 | --- | --- | --- |
 | UI | Flutter Material 3 | `lib/app.dart`, `lib/theme/app_theme.dart` |
-| State/UI flow | Riverpod Notifier + provider/controller | HomeController, AccountAuthController |
-| Auth | Firebase Auth, Google Sign-In | ÄÄƒng nháº­p cloud lÃ  tÃ¹y chá»n |
-| Local storage | SharedPreferences | LÆ°u `LocalCachePayload` |
-| Notifications | `flutter_local_notifications`, `timezone` | Chá»‰ cháº¡y Android |
-| External APIs | TLU education API, Open-Meteo | Äá»“ng bá»™ dá»¯ liá»‡u trÆ°á»ng vÃ  thá»i tiáº¿t |
+| State | Riverpod Notifier + Provider | `HomeController`, `AccountAuthController` |
+| Auth | Firebase Auth, Google Sign-In | Cloud sync la tuy chon |
+| Local storage | SharedPreferences | Luu `LocalCachePayload` |
+| Notifications | `flutter_local_notifications`, `timezone` | Android only |
+| External APIs | TLU education API, Open-Meteo | Dong bo truong va weather |
 
 ### worker-api
 
-| NhÃ³m | CÃ´ng nghá»‡ | Ghi chÃº |
+| Area | Technology | Note |
 | --- | --- | --- |
 | Runtime | Cloudflare Worker | `src/index.ts` |
-| Auth | `jose` + Firebase ID token verify | XÃ¡c thá»±c qua Google JWKS |
-| Database | Cloudflare D1 | `users`, `notes`, `attachments`, `personal_tasks`, `sync_snapshots` |
-| Cache | Cloudflare KV | LÆ°u snapshot dashboard theo TTL |
-| File storage | Cloudflare R2 | LÆ°u PDF, DOC, áº£nh Ä‘Ã­nh kÃ¨m |
+| Auth | `jose` + Firebase ID token verify | Dung Google JWKS |
+| Database | Cloudflare D1 | users, notes, attachments, tasks, sync snapshots |
+| Cache | Cloudflare KV | Dashboard snapshot theo TTL |
+| File storage | Cloudflare R2 | PDF, DOC, image dinh kem |
 | Infra config | Wrangler | `wrangler.toml` |
 
-## Chá»©c nÄƒng ná»•i báº­t
+## Notable features
 
-- Lá»‹ch há»c, lá»‹ch thi vÃ  viá»‡c cÃ¡ nhÃ¢n hiá»ƒn thá»‹ trÃªn cÃ¹ng má»™t lá»‹ch ngÃ y.
-- Ghi chÃº vÃ  Ä‘Ã­nh kÃ¨m tá»‡p trá»±c tiáº¿p trÃªn tá»«ng sá»± kiá»‡n.
-- Xem báº£ng Ä‘iá»ƒm vÃ  chÆ°Æ¡ng trÃ¬nh Ä‘Ã o táº¡o.
-- Láº­p káº¿ hoáº¡ch GPA má»¥c tiÃªu vÃ  gá»£i Ã½ há»c láº¡i/chá»n mÃ´n cháº¯c A.
-- Cache dá»¯ liá»‡u Ä‘á»ƒ dÃ¹ng offline.
-- Äá»“ng bá»™ cloud cho note, task, attachments vÃ  snapshot.
-- Notification cá»¥c bá»™ vÃ  Android home widget cho lá»‹ch hÃ´m nay.
+- Lich hoc va lich thi xep chung trong mot day strip ngay.
+- Ghi chu va attachment gan vao tung event.
+- Xem diem, chuong trinh dao tao va GPA planner.
+- Dong bo du lieu truong ve local cache de su dung offline.
+- Dong bo cloud cho note, task, attachment va dashboard snapshot.
+- Notification cuc bo va Android home widget cho lich hom nay.
 
-## Äiá»ƒm nháº¥n kiáº¿n trÃºc
+## Architecture highlights
 
-- `HomeController` lÃ  Ä‘iá»ƒm Ä‘iá»u phá»‘i trung tÃ¢m giá»¯a UI, local cache, sync trÆ°á»ng, sync cloud, weather, notification vÃ  widget.
-- App Æ°u tiÃªn local-first: cloud failure khÃ´ng cháº·n tráº£i nghiá»‡m cÆ¡ báº£n.
-- Worker tÃ¡ch biá»‡t háº³n lÆ°u trá»¯ cloud khá»i client, trÃ¡nh Ä‘á»ƒ app nÃ³i chuyá»‡n trá»±c tiáº¿p vá»›i D1/KV/R2.
-- Repo Ä‘ang cÃ³ dáº¥u váº¿t tÃ i liá»‡u cÅ© vá» má»™t scraper/backend khÃ¡c; mÃ£ hiá»‡n táº¡i pháº£n Ã¡nh mÃ´ hÃ¬nh gá»i trá»±c tiáº¿p API trÆ°á»ng tá»« app, khÃ´ng pháº£i tá»« Worker.
+- `HomeController` la orchestrator trung tam cua app, nhung lifecycle va
+  ownership do Riverpod quan ly.
+- `AccountAuthController` duoc cung cap qua `accountAuthControllerProvider`.
+- App van local-first: loi cloud khong chan UX co ban.
+- Worker tach rieng hoan toan kho luu tru cloud khoi client.
+- Feature code da chuyen sang feature-first: `home`, `grades`, `auth`,
+  `sync`, `attachments`, `weather`, `notifications`, `widget`.
 
-## Tá»•ng quan phÃ¡t triá»ƒn
+## Documentation map
 
-### Äiá»u kiá»‡n cáº§n
+- [Project Standardization Mindmap](./project-standardization-mindmap.md)
+- [Source Tree Analysis](./source-tree-analysis.md)
+- [Feature-First Target Tree](./feature-first-target-tree.md)
+- [Architecture - Mobile App](./architecture-mobile-app.md)
+- [Architecture - Worker API](./architecture-worker-api.md)
+- [Integration Architecture](./integration-architecture.md)
 
-- Flutter SDK tÆ°Æ¡ng thÃ­ch Dart `^3.11.0`
-- Android Studio hoáº·c VS Code
-- Node.js Ä‘á»ƒ cháº¡y `cloudflare-worker`
-- TÃ i nguyÃªn Cloudflare Ä‘Ã£ táº¡o sáºµn náº¿u muá»‘n test cloud tháº­t
+## Setup quick start
 
-### Khá»Ÿi Ä‘á»™ng nhanh
+### mobile-app
 
-- Mobile app: `flutter pub get` rá»“i `flutter run`
-- Worker: `cd cloudflare-worker`, `npm install`, `npm run dev`
+```bash
+flutter pub get
+flutter run
+```
 
-### Lá»‡nh chÃ­nh
+### worker-api
 
-#### mobile-app
+```bash
+cd cloudflare-worker
+npm install
+npm run dev
+```
 
-- **Install:** `flutter pub get`
-- **Dev:** `flutter run`
-- **Build web:** `flutter run -d chrome`
-- **Test:** `flutter test`
+## Summary
 
-#### worker-api
-
-- **Install:** `npm install`
-- **Dev:** `npm run dev`
-- **Deploy:** `npm run deploy`
-
-## TÃ³m táº¯t cáº¥u trÃºc repo
-
-Repo Ä‘áº·t app Flutter á»Ÿ thÆ° má»¥c gá»‘c Ä‘á»ƒ thuáº­n tiá»‡n cho Android/Web build, cÃ²n backend cloud tÃ¡ch riÃªng trong `cloudflare-worker/`. `docs/` hiá»‡n chá»©a cáº£ tÃ i liá»‡u má»›i Ä‘Æ°á»£c quÃ©t vÃ  má»™t sá»‘ tÃ i liá»‡u lá»‹ch sá»­/Ä‘á» xuáº¥t cÅ©. CÃ¡c thÆ° má»¥c sinh build nhÆ° `build/`, `.dart_tool/`, `cloudflare-worker/node_modules/` khÃ´ng pháº£i pháº§n lÃµi cá»§a kiáº¿n trÃºc.
-
-## Báº£n Ä‘á»“ tÃ i liá»‡u
-
-- [index.md](./index.md) - Äiá»ƒm vÃ o chÃ­nh cho AI vÃ  ngÆ°á»i má»›i
-- [architecture-mobile-app.md](./architecture-mobile-app.md) - Kiáº¿n trÃºc app Flutter
-- [architecture-worker-api.md](./architecture-worker-api.md) - Kiáº¿n trÃºc Worker
-- [integration-architecture.md](./integration-architecture.md) - Luá»“ng giao tiáº¿p giá»¯a cÃ¡c part
-- [source-tree-analysis.md](./source-tree-analysis.md) - CÃ¢y thÆ° má»¥c cÃ³ chÃº giáº£i
-- [development-guide-mobile-app.md](./development-guide-mobile-app.md) - HÆ°á»›ng dáº«n phÃ¡t triá»ƒn app
-- [development-guide-worker-api.md](./development-guide-worker-api.md) - HÆ°á»›ng dáº«n phÃ¡t triá»ƒn Worker
-
----
-
-_Generated using BMAD Method `document-project` workflow_
+`sinhvien-app` da chuyen sang huong feature-first + Riverpod o phan mobile,
+co backend Cloudflare Worker rieng, va cac tai lieu chinh trong `docs/` da
+duoc don lai de phuc vu codebase hien tai thay vi cac tai lieu MVC/scan cu.
 
