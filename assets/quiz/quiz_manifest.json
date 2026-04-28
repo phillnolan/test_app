@@ -1,0 +1,59 @@
+{
+  "banks": [
+    {
+      "id": "cnpm",
+      "code": "CNPM",
+      "title": "Công nghệ phần mềm",
+      "description": "Ôn luyện quy trình phát triển, thiết kế, kiểm thử và quản lý phần mềm.",
+      "questionCount": 59,
+      "sourceQuestionCount": 59,
+      "skippedQuestionCount": 0,
+      "accentColor": 4294286859,
+      "assetPath": "assets/quiz/banks/cnpm.json"
+    },
+    {
+      "id": "lsd",
+      "code": "LSD",
+      "title": "Lịch sử Đảng",
+      "description": "Câu hỏi tổng hợp về lịch sử, đại hội và các mốc phát triển của Đảng.",
+      "questionCount": 422,
+      "sourceQuestionCount": 422,
+      "skippedQuestionCount": 0,
+      "accentColor": 4293870660,
+      "assetPath": "assets/quiz/banks/lsd.json"
+    },
+    {
+      "id": "mmt",
+      "code": "MMT",
+      "title": "Mạng máy tính",
+      "description": "Ôn tập kiến thức mạng, giao thức và hạ tầng truyền thông số.",
+      "questionCount": 282,
+      "sourceQuestionCount": 409,
+      "skippedQuestionCount": 127,
+      "accentColor": 4279150057,
+      "assetPath": "assets/quiz/banks/mmt.json"
+    },
+    {
+      "id": "tthcm",
+      "code": "TTHCM",
+      "title": "Tư tưởng Hồ Chí Minh",
+      "description": "Ngân hàng câu hỏi về tư tưởng, quan điểm và nền tảng lý luận.",
+      "questionCount": 152,
+      "sourceQuestionCount": 152,
+      "skippedQuestionCount": 0,
+      "accentColor": 4279286145,
+      "assetPath": "assets/quiz/banks/tthcm.json"
+    },
+    {
+      "id": "ttnt",
+      "code": "TTNT",
+      "title": "Trí tuệ nhân tạo",
+      "description": "Kiến thức nhập môn về AI, suy luận và xử lý thông minh.",
+      "questionCount": 101,
+      "sourceQuestionCount": 101,
+      "skippedQuestionCount": 0,
+      "accentColor": 4278630100,
+      "assetPath": "assets/quiz/banks/ttnt.json"
+    }
+  ]
+}

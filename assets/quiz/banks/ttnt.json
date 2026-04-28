@@ -1,0 +1,1416 @@
+[
+  {
+    "id": 0,
+    "question": "Có bao nhiêu qui tắc trong giải thuật tìm kiếm theo chiều rộng?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 1,
+    "question": "Giải thuật tìm kiếm theo chiều rộng bắt đầu duyệt từ?",
+    "options": [
+      "Nút kề.",
+      "Nút gốc.",
+      "Nút con.",
+      "Nút cha."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 2,
+    "question": "\"Nếu không tìm thấy đỉnh liền kề, thì xóa đỉnh đầu tiên trong hàng đợi.\" là qui tắc thứ mấy trong giải thuật tìm kiếm theo chiều rộng?",
+    "options": [
+      "Qui tắc 2.",
+      "Qui tắc 4.",
+      "Qui tắc 1.",
+      "Qui tắc 3."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 3,
+    "question": "Đâu không phải là ứng dụng của giải thuật tìm kiếm theo chiều rộng trong bài toán lý thuyết đồ thị?",
+    "options": [
+      "Tìm đường đi ngắn nhất giữa 2 đỉnh u và v.",
+      "Tìm các thành phần liên thông.",
+      "Tìm tất cả các đỉnh trong một thành phần liên thông.",
+      "Tìm kiếm có giới hạn."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 4,
+    "question": "Nếu số đỉnh là hữu hạn thì giải thuật tìm kiếm theo chiều rộng có tìm ra kết quả không?",
+    "options": [
+      "Có",
+      "Không",
+      "Cả A và B đều đúng",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 5,
+    "question": "Giải thuật tìm kiếm theo chiều rộng có bao nhiều tính chất?",
+    "options": [
+      "3 tính chất.",
+      "1 tính chất.",
+      "4 tính chất.",
+      "2 tính chất."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 6,
+    "question": "Giải thuật tìm kiếm theo chiều rộng có tính chất vét cạn vậy có nên áp dụng vào đồ thị có số đỉnh lớn không?",
+    "options": [
+      "Nên",
+      "Không nên",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 7,
+    "question": "Đáp án nào đúng với giải thuật tìm kiếm theo chiều rộng?",
+    "options": [
+      "Duyệt tất cả các đỉnh.",
+      "Duyệt một nửa số đỉnh.",
+      "Chỉ duyệt đỉnh đầu của đồ thị.",
+      "Chỉ duyệt đỉnh cuối của đồ thị"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 8,
+    "question": "Đáp án nào đúng với giải thuật tìm kiếm theo chiều rộng?",
+    "options": [
+      "Sử dụng hàng đợi.",
+      "Sử dụng ngăn xếp.",
+      "Sử dụng mảng nhiều chiều.",
+      "Sử dụng ma trận."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 100,
+    "question": "Đáp án nào đúng với giải thuật tìm kiếm theo chiều sâu?",
+    "options": [
+      "Sử dụng hàng đợi.",
+      "Sử dụng ngăn xếp.",
+      "Sử dụng mảng nhiều chiều.",
+      "Sử dụng ma trận."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 9,
+    "question": "Có bao nhiêu qui tắc trong giải thuật tìm kiếm theo chiều sâu?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 10,
+    "question": "Tìm kiếm theo chiều sâu có giới hạn là gì?",
+    "options": [
+      "Là một thuật toán phát triển các nút đã xét các theo chiều sâu nhưng có giới hạn mức.",
+      "Là một thuật toán phát triển các nút chưa xét các theo chiều sâu nhưng có giới hạn mức.",
+      "Là một thuật toán phát triển tất cả các nút theo chiều sâu nhưng có giới hạn mức.",
+      "Là một thuật toán phát triển các nút chưa xét các theo chiều rộng nhưng có giới hạn mức."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 11,
+    "question": "Giải thuật tìm kiếm sâu dần có sử dụng không gian tuyến tính O (bxL) không?",
+    "options": [
+      "Không.",
+      "Có",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 12,
+    "question": "Tìm kiếm theo giá thành thống nhất là tối ưu vì:",
+    "options": [
+      "Con đường có chi phí cao nhất được chọn.",
+      "Con đường có chi phí thấp nhất được chọn.",
+      "Con đường có chi phí cao nhất và thấp nhất được chọn.",
+      "Con đường có chi phí thấp nhất không được chọn."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 13,
+    "question": "Đâu là nhược điểm của giải thuật tìm kiếm theo giá thành thống nhất?",
+    "options": [
+      "Không cần quan tâm đến số lượng các bước liên quan đến tìm kiếm và chỉ quan tâm đến chi phí đường dẫn.",
+      "Quan tâm đến số lượng các bước liên quan đến tìm kiếm và không quan tâm đến chi phí đường dẫn.",
+      "Quan tâm đến số lượng các bước liên quan đến tìm kiếm và quan tâm đến chi phí đường dẫn.",
+      "Không cần quan tâm đến số lượng các bước liên quan đến tìm kiếm và không quan tâm đến chi phí đường dẫn."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 14,
+    "question": "\"Không cần quan tâm đến số lượng các bước liên quan đến tìm kiếm và chỉ quan tâm đến chi phí đường dẫn\" do đó:",
+    "options": [
+      "Giải thuật tìm kiếm theo giá thành thống nhất không thể bị mắt kẹt trong một vòng lặp vô hạn.",
+      "Giải thuật tìm kiếm theo giá thành thống nhất có thể bị mắt kẹt trong một vòng lặp vô hạn.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 15,
+    "question": "Thuật toán nào đưa ra để khắc phục điểm yếu của thuật toán tìm kiếm giới hạn độ sâu DLS?",
+    "options": [
+      "Tìm kiếm theo chiều dài.",
+      "Tìm kiếm theo chiều rộng.",
+      "Tìm kiếm sâu dần.",
+      "Tìm kiếm beam"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 16,
+    "question": "Giải thuật tìm kiếm sâu dần thường áp dụng cho bài toán nào?",
+    "options": [
+      "Bài toán có không gian trạng thái lớn và độ sâu của nghiệm không biết trước.",
+      "Bài toán có không gian trạng thái lớn và độ sâu của nghiệm biết trước.",
+      "Bài toán có không gian trạng thái nhỏ và độ sâu của nghiệm không biết trước.",
+      "Bài toán có không gian trạng thái nhỏ và độ sâu của nghiệm biết trước."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 17,
+    "question": "Hạn chế chính của giải thuật tìm kiếm sâu dần là gì?",
+    "options": [
+      "Không lặp lại tất cả các công việc của giai đoạn trước.",
+      "Lặp lại một nửa công việc của giai đoạn trước.",
+      "Lặp lại tất cả các công việc của giai đoạn trước.",
+      "Lặp lại tất cả các công việc của giai đoạn sau."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 18,
+    "question": "Trong giải thuật tìm kiếm leo đồi?",
+    "options": [
+      "Khi phát triển một đỉnh u thì bước tiếp theo ta không chọn trong số các đỉnh con của u, đỉnh có hứa hẹn nhiều nhất để phát triển, đỉnh này được xác định bởi hàm đánh giá.",
+      "Khi phát triển một đỉnh u thì bước tiếp theo ta chọn trong số các đỉnh con của u, đỉnh có hứa hẹn nhiều nhất để phát triển, đỉnh này được xác định bởi hàm đánh giá.",
+      "Khi phát triển một đỉnh u thì bước tiếp theo ta chọn trong số các đỉnh con của u, đỉnh có hứa hẹn nhiều nhất để phát triển, đỉnh này không được xác định bởi hàm đánh giá.",
+      "Khi phát triển một đỉnh u thì bước tiếp theo ta không chọn trong số các đỉnh con của u, đỉnh có hứa hẹn nhiều nhất để phát triển, đỉnh này không được xác định bởi hàm đánh giá."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 19,
+    "question": "Giải thuật tìm kiếm Simulated Annealing sử dụng chiến lược tìm kiếm gì?",
+    "options": [
+      "Ngẫu nhiên.",
+      "Tuần tự",
+      "Không ngẫu nhiên",
+      "Không tuần tự"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 20,
+    "question": "Đâu là đáp án đúng khi nói đến giải thuật Simulated Annealing?",
+    "options": [
+      "Không thể đối phó với các mô hình phi tuyến tính cao, dữ liệu hỗn loạn và ồn ào và nhiều ràng buộc.",
+      "Có thể đối phó với các mô hình phi tuyến tính thấp, dữ liệu hỗn loạn và ồn ào và nhiều ràng buộc.",
+      "Không thể đối phó với các mô hình phi tuyến tính thấp, dữ liệu hỗn loạn và ồn ào và ít ràng buộc.",
+      "Có thể đối phó với các mô hình phi tuyến tính cao, dữ liệu hỗn loạn và ồn ào và nhiều ràng buộc."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 21,
+    "question": "Trong giải thuật tìm kiểm beam?",
+    "options": [
+      "Không phát triển một đỉnh K tốt nhất",
+      "Phát triển nhiều đỉnh K tốt nhất",
+      "Chỉ phát triển một đỉnh K tốt nhất",
+      "Phát triển nhiều đỉnh K nhưng không tốt nhất"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 22,
+    "question": "Đâu là ưu điểm của giải thuật tìm kiếm beam?",
+    "options": [
+      "Khả năng làm tăng tính toán.",
+      "Khả năng làm giảm tính toán.",
+      "Khả năng tiêu thụ nhiều bộ nhớ.",
+      "Khả năng làm tăng tính toán và tiêu thụ nhiều bộ nhớ."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 23,
+    "question": "Đâu là nhược điểm của giải thuật tìm kiếm beam?",
+    "options": [
+      "Có thể dẫn đến mục tiêu và thậm chí không đạt được mục tiêu.",
+      "Có thể không dẫn đến mục tiêu và đạt được mục tiêu.",
+      "Có thể dẫn đến mục tiêu và đạt được mục tiêu.",
+      "Có thể không dẫn đến mục tiêu và thậm chí không đạt được mục tiêu."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 24,
+    "question": "Giải thuật tìm kiếm nhánh cận giải quyết các bài toán nào?",
+    "options": [
+      "Các bài toán không tối ưu tổ hợp.",
+      "Các bài toán tối ưu tổ hợp.",
+      "Các bài toán tối ưu tổ hợp và các bài toán không tối ưu tổ hợp.",
+      "Tất cả các bài toán."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 25,
+    "question": "Giải thuật tìm kiếm nhánh cận là một dạng của tiến của giải thuật nào?",
+    "options": [
+      "Giải thuật quay lui.",
+      "Giải thuật leo đồi.",
+      "Giải thuật tham lam.",
+      "Tất cả các ý trên"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 26,
+    "question": "Đâu là ưu điểm của giải thuật tìm kiếm nhánh cận?",
+    "options": [
+      "Quét qua toàn bộ nghiệm có thể có của bài toán.",
+      "Chỉ quét qua một nửa nghiệm có thể có của bài toán.",
+      "Không quét qua toàn bộ nghiệm có thể có của bài toán.",
+      "Quét qua toàn bộ nghiệm có thể không có của bài toán."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 27,
+    "question": "Giải thuật Minimax là gì?",
+    "options": [
+      "Là một giải thuật đệ quy.",
+      "Là một giải thuật không đệ quy.",
+      "Là một giải thuật đệ quy và không đệ quy.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 28,
+    "question": "Giải thuật Minimax thể hiện bằng cách định trị các Node trên cây trò chơi:\n• Node thuộc lớp MAX thì gán cho nó giá trị ........ nhất của con Node đó.\n• Node thuộc lớp MIN thì gán cho nó giá trị ........ nhất của con Node đó.\nĐiền vào chỗ trống.",
+    "options": [
+      "Lớn - Lớn.",
+      "Nhỏ – Nhỏ.",
+      "Lớn – Lớn.",
+      "Lớn – Nhỏ."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 29,
+    "question": "Giải thuật Minimax có tính chất gì?",
+    "options": [
+      "Véc cạn.",
+      "Rà soát.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 30,
+    "question": "Duyệt hết các trạng thái nên giải thuật Minimax?",
+    "options": [
+      "Tốn nhiều thời gian.",
+      "Không tốn nhiều thời gian.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 31,
+    "question": "Giải thuật nào sử dụng chung với thuật toán tìm kiếm Minimax nhằm hỗ trợ giảm bớt các không gian trạng thái?",
+    "options": [
+      "Giải thuật tìm kiếm beam.",
+      "Giải thuật tìm kiếm sâu dần.",
+      "Giải thuật cắt tỉa Alpha-Beta.",
+      "Tất cả các giải thuật trên."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 32,
+    "question": "Nguyên tắc đơn giản của giải thuật cắt tỉa Alpha-Beta là gì?",
+    "options": [
+      "\"Nếu biết là trường hợp xấu thì cần phải xét thêm\".",
+      "\"Nếu biết không phải trường hợp xấu thì không cần phải xét thêm\".",
+      "\"Nếu biết không phải trường hợp xấu thì cần phải xét thêm\".",
+      "\"Nếu biết là trường hợp xấu thì không cần phải xét thêm\"."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 33,
+    "question": "Sử dụng giải thuật nào để xác định được Alpha và Beta trong giải thuật cắt tỉa Alpha-Beta?",
+    "options": [
+      "Giải thuật tìm kiếm beam.",
+      "Giải thuật tìm kiếm theo chiều rộng.",
+      "Giải thuật tìm kiếm theo chiều sâu.",
+      "Tất cả các giải thuật trên."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 34,
+    "question": "Có mấy giải thuật dựa vào giải thuật tìm kiếm tốt nhất đầu tiên?",
+    "options": [
+      "1.",
+      "2.",
+      "3.",
+      "4."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 35,
+    "question": "Giải thuật nào dựa vào giải thuật tìm kiếm tốt nhất đầu tiên?",
+    "options": [
+      "Giải thuật A*.",
+      "Giải thuật leo đồi.",
+      "Giải thuật tham lam.",
+      "Giải thuật tìm kiếm nhánh cận."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 36,
+    "question": "Giải thuật tìm kiếm tốt nhất đầu tiên kết hợp 2 ưu điểm của 2 giải thuật nào?",
+    "options": [
+      "Giải thuật tìm kiếm nhánh cận và giải thuật leo đồi.",
+      "Giải thuật tìm kiếm beam và giải thuật tìm kiếm theo chiều rộng.",
+      "Giải thuật leo đồi và giải thuật tham lam.",
+      "Giải thuật tìm kiếm theo chiều sâu và giải thuật tìm kiếm theo chiều rộng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 37,
+    "question": "Đâu là đáp án đúng khi nói về giải thuật tìm kiếm tốt nhất đầu tiên?",
+    "options": [
+      "Giải thuật tìm kiếm tốt nhất đầu tiên có thể bị kẹt trong một vòng lặp như A*.",
+      "Giải thuật tìm kiếm tốt nhất đầu tiên không thể bị kẹt trong một vòng lặp như DFS.",
+      "Giải thuật tìm kiếm tốt nhất đầu tiên có thể bị kẹt trong một vòng lặp như DFS.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 38,
+    "question": "Đâu là đán án đúng khi nói về giải thuật tham lam?",
+    "options": [
+      "Giải thuật này tối ưu để tìm giải pháp toàn cục.",
+      "Giải thuật này không tối ưu để tìm giải pháp toàn cục.",
+      "Tất cả các đáp án đều đúng.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 39,
+    "question": "Lựa chọn của giải thuật tham lam?",
+    "options": [
+      "Có thể phụ thuộc vào lựa chọn trước đó.",
+      "Không phụ thuộc vào lựa chọn trước đó.",
+      "Chắc chắn phụ thuộc vào lựa chọn trước đó.",
+      "Tất cả đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 40,
+    "question": "Đâu là đáp án đúng khi nói về giải thuật tham lam?",
+    "options": [
+      "Tối ưu để tìm giải pháp toàn cục.",
+      "Không tối ưu để tìm giải pháp toàn cục.",
+      "Tất cả các đáp án đều đúng.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 41,
+    "question": "Giải thuật A* được công bố đầu tiên vào năm nào?",
+    "options": [
+      "1966.",
+      "1967.",
+      "1968.",
+      "1969."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 42,
+    "question": "Đâu là đáp án đúng khi nói về giải thuật A*?",
+    "options": [
+      "Không tốn nhiều bộ nhớ để lưu lại những trạng thái đã đi qua.",
+      "Tốn khá nhiều bộ nhớ để lưu lại những trạng thái đã đi qua.",
+      "Không tốn bộ nhớ để lưu lại những trạng thái đã đi qua.",
+      "Tất cả đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 43,
+    "question": "Giải thuật tìm kiếm truyền lùi (back tracking) bắt đầu tại trạng thái?",
+    "options": [
+      "Ban đầu bài toán.",
+      "Giữa bài toán",
+      "Cuối bài toán.",
+      "Tất cả đáp án đề sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 44,
+    "question": "Thông tin luật đánh giá heuristic về bài toán được biểu diễn bằng luật điều khiển dưới dạng gì?",
+    "options": [
+      "For.",
+      "Loop.",
+      "While.",
+      "If Then"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 45,
+    "question": "Sử dụng thuật giải heuristic thường?",
+    "options": [
+      "Lâu và khó đưa ra kết quả do vậy, chi phí thấp.",
+      "Lâu và khó đưa ra kết quả do vậy, chi phí cao.",
+      "Nhanh chóng và dễ dàng đưa ra kết quả do vậy, chi phí thấp.",
+      "Nhanh chóng và dễ dàng đưa ra kết quả do vậy, chi phí cao."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 46,
+    "question": "Giải thuật heuristic thường thể hiện?",
+    "options": [
+      "Khá tự nhiên, gần gũi với cách suy nghĩ và hành động của con người.",
+      "Không tự nhiên, khó gần gũi với cách suy nghĩ và hành động của con người.",
+      "Không tự nhiên, khó gần gũi với cách suy nghĩ và hành động của máy tính.",
+      "Khá tự nhiên, gần gũi với cách suy nghĩ và hành động của máy tính."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 47,
+    "question": "Đâu là đáp án đúng khi nói đến giải thuật đồ thị và-hoặc?",
+    "options": [
+      "Giải thuật sử dụng nhiều hàm ước lượng heuristic để đánh giá trạng thái trong đồ thị.",
+      "Giải thuật sử dụng chỉ một hàm ước lượng heuristic để đánh giá mỗi trạng thái trong đồ thị.",
+      "Giải thuật sử không sử dụng hàm ước lượng heuristic để đánh giá mỗi trạng thái trong đồ thị.",
+      "Giải thuật sử dụng ít hàm ước lượng heuristic để đánh giá mỗi trạng thái trong đồ thị."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 48,
+    "question": "Đâu là đáp án đúng khi nói đến giải thuật đồ thị và-hoặc?",
+    "options": [
+      "Giải thuật sử dụng một danh sách S nhằm mục đích cho quá trình truyền lùi về gốc của đồ thị.",
+      "Giải thuật không sử dụng một danh sách S nhằm mục đích cho quá trình truyền lùi về gốc của đồ thị.",
+      "Giải thuật sử dụng một danh sách S nhằm mục đích cho quá trình truyền lùi về đỉnh con của đồ thị.",
+      "Tất cả đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 49,
+    "question": "Đâu không phải là đặc trưng cơ bản của hệ chuyên gia?",
+    "options": [
+      "Sử dụng tri thức chuyên gia",
+      "Sử dụng kỹ thuật tìm kiếm",
+      "Không sử dụng thông tin Heuristics",
+      "Có khả năng xử lý ký hiệu"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 50,
+    "question": "Toác học logic xuất phát điểm từ?",
+    "options": [
+      "Tập hợp các câu đơn giản ghi nhận lại các sự kiện đã xảy ra trong một không gian và thời gian xác định nào đó.",
+      "Tập hợp các câu phức tạp ghi nhận lại các sự kiện đã xảy ra trong một không gian và thời gian xác định nào đó.",
+      "Tập hợp các phức tạp ghi nhận lại các sự kiện chưa xảy ra trong một không gian và thời gian chưa xác định nào đó.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 51,
+    "question": "Có mấy loại toán logic?",
+    "options": [
+      "1.",
+      "2.",
+      "3.",
+      "4."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 52,
+    "question": "Biểu diễn tri thức bằng logic vị từ?",
+    "options": [
+      "Không cho phép ta có khả năng truy cập hoặc thay thế các thành phần của biểu diễn.",
+      "Cho phép ta có khả năng truy cập hoặc thay thế các thành phần của biểu diễn.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 53,
+    "question": "Trong logic đề xuất, ký hiệu đề xuất là gì?",
+    "options": [
+      "Các chữ cái in hoa A, B, C,...",
+      "Các số nguyên 1, 2, 3,...",
+      "Các chữ cái thường a, b, c,...",
+      "Các ký tự đặc biệt."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 54,
+    "question": "Toán logic vị từ là gì?",
+    "options": [
+      "Logic vị từ là một phần của toán học logic, nó được mở rộng từ logic đề xuất.",
+      "Logic vị từ không phải là một phần của toán học logic, nó không được mở rộng từ logic đề xuất.",
+      "Logic vị từ là một phần của toán học logic, nó không được mở rộng từ logic đề xuất.",
+      "Logic vị từ không phải là một phần của toán học logic, nó được mở rộng từ logic đề xuất."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 55,
+    "question": "Phương pháp học nhờ các mạng neuron là gì?",
+    "options": [
+      "Là phương pháp học thay đổi cấu trúc bên ngoài của mạng hoặc thay đổi các trọng số kết nối giữa các neuron trong mạng.",
+      "Là phương pháp học thay đổi cấu trúc bên trong của mạng hoặc thay đổi các trọng số kết nối giữa các neuron ngoài mạng.",
+      "Là phương pháp học thay đổi cấu trúc bên trong của mạng hoặc thay đổi các trọng số kết nối giữa các neuron trong mạng.",
+      "Là phương pháp học thay đổi cấu trúc bên trong của mạng và thay đổi các trọng số kết nối giữa các neuron trong mạng."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 56,
+    "question": "Phương pháp học ký ức (rote learning) là gì?",
+    "options": [
+      "là phương pháp học bằng cách sử dụng một tất cả bộ nhớ để ghi nhận lại dữ liệu và đem ra sử dụng trong các tình huống tương tự.",
+      "là phương pháp học bằng cách sử dụng một vài bộ nhớ để ghi nhận lại dữ liệu và đem ra sử dụng trong các tình huống tương tự.",
+      "là phương pháp học bằng cách không sử dụng bộ nhớ để ghi nhận lại dữ liệu và đem ra sử dụng trong các tình huống tương tự.",
+      "Tất cả các đáp án đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 57,
+    "question": "Có bao nhiêu phương pháp concept learning?",
+    "options": [
+      "1.",
+      "2.",
+      "3.",
+      "4."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 58,
+    "question": "Để định nghĩa một không gian học thường sử dụng phép toán?",
+    "options": [
+      "Tổng quát hoá.",
+      "Đặc trưng hóa.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 59,
+    "question": "Giải thuật học hướng đặc trưng đến tổng quát hóa được sử dụng để?",
+    "options": [
+      "Tìm kiếm mẫu mong muốn học trong đồ thị.",
+      "Tìm kiếm mẫu không mong muốn học trong không gian học.",
+      "Tìm kiếm mẫu mong muốn học trong không gian học.",
+      "Tìm kiếm mẫu không mong muốn học trong đồ thị."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 60,
+    "question": "Phương pháp mờ hóa là gì?",
+    "options": [
+      "Mờ hoá là quá trình làm mờ một đại lượng rõ.",
+      "Mờ hoá là quá trình làm rõ một đại lượng rõ.",
+      "Mờ hoá là quá trình làm rõ một đại lượng mờ.",
+      "Mờ hoá là quá trình làm mờ một đại lượng mờ."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 61,
+    "question": "Phương pháp mờ hóa trực giác là gì?",
+    "options": [
+      "Là phương pháp dựa trên kinh nghiệm và sự hiểu biết của con người để phát triển các hàm liên thuộc chuyển đổi các đại lượng mờ sang các đại lượng rõ.",
+      "Là phương pháp dựa trên kinh nghiệm và sự hiểu biết của máy tính để phát triển các hàm liên thuộc chuyển đổi các đại lượng rõ sang các đại lượng mờ.",
+      "Là phương pháp không dựa trên kinh nghiệm và sự hiểu biết của con người để phát triển các hàm liên thuộc chuyển đổi các đại lượng rõ sang các đại lượng mờ.",
+      "Là phương pháp dựa trên kinh nghiệm và sự hiểu biết của con người để phát triển các hàm liên thuộc chuyển đổi các đại lượng rõ sang các đại lượng mờ."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 62,
+    "question": "Phương pháp mờ hóa suy diễn là gì?",
+    "options": [
+      "Là phương pháp dựa trên luật để phát triển các hàm cũ.",
+      "Là phương pháp dựa trên luật để phát triển các hàm liên thuộc.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 63,
+    "question": "Phương pháp giải mờ là gì?",
+    "options": [
+      "Giải mờ là quá trình biến đổi từ các đại lượng mờ sang các đại lượng rõ.",
+      "Giải mờ là quá trình biến đổi từ các đại lượng rõ sang các đại lượng mờ.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 64,
+    "question": "Phương pháp giải mờ cực đại là gì?",
+    "options": [
+      "là lấy giá trị mờ tại điểm cực đại của tập mờ đầu ra hệ thống.",
+      "là lấy giá trị rõ tại điểm cực đại của tập mờ đầu ra hệ thống.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 65,
+    "question": "Phương pháp giải mờ điểm trọng tâm là gì?",
+    "options": [
+      "Là lấy giá trị rõ tại điểm trọng tâm vùng hợp nhau của nhiều tập mờ đầu ra.",
+      "Là lấy giá trị mờ tại điểm trọng tâm vùng hợp nhau của nhiều tập mờ đầu ra.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 66,
+    "question": "Tìm kiếm mù là gì?",
+    "options": [
+      "Là phương pháp duyệt không gian trạng thái không sử dụng các thông tin theo phát biểu của bài toán tìm kiếm tổng quát trong quá trình tìm kiếm.",
+      "Là phương pháp duyệt không gian trạng thái chỉ sử dụng các thông tin theo phát biểu của bài toán tìm kiếm tổng quát trong quá trình tìm kiếm.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 67,
+    "question": "Tìm theo hai hướng là gì?",
+    "options": [
+      "Là phương pháp tìm kiếm trong đó ta đồng thời xây dựng hai cây tìm kiếm có nút gốc là trạng thái xuất phát và trạng thái đích.",
+      "Là phương pháp tìm kiếm trong đó ta đồng thời xây dựng hai cây tìm kiếm có nút con là trạng thái xuất phát và trạng thái đích.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 68,
+    "question": "Tìm theo hai hướng sẽ tồn tại bao nhiêu cây tìm kiếm?",
+    "options": [
+      "1",
+      "2",
+      "3",
+      "4"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 69,
+    "question": "Tìm theo hai hướng khi nào kết thúc?",
+    "options": [
+      "Tìm kiếm kết thúc khi có nút lá của cây này không trùng với nút lá của cây kia.",
+      "Tìm kiếm kết thúc khi có nút lá của cây này trùng với nút lá của cây kia.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 70,
+    "question": "Tìm kiếm chùm cục bộ là gì?",
+    "options": [
+      "Là phương pháp tìm kiếm cục bộ tương tự leo đồi nhưng thay vì chỉ lưu một trạng thái tại mỗi thời điểm, tìm kiếm chùm lưu k trạng thái.",
+      "Là phương pháp tìm kiếm cục bộ tương tự leo đồi nhưng thay vì lưu một trạng thái tại nhiều thời điểm, tìm kiếm chùm lưu k trạng thái.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 71,
+    "question": "Quá vừa dữ liệu (data overfitting) là gì?",
+    "options": [
+      "Là một vấn đề hiếm gặp trong học máy và có ảnh hưởng nhiều tới độ chính xác của các kỹ thuật học máy.",
+      "Là một vấn đề thường gặp trong học máy và có ảnh hưởng nhiều tới độ chính xác của các kỹ thuật học máy.",
+      "Là một vấn đề thường gặp trong học máy và không ảnh hưởng nhiều tới độ chính xác của các kỹ thuật học máy.",
+      "Là một vấn đề hiếm gặp trong học máy và không có ảnh hưởng nhiều tới độ chính xác của các kỹ thuật học máy."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 72,
+    "question": "Tìm kiếm leo đồi dốc đứng khác gì so với tìm kiếm leo đồi?",
+    "options": [
+      "Leo đồi dốc đứng sẽ không duyệt tất cả các hướng đi có thể và không chọn đi theo trạng thái tốt nhất trong số các trạng thái kế tiếp có thể có.",
+      "Leo đồi dốc đứng sẽ duyệt tất cả các hướng đi có thể và chọn đi theo trạng thái xấu nhất trong số các trạng thái kế tiếp có thể có.",
+      "Leo đồi dốc đứng sẽ duyệt tất cả các hướng đi có thể và chọn đi theo trạng thái tốt nhất trong số các trạng thái kế tiếp có thể có.",
+      "Leo đồi dốc đứng sẽ không duyệt tất cả các hướng đi có thể và không chọn đi theo trạng thái xấu nhất trong số các trạng thái kế tiếp có thể có."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 73,
+    "question": "Đối tượng nghiên cứu của ngành AI?",
+    "options": [
+      "Các hành xử thông minh.",
+      "Sự thông minh",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 74,
+    "question": "Hành xử thông minh là gì?",
+    "options": [
+      "Là các hoạt động của một đối tượng như là kết quả của một quá trình thu thập, xử lý và điều khiển theo những tri thức đã.",
+      "Là các hoạt động của một đối tượng như là kết quả của một quá trình thu thập, xử lý và điều khiển theo những tri thức mới phát sinh.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 75,
+    "question": "Tác tử là gì?",
+    "options": [
+      "Là bất cứ thứ gì không có khả năng cảm nhận môi trương xung quanh thông qua các bộ phận cảm biến.",
+      "Là bất cứ thứ gì có khả năng cảm nhận môi trương xung quanh thông qua các bộ phận cảm biến.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 76,
+    "question": "Có bao nhiêu kiểu tác tử cơ bản?",
+    "options": [
+      "1.",
+      "2.",
+      "3.",
+      "4."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 77,
+    "question": "Tìm kiếm bằng kiểm thử là gì?",
+    "options": [
+      "Là phương pháp giải quyết vấn đề tổng quát nhất .",
+      "Là phương pháp giải quyết vấn đề nhưng không tổng quát nhất .",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 78,
+    "question": "Đâu là đáp án đúng khi nói đến tìm kiếm bằng kiểm thử?",
+    "options": [
+      "Xét quá nhiều các khả năng gán (hiển nhiên) không thỏa mãn các ràng buộc.",
+      "Xét quá ít các khả năng gán (hiển nhiên) thỏa mãn các ràng buộc.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 79,
+    "question": "Tìm kiếm quay lui là gì?",
+    "options": [
+      "Là một kĩ thuật thiết kế giải thuật dựa trên đệ quy.",
+      "Là một kĩ thuật thiết kế giải thuật không dựa trên đệ quy.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 80,
+    "question": "Đâu là đáp án đúng khi nói về tìm kiếm quay lui?",
+    "options": [
+      "Tránh được việc phải thử nhiều trường hợp hoàn chỉnh, nhờ đó giảm thời gian chạy.",
+      "Tránh được việc phải thử nhiều trường hợp chưa hoàn chỉnh, nhờ đó giảm thời gian chạy.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 81,
+    "question": "Giải thuật tìm kiếm nội suy (Interpolation Sreach) là gì?",
+    "options": [
+      "Là biến thể cải tiến của tìm kiếm nhị phân.",
+      "Là biến thể cải tiến của tìm kiếm beam.",
+      "Là biến thể cải tiến của tìm kiếm sâu dần.",
+      "Là biến thể cải tiến của tìm kiếm theo chiều rộng."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 82,
+    "question": "Để giải thuật tìm kiếm nội suy xác định thì tập dữ liệu?",
+    "options": [
+      "Phải được sắp xếp.",
+      "Không cần phải sắp xếp.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 83,
+    "question": "Đâu là phát biểu đúng?",
+    "options": [
+      "Binary Search có lợi thế lớn về độ phức tạp tính toán khi so sánh với Linear Search.",
+      "Binary Search có lợi thế lớn về độ phức tạp thời gian khi so sánh với Linear Search.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 84,
+    "question": "Đâu là phát biểu đúng?",
+    "options": [
+      "Linear Search có độ phức tạp trường hợp xấu nhất là O(n) trong khi Binary Search là O(log n).",
+      "Linear Search có độ phức tạp trường hợp xấu nhất là O(log n) trong khi Binary Search là O(n).",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 85,
+    "question": "Tìm kiếm tuyến tính là gì?",
+    "options": [
+      "Hoạt động tìm kiếm liên tiếp được diễn ra qua một phần tử.",
+      "Hoạt động tìm kiếm liên tiếp được diễn ra qua tất cả từng phần tử.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 86,
+    "question": "Đâu là đáp án đúng khi nói về tìm kiếm tuyến tính?",
+    "options": [
+      "Nếu không tìm thấy thì quá trình tìm kiếm sẽ kết thúc.",
+      "Nếu không tìm thấy thì quá trình tìm kiếm tiếp tục diễn ra cho tới khi tìm kiếm hết dữ liệu.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 87,
+    "question": "Tìm kiếm nhị phân là gì?",
+    "options": [
+      "Là một giải thuật tìm kiếm nhanh với độ phức tạp thời gian chạy là O(log n).",
+      "Là một giải thuật tìm kiếm nhanh với độ phức tạp thời gian chạy là O(n).",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 88,
+    "question": "Giải thuật tìm kiếm nhị phân làm việc dựa trên nguyên tắc?",
+    "options": [
+      "Chia để trị.",
+      "Đệ qui",
+      "Quay lui",
+      "Tất cả đáp án đều đúng."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 89,
+    "question": "Để giải thuật tìm kiếm nhị phân có thể làm việc một cách chính xác thì tập dữ liệu?",
+    "options": [
+      "Nên ở trong dạng đã được sắp xếp.",
+      "Không cần thiết ở trong dạng đã được sắp xếp.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 90,
+    "question": "Nhân tố nào là nhân tố chính ảnh hưởng đến thời gian tính của một giải thuật?",
+    "options": [
+      "Máy tính.",
+      "Thuật toán được sử dụng.",
+      "Chương trình dịch.",
+      "Kích thước của dữ liệu đầu vào của thuật toán"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 91,
+    "question": "Có bao nhiêu loại tri thức?",
+    "options": [
+      "2.",
+      "3.",
+      "4.",
+      "5."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 92,
+    "question": "Thuật giải Quinlan là gì?",
+    "options": [
+      "Là thuật toán học theo quy nạp dùng luật, đa mục tiêu.",
+      "Là thuật toán học theo quy nạp dùng đệ qui, đa mục tiêu.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 93,
+    "question": "Lập trình logic là gì?",
+    "options": [
+      "Là mẫu lập trình quan niệm rằng: logical assertions như là các chương trình.",
+      "Là mẫu lập trình quan niệm rằng: logical assertions không phải là các chương trình.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 94,
+    "question": "Ràng buộc (Constraint) là gì?",
+    "options": [
+      "Là một quan hệ trên một tập các biến",
+      "Là một quan hệ trên một biến",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 95,
+    "question": "Có bao nhiêu bước cơ bản của giải thuật di truyền?",
+    "options": [
+      "4.",
+      "5.",
+      "6.",
+      "7."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 96,
+    "question": "Tìm kiếm là gì?",
+    "options": [
+      "Tìm kiếm là quá trình tìm một phần tử nằm trong một phần tử dựa vào một miêu tả nào đó.",
+      "Tìm kiếm là quá trình tìm một phần tử nằm trong một tập hợp nhiều phần tử dựa vào một miêu tả nào đó.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 97,
+    "question": "Lập trình động là gì?",
+    "options": [
+      "Lập trình động thường là một hàm giải quyết vấn đề đơn giản, không liên quan đến trí tuệ bằng cách hợp các vấn đề thành các bài toán lớn.",
+      "Lập trình động thường là một hàm giải quyết vấn đề phức tạp liên quan đến trí tuệ bằng cách tách các vấn đề thành các bài toán con nhỏ hơn.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 98,
+    "question": "Có bao nhiêu phương pháp duyệt toàn bộ các đỉnh của đồ thị?",
+    "options": [
+      "1.",
+      "2.",
+      "3.",
+      "4."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 99,
+    "question": "DFS là thuật toán dựa trên?",
+    "options": [
+      "Đỉnh.",
+      "Cạnh.",
+      "Cả A và B đều đúng.",
+      "Cả A và B đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  }
+]

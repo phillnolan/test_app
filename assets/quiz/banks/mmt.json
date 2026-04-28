@@ -1,0 +1,3950 @@
+[
+  {
+    "id": 0,
+    "question": "Nguyên nhân cơ bản nào dẫn đến sự ra đời của mạng máy tính",
+    "options": [
+      "Nhu cầu trao đổi thông tin ngày càng tăng",
+      "Khối lượng thông tin lưu trên máy tính ngày càng tăng",
+      "Khoa học và công nghệ về lĩnh vực máy tính và truyền thông phát triển",
+      "Nhu cầu trao đổi thông tin ngày càng tang, khối lượng thông tin lưu trên máy tính ngày càng tang và khoa học và công nghệ về lĩnh vực máy tính và truyền thông phát triển"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 1,
+    "question": "Ý nghĩa cơ bản nhất của mạng máy tính là gì?",
+    "options": [
+      "Nâng cao độ tin cậy của hệ thống máy tính",
+      "Trao đổi và chia sẻ thông tin",
+      "Phát triển ứng dụng trên máy tính",
+      "Nâng cao chất lượng khai thác thông tin"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 2,
+    "question": "Thuật ngữ viết tắt bằng tiếng Anh của mạng cục bộ là gì?",
+    "options": [
+      "LAN (Local Area Network)",
+      "MAN (Metropolitan Area Network)",
+      "WAN (Wide Area Network)",
+      "GAN (Global Area Network)"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 3,
+    "question": "Thuật ngữ viết tắt bằng tiếng Anh của mạng diện rộng là gì?",
+    "options": [
+      "LAN (Local Area Network)",
+      "MAN (Metropolitan Area Network)",
+      "WAN (Wide Area Network)",
+      "GAN (Global Area Network)"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 4,
+    "question": "Thuật ngữ viết tắt bằng tiếng Anh của mạng thành phố là gì?",
+    "options": [
+      "LAN (Local Area Network)",
+      "MAN (Metropolitan Area Network)",
+      "WAN (Wide Area Network)",
+      "GAN(Global Area Network)"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 5,
+    "question": "Thuật ngữ viết tắt bằng tiếng Anh của mạng toàn cục là gì?",
+    "options": [
+      "LAN (Local Area Network)",
+      "MAN (Metropolitan Area Network)",
+      "WAN (Wide Area Network)",
+      "GAN(Global Area Network)"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 6,
+    "question": "Thuật ngữ LAN (mạng cục bộ) là viết tắt của cụm từ nào?",
+    "options": [
+      "Local Access Network",
+      "Local Access Networking",
+      "Local Area Network",
+      "Local Area Networking"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 7,
+    "question": "Thuật ngữ WAN (mạng diện rộng) là viết tắt của cụm từ nào?",
+    "options": [
+      "Wide Access Network",
+      "Wide Access Networking",
+      "Wide Area Networking",
+      "Wide Area Network"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 8,
+    "question": "Thuật ngữ MAN (mạng thành phố) là viết tắt của cụm từ nào?",
+    "options": [
+      "Metropolitan Area Network",
+      "Metropolitan Area Networking",
+      "Metro Area Network",
+      "Metro Area Networking"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 9,
+    "question": "Thuật ngữ GAN (mạng cục bộ) là viết tắt của cụm từ nào?",
+    "options": [
+      "Global Access Network",
+      "Global Area Network",
+      "Global Access Networking",
+      "Global Area Networking"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 10,
+    "question": "Các kiểu mạng LAN, MAN, WAN, GAN được phân biệt với nhau bởi tiêu chí phân loại nào?",
+    "options": [
+      "Khoảng cách địa lý",
+      "Giao thức truyền thông",
+      "Thiết bị mạng",
+      "Đường truyền mạng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 11,
+    "question": "Mục đích chính của việc xây dựng LAN là gì?",
+    "options": [
+      "Kết nối các máy tính trong phạm vi một thành phố hay một trung tâm kinh tế",
+      "Kết nối các máy tính trong phạm vi một quốc gia hoặc trong một châu lục.",
+      "Kết nối các máy tính trong phạm vi toàn cầu",
+      "Kết nối các máy tính trong phạm hẹp như một toà nhà, trường học,..."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 12,
+    "question": "Mục đích chính của việc xây dựng WAN là gì?",
+    "options": [
+      "Kết nối các máy tính trong phạm hẹp như một toà nhà, trường học,...",
+      "Kết nối các máy tính trong phạm vi một thành phố hay một trung tâm kinh tế",
+      "Kết nối các máy tính trong phạm vi một quốc gia hoặc trong một châu lục",
+      "Kết nối các máy tính trong phạm vi toàn cầu"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 13,
+    "question": "Mục đích chính của việc xây dựng MAN là gì?",
+    "options": [
+      "Kết nối các máy tính trong phạm hẹp như một toà nhà, trường học,...",
+      "Kết nối các máy tính trong phạm vi một thành phố hay một trung tâm kinh tế",
+      "Kết nối các máy tính trong phạm vi một quốc gia hoặc trong một châu lục.",
+      "Kết nối các máy tính trong phạm vi toàn cầu"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 14,
+    "question": "Mục đích chính của việc xây dựng GAN là gì?",
+    "options": [
+      "Kết nối các máy tính trong phạm vi toàn cầu",
+      "Kết nối các máy tính trong phạm hẹp như một toà nhà, trường học,...",
+      "Kết nối các máy tính trong phạm vi một thành phố hay một trung tâm kinh tế",
+      "Kết nối các máy tính trong phạm vi một quốc gia hoặc trong một châu lục."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 15,
+    "question": "Mạng Internet là mạng thuộc loại mạng nào?",
+    "options": [
+      "LAN",
+      "MAN",
+      "WAN",
+      "GAN"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 16,
+    "question": "Hai máy tính có thể kết nối trực tiếp với nhau để trao đổi thông tin, mạng kết nối 2 máy tính đó thuộc loại mạng nào?",
+    "options": [
+      "Mạng Internet",
+      "Mạng LAN",
+      "Mạng MAN",
+      "Mạng WAN"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 17,
+    "question": "Các tài nguyên nào có thể dùng chung được nhờ có mạng máy tính?",
+    "options": [
+      "Chương trình, dữ liệu",
+      "Máy in, máy scanner,...",
+      "Ổ đĩa CD ROM",
+      "Tất cả các tài nguyên chương trình, dữ liệu, máy in, máy scanner.. bộ nhớ."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 18,
+    "question": "Người ta có thể điều khiển hoạt động của một máy tính từ xa thông qua công cụ nào sau đây?",
+    "options": [
+      "Telnet",
+      "Command Prompt",
+      "Service",
+      "Computer Management"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 19,
+    "question": "Sau khi đã khảo sát và thiết kế một mạng máy tính, bước tiếp theo để thiết lập một mạng máy tính, người ta cần phải thực hiện các công việc gì?",
+    "options": [
+      "Xây dựng và lắp đặt các thiết bị truyền thông",
+      "Xây dựng và lắp đặt các cáp truyền thông hoặc là lắp đặt các thiết bị hỗ trợ truyền thông vô tuyến",
+      "Cài đặt và cấu hình các phần mềm giao thức mạng",
+      "Tất cả các công việc xây lắp hệ thống như thiết bị truyền thông, cáp truyền thông, thiết bị hỗ trợ truyền thông vô tuyến, cài đặt cấu hình các phần mềm giao thức mạng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 20,
+    "question": "Tại sao cần phải xây dựng hệ thống an ninh mạng máy tính?",
+    "options": [
+      "Nhằm để tránh các truy nhập bất hợp pháp từ ngoài mạng",
+      "Nhằm để tránh các lỗi do bản thân mạng sinh ra",
+      "Nhằm để nâng cao tốc độ truyền thông",
+      "Nhằm để nâng cao hiệu suất truyền thông"
+    ],
+    "correctAnswerIndices": [
+      -1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 21,
+    "question": "Tại sao vấn đề an ninh mạng máy tính lại được quan tâm và phát triển hiện nay?",
+    "options": [
+      "Do yêu cầu đảm bảo an ninh tài nguyên mạng của người dùng",
+      "Do sự phát triển nhanh của các cuộc xâm nhập tài nguyên mạng bất hợp pháp",
+      "Do khối lượng tài nguyên của mạng máy tính ngày càng tăng và có giá trị cao",
+      "Do sự gia tăng cả về số lượng lẫn giá trị tài nguyên mạng, do yêu cầu an ninh tài nguyên mạng, do xâm nhập bất hợp pháp tài nguyên mạng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 22,
+    "question": "Tổ chức nào sau đây cung cấp dịch vụ truyền thông Internet tại Việt Nam?",
+    "options": [
+      "Viettel",
+      "FPT",
+      "NetNam",
+      "Cả ba tổ chức Viettel, FPT, NetNam."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 23,
+    "question": "Khi sử dụng mạng máy tính ta sẽ được các lợi ích gì?",
+    "options": [
+      "Chia sẻ tài nguyên (ổ cứng, cơ sở dữ liệu, máy in, các phần mềm tiện ích, ...)",
+      "Quản lý tập trung",
+      "Tận dụng năng lực xử lý của các máy tính rỗi để làm các đề án lớn",
+      "Chia sẻ tài nguyên, quản lý tập trung, tận dụng khả năng xử lý của các máy tính."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 24,
+    "question": "Kiến trúc mạng máy tính là:",
+    "options": [
+      "Cấu trúc kết nối cụ thể giữa các máy trong mạng.",
+      "Các phần tử chức năng cấu thành mạng và mối quan hệ giữa chúng",
+      "Cấu trúc kết nối cụ thể giữa các máy trong mạng và Các phần tử chức năng cấu thành mạng và mối quan hệ giữa chúng.",
+      "Không có ý đúng."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 25,
+    "question": "Tầng nào trong mô hình OSI thực hiện gửi tín hiệu lên cáp?",
+    "options": [
+      "Physical",
+      "Network",
+      "Data Link",
+      "Transport"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 26,
+    "question": "Địa chỉ mạng được gán tại tầng nào trong mô hình OSI ?",
+    "options": [
+      "Session",
+      "Data Link",
+      "Network",
+      "Presentation"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 27,
+    "question": "Mô hình OSI được chia ra thành mấy tầng?",
+    "options": [
+      "4 tầng",
+      "5 tầng",
+      "6 tầng",
+      "7 tầng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 28,
+    "question": "Mô hình OSI là một bộ định chuẩn của tổ chức nào?",
+    "options": [
+      "IEEE",
+      "ISO",
+      "ANSI",
+      "WLAN"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 29,
+    "question": "Mô hình OSI được nghiên cứu bắt đầu từ năm nào?",
+    "options": [
+      "1969",
+      "1970",
+      "1971",
+      "1981"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 30,
+    "question": "Những quy định nào sau đây không phải là của ISO dành cho việc xây dựng mô hình OSI",
+    "options": [
+      "Các chức năng giống nhau có thể đặt ở các tầng khác nhau",
+      "Không được định nghĩa quá nhiều tầng chức năng",
+      "Tạo ranh giới giữa các tầng chức năng sao cho số các tương tác giữa hai tầng là nhỏ nhất",
+      "Tạo các tầng riêng biệt cho các chức năng khác nhau hoàn toàn về kỹ thuật sử dụng hoặc quá trình thực hiện"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 31,
+    "question": "Các gói dữ liệu truyền thông giữa hai trạm theo mô hình OSI được truyền thông theo phương thức chuyển mạng gì?",
+    "options": [
+      "Mạng Quảng Bá",
+      "Mạng chuyển mạch ảo",
+      "Mạng chuyển gói",
+      "Tất cả đều sai"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 32,
+    "question": "Tầng nào trong mô hình OSI thực hiện chia nhỏ các gói tin nhận được từ tầng phiên trước khi gửi đi?",
+    "options": [
+      "Physical",
+      "Data Link",
+      "Network",
+      "Transport"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 33,
+    "question": "Chức năng định tuyến các gói tin xảy ra ở tầng nào trong mô hình OSI?",
+    "options": [
+      "Data Link",
+      "Network",
+      "Transport",
+      "Presentation"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 34,
+    "question": "Mục đích chính của việc xây dựng mô hình OSI là gì?",
+    "options": [
+      "Kết nối các sản phẩm mạng của các hãng khác nhau",
+      "Chuyên môn hoá trong sản xuất các sản phẩm mạng",
+      "Xây dựng các giao thức truyền thông",
+      "Xây dựng các ứng dụng trên mạng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 35,
+    "question": "Điều gì sẽ xẩy ra nếu không có mô hình OSI?",
+    "options": [
+      "Người ta không thể thiết kế và xây dựng được các giao thức mạng",
+      "Người ta không thể thiết kế và xây dựng được các ứng dụng trên mạng",
+      "Người ta vẫn có thể xây dựng được các giao thức mạng, nhưng tính hiệu quả và đồng bộ thấp, gây khó khăn cho việc xây dựng và phát triển hệ thống",
+      "Người ta không thể xây dựng được bộ giao thức TCP/IP"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 36,
+    "question": "Tổ chức nào đã phát triển mô hình TCP/IP?",
+    "options": [
+      "IEEE",
+      "Bộ quốc phòng Mỹ",
+      "Cisco",
+      "ITU"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 37,
+    "question": "Mỗi tầng chức năng trong mỗi hệ thống theo mô hình OSI trao đổi thông tin như thế nào với các tầng còn lại?",
+    "options": [
+      "Có thể trao đổi thông tin trực tiếp với các tầng chức năng còn lại",
+      "Không thể trao đổi thông tin trực tiếp với các tầng chức năng còn lại",
+      "Chỉ trao đổi thông tin trực tiếp với tầng chức năng nằm liền kề nó",
+      "Các ý đều sai"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 38,
+    "question": "So sánh cấu trúc gói dữ liệu trao đổi của các tầng chức năng đồng mức ở hai hệ thống trao đổi thông tin với nhau theo mô hình OSI?",
+    "options": [
+      "Giống nhau",
+      "Khác nhau hoàn toàn",
+      "Một phần giống nhau",
+      "Gói tin trong một hệ thống có cấu trúc là mở rộng cấu trúc gói tin của hệ thống còn lại"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 39,
+    "question": "Tầng nào trong mô hình OSI có nhiệm vụ chia dữ liệu thành các khung (frame) để truyền lên mạng?",
+    "options": [
+      "Network",
+      "Data Link",
+      "Physical",
+      "Transport"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 40,
+    "question": "Các tầng chức năng đồng mức của hai hệ thống trao đổi thông tin với nhau theo mô hình OSI có liên kết với nhau như thế nào?",
+    "options": [
+      "Liên kết logic với nhau",
+      "Liên kết vật lý với nhau",
+      "Chỉ có các tầng tầng vật lý là thực sự trao đổi thông tin với nhau",
+      "Cả 3 ý đã nêu đều sai"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 41,
+    "question": "Thứ tự các tầng sắp xếp từ thấp đến cao trong mô hình OSI là :",
+    "options": [
+      "Vật lý, liên kết dữ liệu, mạng, trình diễn, giao vận, phiên, ứng dụng",
+      "Vật lý, liên kết dữ liệu, mạng, giao vận, phiên, trình diễn, ứng dụng",
+      "Vật lý, liên kết dữ liệu, mạng, phiên, giao vận, trình diễn, ứng dụng",
+      "Vật lý, liên kết dữ liệu, mạng, giao vận, trình diễn, phiên, ứng dụng"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 42,
+    "question": "Đặc trưng của mạng cục bộ là gì?",
+    "options": [
+      "Tốc độ truyền thông cao, tỉ suất lỗi thấp",
+      "Có nhiều cơ quan quản lý",
+      "Sử dụng chung hệ thống truyền thông, phạm vi kết nối giữa các máy tính hẹp",
+      "Tốc độ truyền thông cao, tỉ suất lỗi thấp và sử dụng chung hệ thống truyền thông, phạm vi kết nối giữa các máy tính hẹp."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 43,
+    "question": "Mô hình ghép nối mạng (topology) là gì?",
+    "options": [
+      "Hình dạng vật lý của hệ thống mạng",
+      "Hình dạng logic của hệ thống mạng",
+      "Mô hình trao đổi thông tin giữa các máy tính trong mạng",
+      "Cả ba ý đã nêu đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 44,
+    "question": "Yếu tố khác nhau giữa mạng cục bộ và mạng diện rộng là",
+    "options": [
+      "Phạm vi kết nối máy tính",
+      "Tốc độ truyền thông và tỉ suất lỗi",
+      "Chủ sở hữu mạng",
+      "Cả ba yếu tố đã nêu."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 45,
+    "question": "Tốc độ truyền thông trong mạng cục bộ so với mạng diện rộng:",
+    "options": [
+      "Thường lớn hơn",
+      "Thường nhỏ hơn",
+      "Bằng nhau",
+      "Thường nhỏ hơn hoặc bằng"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 46,
+    "question": "Liệt kê các mô hình ghép nối (topo) cơ bản của mạng cục bộ?",
+    "options": [
+      "Bus, Ring, Point – to – Point",
+      "Bus, Ring, Star",
+      "Ring, Star, Broadcast",
+      "Point – to – Point, Broadcast"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 47,
+    "question": "Mạng dạng tuyến (Bus) là gì?",
+    "options": [
+      "Các máy tính và các thiết bị được nối với nhau bởi đường truyền dẫn chung được giới hạn bởi các đầu nối Terminator.",
+      "Các máy tính và các thiết bị được nối với nhau bởi đường truyền dẫn chung dạng vòng khép kín.",
+      "Các máy tính và các thiết bị được nối với nhau bởi thiết bị xử lý truyền thông trung tâm",
+      "Các máy tính và các thiết bị được nối trực tiếp với nhau"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 49,
+    "question": "Họ các chuẩn IEEE dành cho mạng cục bộ là:",
+    "options": [
+      "802",
+      "803",
+      "804",
+      "805"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 100,
+    "question": "Siêu văn bản được viết bằng ngôn ngữ nào",
+    "options": [
+      "ASP",
+      "PHP",
+      "Dot NET",
+      "HTML"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 101,
+    "question": "Website là gì?",
+    "options": [
+      "Là một máy chủ Web",
+      "Là một hệ thống máy chủ Web lưu giữ thông tin dưới dạng một tập các trang Web của một tổ chức",
+      "Là trang web chứa thông tin của một tổ chức xác định",
+      "Là máy tính truy cập dữ liệu Web"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 102,
+    "question": "Giao thức HTTPS là gì?",
+    "options": [
+      "Là giao thức truyền siêu văn bản có hỗ trợ chức năng nén và giải nén thông tin",
+      "Là giao thức truyền siêu văn bản có hỗ trợ chức năng bảo mật thông tin",
+      "Là giao thức truyền siêu văn bản có hỗ trợ chức năng lọc thông tin",
+      "Là giao thức truyền siêu văn bản có hỗ trợ chức năng kiểm tra lỗi truyền thông"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 103,
+    "question": "Siêu văn bản là gì?",
+    "options": [
+      "Siêu văn bản là một văn bản có chứa nhiều dạng dữ liệu như văn bản, hình ảnh, âm thanh.",
+      "Siêu văn bản là một văn bản có chứa một hoặc nhiều tham chiếu tới văn bản khác",
+      "Siêu văn bản là một tệp dữ liệu văn bản",
+      "Siêu văn bản là một văn bản có kích thước lớn"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 104,
+    "question": "URL là thuật ngữ viết tắt của cụm từ nào?",
+    "options": [
+      "Uniform Resource Local",
+      "Unicode Resource Locator",
+      "Uniform Resource Locator",
+      "Uniform Research Locator"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 105,
+    "question": "Ý nghĩa của URL là gì?",
+    "options": [
+      "Nhằm để định vị tài nguyên trên mạng cục bộ",
+      "Nhằm để định vị một tài nguyên trên Internet",
+      "Nhằm để định vị một trang Web trên Internet",
+      "Nhằm để định vị một người dùng thư điện tử trên Internet"
+    ],
+    "correctAnswerIndices": [
+      -1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 106,
+    "question": "Cú pháp tổng quát của URL có dạng như thế nào?",
+    "options": [
+      "Protocol :// Host name/Path/filename",
+      "Protocol :// Host name [:port]/Path/filename",
+      "Http:// Host name [:port]/Path/filename",
+      "ftp:// Host name [:port]/Path/filename"
+    ],
+    "correctAnswerIndices": [
+      -1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 50,
+    "question": "Chuẩn IEEE nào định nghĩa chuẩn kết nối dành cho mạng cục bộ dựa trên Ethernet?",
+    "options": [
+      "802.3",
+      "802.5",
+      "802.12",
+      "802.11b"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 51,
+    "question": "Chuẩn IEEE nào định nghĩa chuẩn kết nối dành cho mạng Wireless LAN?",
+    "options": [
+      "802.3",
+      "802.5",
+      "802.6",
+      "802.11"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 52,
+    "question": "Chuẩn IEEE nào định nghĩa chuẩn kết nối dành cho mạng dạng vòng (Ring)?",
+    "options": [
+      "802.3",
+      "802.5",
+      "802.11",
+      "802.11b"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 53,
+    "question": "Trong mạng dạng tuyến (BUS), Terminator dùng để làm gì?",
+    "options": [
+      "Kết nối giữa mạng dạng tuyến với các mạng khác",
+      "Tránh sự phản xạ của sóng điện từ khi lan truyền đến cuối sợi cáp",
+      "Tăng cường năng lượng của sóng điện từ",
+      "Dùng để khử nhiễu trong sóng điện từ"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 54,
+    "question": "Trạng thái của mạng dạng BUS sẽ như thế nào nếu không có Terminator?",
+    "options": [
+      "Mạng vẫn hoạt động bình thường nhưng tốc độ truyền thông chậm",
+      "Mạng không hoạt động được",
+      "Mạng vẫn hoạt động bình thường và không có khả năng mở rộng",
+      "Mạng vẫn hoạt động bình thường và hiệu suất truyền tin giảm"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 55,
+    "question": "Mạng dạng tuyến (Bus) kết nối các máy tính theo phương thức",
+    "options": [
+      "Điểm - điểm",
+      "Điểm - nhiều điểm",
+      "Hỗn hợp",
+      "Cả 3 ý đã nêu đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 56,
+    "question": "Nguyên nhân nào có thể gây ra lỗi kết nối trao đổi thông tin giữa hai máy trạm trong mạng dạng tuyến?",
+    "options": [
+      "Do thiết bị Terminator bị lỗi",
+      "Do đầu nối giữa máy trạm và đường truyền chính (T-Connector) bị lỗi",
+      "Do có nhiều cặp máy trạm trên mạng trao đổi thông tin đồng thời",
+      "Do thiết bị Terminator bị lỗi hoặc do đầu nối giữa máy trạm và đường truyền chính (T-Connector) bị lỗi."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 57,
+    "question": "Nguyên nhân nào có thể dẫn đến giảm hiệu suất truyền thông trong một LAN?",
+    "options": [
+      "Do có nhiều cặp máy tính trong mạng trao đổi thông tin với lưu lượng cao",
+      "Do Virus chiếm dụng băng thông của đường truyền",
+      "Do thiết bị truyền thông có năng lực kém",
+      "Do có nhiều cặp máy tính trong mạng trao đổi thông tin với lưu lượng cao hoặc do Virus chiếm dụng băng thông của đường truyền"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 58,
+    "question": "Mạng dạng vòng (Ring) kết nối các máy tính theo phương thức",
+    "options": [
+      "Điểm - điểm",
+      "Điểm - nhiều điểm",
+      "Điểm - một số điểm",
+      "Cả ba phương thức đã nêu đều đúng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 59,
+    "question": "Nguyên nhân nào có thể gây ra lỗi kết nối trao đổi thông tin giữa hai máy trạm trong mạng dạng vòng (Ring)?",
+    "options": [
+      "Do thẻ bài bị mất",
+      "Do đầu nối giữa máy trạm và đường truyền chính bị lỗi",
+      "Do mạng bị tắc nghẽn",
+      "Do thẻ bài bị mất hoặc do đầu nối giữa máy trạm và đường truyền chính bị lỗi."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 60,
+    "question": "Nhược điểm chính của mạng dạng vòng (Ring) là gì?",
+    "options": [
+      "Đường dây cần phải khép kín, nếu bị ngắt ở một nơi nào đó thì toàn bộ hệ thống cũng bị ngừng hoạt động.",
+      "Tốc độ trao đổi thông tin chậm",
+      "Tốn nhiều dây cáp, hiệu suất đường truyền thấp",
+      "Khó có khả năng mở rộng mạng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 61,
+    "question": "Ưu điểm chính của mạng dạng vòng (Ring) là gì?",
+    "options": [
+      "Có thể nới rộng đường truyền chính, ít tốn kém đường truyền mạng, hiệu suất của đường truyền có thể đạt tới gần 100%",
+      "Nhiều cặp máy trạm có thể trao đổi thông tin đồng thời",
+      "Khi một trạm nào đó ngừng hoạt động thì hệ thống mạng vẫn hoạt động bình thường.",
+      "Giao thức truyền dữ liệu đơn giản hơn so với mạng dạng sao"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 62,
+    "question": "Mạng dạng vòng tròn (Ring) là gì?",
+    "options": [
+      "Các máy tính và các thiết bị được nối với nhau bởi đường truyền dẫn chung được giới hạn bởi hai đầu nối Terminator",
+      "Các máy tính hay các thiết bị được nối với nhau bởi đường truyền dẫn chung dạng vòng khép kín, mỗi thiết bị hay các máy tính được nối với đường truyền bởi thiết bị Repeater",
+      "Các máy tính và các thiết bị được nối với nhau bởi thiết bị xử lý truyền thông trung tâm như Hub/Switch",
+      "Các máy tính và các thiết bị được nối trực tiếp với nhau"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 63,
+    "question": "Mô hình kết nối mạng (topo) của LAN là gì?",
+    "options": [
+      "Star",
+      "Bus",
+      "Ring",
+      "Một trong những mô hình kết nối mạng đã nêu."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 64,
+    "question": "Mạng dạng hình sao là gì?",
+    "options": [
+      "Các máy tính và các thiết bị được nối với nhau bởi đường truyền dẫn chung được giới hạn bởi hai đầu nối Terminator",
+      "Các máy tính và các thiết bị được nối với nhau bởi đường truyền dẫn chung dạng vòng khép kín",
+      "Các máy tính và các thiết bị được nối với nhau bởi thiết bị xử lý truyền thông trung tâm.",
+      "Các máy tính và các thiết bị được nối trực tiếp với nhau"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 65,
+    "question": "Ưu điểm của mạng dạng sao là gì?",
+    "options": [
+      "Nếu có một máy trạm nào đó trong mạng bị hỏng thì mạng vẫn hoạt động bình thường",
+      "Mạng có thể mở rộng hoặc thu hẹp tuỳ theo yêu cầu của người sử dụng",
+      "Dễ dàng kiểm soát và khắc phục sự cố",
+      "Nếu có một máy trạm nào đó trong mạng bị hỏng thì mạng vẫn hoạt động bình thường, dễ dàng kiểm soát và khắc phục sự cố"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 66,
+    "question": "Nhược điểm của mạng dạng sao là gì?",
+    "options": [
+      "Khi thiết bị xử lý truyền thông trung tâm bị hỏng thì cả hệ thống ngưng hoạt động",
+      "Khả năng mở rộng mạng phụ thuộc vào khả năng xử lý truyền thông của thiết bị trung tâm.",
+      "Việc cấu hình lại mạng là rất khó khăn",
+      "Khi thiết bị xử lý truyền thông trung tâm bị hỏng thì cả hệ thống ngưng hoạt động hoặc khả năng mở rộng mạng phụ thuộc vào khả năng xử lý truyền thông của thiết bị trung tâm."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 67,
+    "question": "Nguyên nhân nào có thể gây ra lỗi kết nối truyền thông giữa hai trạm trong mạng dạng sao (star)?",
+    "options": [
+      "Do thiết bị trung tâm bị lỗi",
+      "Do đường truyền bị lỗi",
+      "Do có nhiều cặp máy trạm khác cùng trao đổi thông tin đồng thời",
+      "Do thiết bị trung tâm bị lỗi hoặc do đường truyền bị lỗi."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 68,
+    "question": "Để mở rộng kết nối của mạng dạng sao, về cơ bản người ta phải làm gì?",
+    "options": [
+      "Nâng cao năng lực xử lý truyền thông của thiết bị trung tâm",
+      "Nâng cao năng lực tính toán của mỗi máy trạm",
+      "Cài đặt bổ sung phần mềm mạng vào các máy trạm",
+      "Nâng cao năng lực xử lý truyền thông của thiết bị trung tâm hoặc cài đặt bổ sung phần mềm mạng vào các máy trạm."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 69,
+    "question": "Công nghệ LAN nào được sử dụng rộng rãi nhất hiện nay?",
+    "options": [
+      "Token Ring",
+      "Ethernet",
+      "FDDI",
+      "ArcNet"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 70,
+    "question": "Băng thông (Bandwith) là gì?",
+    "options": [
+      "Là dung lượng đường truyền được xác định bằng mật độ dữ liệu truyền thông",
+      "Là tốc độ truyền dữ liệu cho phép tối đa của đường truyền",
+      "Là đường truyền thông dữ liệu",
+      "Là dung lượng đường truyền được xác định bằng mật độ dữ liệu truyền thông và là tốc độ truyền dữ liệu cho phép tối đa của đường truyền"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 71,
+    "question": "Mbps (Đơn vị tốc độ truyền thông) là viết tắt của cụm từ nào?",
+    "options": [
+      "Mega Bytes Per Second",
+      "Mega Bit Protocol Second",
+      "Mega Bit Per Sequence",
+      "Mega Bits Per Second"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 72,
+    "question": "Mạng diện rộng thường do bao nhiêu cơ quan tham hay tổ chức gia quản lý?",
+    "options": [
+      "Một cơ quan",
+      "Hai cơ quan",
+      "Ba cơ quan",
+      "Nhiều cơ quan"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 73,
+    "question": "Mạng diện rộng thường sử dụng hạ tầng truyền dẫn của nhà cung cấp dịch vụ truyền thông công cộng như các công ty điện thoại, đúng hay sai?",
+    "options": [
+      "Thường sử dụng hạ tầng truyền dẫn của nhà cung cấp dịch vụ truyền thông công cộng như các công ty điện thoại",
+      "Thường xây dựng cơ sở hạ tầng truyền dẫn riêng",
+      "Thường kết hợp sử dụng hạ tầng truyền dẫn của nhà cung cấp dịch vụ truyền thông công cộng và cơ sở hạ tầng riêng phần của các mạng này",
+      "Tất cả các ý đã nêu đều đúng."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 74,
+    "question": "Ưu điểm của mạng diện rộng so với mạng cục bộ là",
+    "options": [
+      "Cho phép kết nối các máy tính trên một phạm vi lớn",
+      "Tốc độ truyền thông cao",
+      "Độ tin cậy cao",
+      "Cho phép kết nối các máy tính trên một phạm vi lớn và độ tin cậy cao"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 75,
+    "question": "Phát biểu về Mạng diện rộng và mạng cục bộ nào đúng?",
+    "options": [
+      "Mạng diện rộng thường có tốc độ truyền thông cao hơn so với mạng cục bộ",
+      "Mạng diện rộng thường có tốc độ truyền thông thấp hơn so với mạng cục bộ",
+      "Mạng diện rộng thường có tốc độ truyền thông ngang bằng so với mạng cục bộ",
+      "Rất khó so sánh tốc độ truyền thông giữa mạng diện rộng và mạng cục bộ"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 76,
+    "question": "Tại sao mạng diện rộng lại có độ tin cậy thấp so với mạng cục bộ?",
+    "options": [
+      "Do chịu ảnh hưởng nhiều các tác động từ môi trường",
+      "Do phạm vi kết nối đường truyền lớn",
+      "Do tốc độ truyền thông cao",
+      "Do chịu ảnh hưởng nhiều các tác động từ môi trường và do phạm vi kết nối đường truyền lớn"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 77,
+    "question": "Phát biểu nào sau đây đúng?",
+    "options": [
+      "Trong mạng chuyển mạch kênh các dữ liệu chuyển từ trạm nguồn cho tới trạm đích theo một đường truyền được xác định trước.",
+      "Trong mạng chuyển mạch kênh các dữ liệu chuyển từ trạm nguồn cho tới trạm đích theo nhiều đường truyền khác nhau.",
+      "Trong mạng chuyển mạch kênh một trạm có thể trao đổi thông tin đồng thời với nhiều trạm khác.",
+      "Tốc độ truyền thông của mạng chuyển mạch kênh chậm hơn so với mạng chuyển mạch gói"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 78,
+    "question": "Phát biểu nào sau đây là sai?",
+    "options": [
+      "Trong mạng chuyển mạch gói, các dữ liệu chuyển từ trạm nguồn cho tới trạm đích theo một đường truyền được xác định trước và không thay đổi trong quá trình truyền",
+      "Trong mạng chuyển mạch gói, các dữ liệu chuyển từ trạm nguồn cho tới trạm đích theo nhiều đường truyền khác nhau",
+      "Trong mạng chuyển mạch gói, một trạm chỉ có thể trao đổi thông tin với nhiều trạm khác tại cùng một thời điểm",
+      "Tốc độ truyền thông của mạng chuyển mạch gói chậm hơn so với mạng chuyển mạch kênh"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 79,
+    "question": "Mạng internet là mạng thuộc loại mạng nào?",
+    "options": [
+      "Mạng chuyển mạch kênh",
+      "Mạng chuyển mạch gói",
+      "Mạng quảng bá",
+      "Không thuộc cả 3 loại mạng đã nêu (mạng toàn cầu)"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 80,
+    "question": "Nguyên nhân dẫn đến hiệu suất truyền thông của mạng chuyển mạch gói cao hơn so với mạng chuyển mạch kênh?",
+    "options": [
+      "Do dữ liệu được chia thành các gói tin được truyền theo nhiều đường khác nhau trên mạng cho tới đích",
+      "Do tại cùng một thời điểm có nhiều trạm được phép cùng sử dụng chung hạ tầng truyền thông của mạng để trao đổi thông tin",
+      "Do năng lực truyền thông của hạ tầng mạng chuyển mạch gói mạnh hơn so với năng lực truyền thông của mạng chuyển mạch kênh",
+      "Do dữ liệu được chia thành các gói tin được truyền theo nhiều đường khác nhau trên mạng cho tới đích và do tại cùng một thời điểm có nhiều trạm được phép cùng sử dụng chung hạ tầng truyền thông của mạng để trao đổi thông tin"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 81,
+    "question": "Mạng điện thoại công cộng là một mạng thuộc loại mạng nào?",
+    "options": [
+      "Mạng quảng bá",
+      "Mạng chuyển mạch gói",
+      "Mạng chuyển mạch kênh",
+      "Cả 3 loại mạng đã nêu"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 82,
+    "question": "Hầu kết các loại mạng diện rộng hiện nay",
+    "options": [
+      "Là mạng chuyển mạch kênh",
+      "Là mạng chuyển mạch gói",
+      "Là mạng quảng bá",
+      "Là sự kết hợp giữa các loại mạng chuyển mạch kênh, chuyển mạch gói, mạng quảng bá."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 83,
+    "question": "Các hoạt động truyền dữ liệu chính qua mạng chuyển mạch kênh là gì?",
+    "options": [
+      "Thiết lập kết nối vật lý, truyền dữ liệu, nhận dữ liệu, giải phóng kết nối vật lý",
+      "Gửi dữ liệu, kiểm tra và nhận dữ liệu",
+      "Thiết lập kết nối logic, truyền dữ liệu, giải phóng kết nối logic",
+      "Thiết lập kết nối vật lý, truyền dữ liệu, nhận dữ liệu, giải phóng kết nối vật lý và Thiết lập kết nối logic, truyền dữ liệu, giải phóng kết nối logic."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 84,
+    "question": "Intranet là gì?",
+    "options": [
+      "Mạng con của Internet",
+      "Mạng cục bộ kiểu Ethernet",
+      "Mạng cục bộ sử dụng công nghệ Internet",
+      "Mạng diện rộng theo chuẩn Internet"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 85,
+    "question": "VPN (Virtual Private Network ) là gì?",
+    "options": [
+      "Là LAN sử dụng công nghệ Internet như TCP/IP",
+      "Là WAN sử dụng công nghệ Internet như TCP/IP",
+      "Là mạng riêng của một tổ chức bao gồm có nhiều điểm kết nối tới LAN trung tâm sử dụng hạ tầng hệ thống mạng công cộng",
+      "Là LAN có sử dụng công nghệ Web"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 86,
+    "question": "Có bao nhiêu tổ chức quản lý VPN ?",
+    "options": [
+      "Có một tổ chức quản lý",
+      "Có nhiều tổ chức tham gia quản lý bao gồm nhà cung cấp dịch vụ và tổ chức sử dụng VPN,...",
+      "Do tổ chức sử dụng VPN quản lý",
+      "Có một tổ chức quản lý và Do tổ chức sử dụng VPN quản lý"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 87,
+    "question": "Đặc điểm chung giữa hai máy tính trong một LAN là gì?",
+    "options": [
+      "Có cùng địa chỉ IP",
+      "Có cùng địa chỉ MAC",
+      "Có cùng địa chỉ mạng",
+      "Có cùng địa chỉ IP và cùng địa chỉ mạng"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 88,
+    "question": "Đặc điểm phân biệt giữa hai máy tính ở hai LAN khác nhau là gì?",
+    "options": [
+      "Có cùng địa chỉ IP",
+      "Có cùng địa chỉ MAC",
+      "Có địa chỉ mạng khác nhau",
+      "Có cùng địa chỉ IP và cùng địa chỉ MAC"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 89,
+    "question": "TCP/IP là thuật ngữ viết tắt của cụm từ nào?",
+    "options": [
+      "Transfer Control Protocol/Internet Protocol",
+      "Transmission Control Protocol/Internet Protocol",
+      "Transmission Control Protocol/Interconnection Protocol",
+      "Transfer Communication Protocol/Internet Protocol"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 90,
+    "question": "Bộ phần mềm giao thức TCP/IP được tích hợp vào phần mềm nào sau đây?",
+    "options": [
+      "Trình điều khiển (Driver) cho Card mạng",
+      "Hệ điều hành Linux",
+      "Hệ điều hành Windows XP",
+      "Hệ điều hành Linux và Hệ điều hành Windows XP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 91,
+    "question": "TCP/IP là gì?",
+    "options": [
+      "Là một bộ giao thức cho phép LAN kết nối với LAN",
+      "Là một bộ giao thức cho phép LAN kết nối với WAN",
+      "Là một bộ giao thức cho phép WAN kết nối với WAN",
+      "Là một bộ giao thức cho phép truyền thông dữ liệu thông qua nhiều mạng khác nhau."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 92,
+    "question": "Việt Nam chính thức gia nhập vào Internet bắt đầu vào năm nào?",
+    "options": [
+      "1995",
+      "1996",
+      "1997",
+      "1998"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 93,
+    "question": "Khẳng định nào sau đây là đúng",
+    "options": [
+      "Internet sử dụng bộ giao thức chung TCP/IP để trao đổi thông tin",
+      "Internet sử dụng giao thức chung TCP để trao đổi thông tin",
+      "Internet sử dụng giao thức chung IP để trao đổi thông tin",
+      "Internet sử dụng bộ giao thức chung UDP/IP để trao đổi thông tin"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 94,
+    "question": "Máy khách trong mô hình Khách/Chủ thực hiện chức năng gì?",
+    "options": [
+      "Gửi yêu cầu truy nhập thông tin tới máy chủ",
+      "Gửi yêu cầu truy nhập thông tin tới máy chủ và tiếp nhận, thể hiện kết quả cho người dùng",
+      "Tiếp nhận yêu cầu từ máy chủ và gửi kết quả trả về cho máy chủ",
+      "Xử lý các thông tin do máy chủ yêu cầu"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 95,
+    "question": "Máy chủ trong mô hình Khách/Chủ thực hiện chức năng gì?",
+    "options": [
+      "Gửi yêu cầu truy nhập thông tin tới máy khách",
+      "Gửi thông tin tới máy khách theo yêu cầu và tiếp nhận yêu cầu, tổ chức lưu trữ.",
+      "Tiếp nhận yêu cầu từ máy khách, xử lý yêu cầu và gửi kết quả trả về cho máy khách",
+      "Xử lý các thông tin do máy khách yêu cầu"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 96,
+    "question": "Dịch vụ WWW (World Wide Web) hoạt động trao đổi thông tin theo giao thức nào?",
+    "options": [
+      "FTP",
+      "HTTP",
+      "SMTP",
+      "DHCP"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 97,
+    "question": "Phần mềm nào sau đây có chức năng dành cho máy khách của dịch vụ E-mail?",
+    "options": [
+      "Netscape Navigator",
+      "Internet Explore",
+      "FireFox",
+      "Outlook Express"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 98,
+    "question": "HTML là thuật ngữ viết tắt của cụm từ nào?",
+    "options": [
+      "HyperText Markup Language",
+      "HyperText Made Language",
+      "HybridText Markup Language",
+      "HyperText Markup Locator"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 99,
+    "question": "Siêu văn bản có chứa dạng dữ liệu nào sau đây?",
+    "options": [
+      "Văn bản",
+      "Âm thanh",
+      "Hình ảnh",
+      "Cả ba dạng dữ liệu trên"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 109,
+    "question": "Kỹ thuật dùng để nối kết nhiều máy tính với nhau trong phạm vi một văn phòng gọi là:",
+    "options": [
+      "LAN",
+      "WAN",
+      "MAN",
+      "Internet"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 110,
+    "question": "Mạng Internet là sự phát triển của:",
+    "options": [
+      "Các hệ thống mạng LAN",
+      "Các hệ thống mạng WAN.",
+      "Các hệ thống mạng Intranet.",
+      "Cả ba câu đều đúng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 111,
+    "question": "Phát biểu nào sau đây mô tả đúng nhất cho cấu hình Star",
+    "options": [
+      "Cần ít cáp hơn nhiều so với các cấu hình khác.",
+      "Khi cáp đứt tại một điểm nào đó làm toàn bộ mạng ngưng hoạt động.",
+      "Khó tái lập cấu hình hơn so với các cấu hình khác.",
+      "Dễ kiểm soát và quản lý tập trung."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 112,
+    "question": "Mô tả nào thích hợp cho mạng Bus",
+    "options": [
+      "Cần nhiều cáp hơn các cấu hình khác.",
+      "Phương tiện rẻ tiền và dễ sử dụng.",
+      "Dễ sửa chữa hơn các cấu hình khác.",
+      "Số lượng máy trên mạng không ảnh hưởng đến hiệu suất mạng."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 113,
+    "question": "Việc nhiều các gói tin bị đụng độ trên mạng sẽ làm cho:",
+    "options": [
+      "Hiệu quả truyền thông của mạng tăng lên",
+      "Hiệu quả truyền thông của mạng kém đi",
+      "Hiệu quả truyền thông của mạng không thay đổi",
+      "Phụ thuộc vào các ứng dụng mạng mới tính được hiệu quả"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 114,
+    "question": "Đơn vị của “băng thông là”:",
+    "options": [
+      "Hertz (Hz).",
+      "Volt (V).",
+      "Bit/second (bps).",
+      "Ohm (Ω)"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 115,
+    "question": "Chức năng nén dữ liệu trước khi gửi được thực hiện bởi tầng chức năng nào trong mô hình OSI?",
+    "options": [
+      "Application",
+      "Presentation",
+      "Session",
+      "Network"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 116,
+    "question": "Chức năng chuyển đổi cú pháp cho dữ liệu truyền thông được thực hiện bởi tầng chức năng nào trong mô hình OSI?",
+    "options": [
+      "Application",
+      "Presentation",
+      "Session",
+      "Network"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 117,
+    "question": "Giao thức là gì?",
+    "options": [
+      "Mô hình nhằm để thiết lập các ứng dụng trao đổi thông tin",
+      "Các quy định để truyền thông tin của một thực thể mạng",
+      "Một tập các quy tắc và thủ tục mà các thực thể mạng trao đổi thông tin với nhau phải tuân thủ.",
+      "Cả ba ý đã nêu đều sai"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 118,
+    "question": "Giao thức có kết nối thực hiện truyền tin qua mấy bước?",
+    "options": [
+      "1 bước",
+      "2 bước",
+      "3 bước",
+      "4 bước"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 119,
+    "question": "Giao thức không kết nối thực hiện truyền tin qua mấy bước",
+    "options": [
+      "1 bước",
+      "2 bước",
+      "3 bước",
+      "4 bước"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 120,
+    "question": "Truyền thông theo giao thức không kết nối so với giao thức có kết nối ?",
+    "options": [
+      "Truyền thông không kết nối đảm bảo an toàn hơn so với truyền tin có kết nối",
+      "Truyền tin không kết nối kém tin cậy trong truyền dữ liệu hơn so với truyền tin có kết nối",
+      "Hai phương thức truyền dữ liệu là như nhau về độ tin cậy trong truyền tin",
+      "Cả 3 ý đã nêu đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 121,
+    "question": "Tầng nào trong mô hình OSI chịu trách nhiệm mã hoá dữ liệu?",
+    "options": [
+      "Ứng dụng",
+      "Trình diễn",
+      "Phiên",
+      "Giao vận"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 122,
+    "question": "Xác thực người dùng được thực hiện bởi tầng chức năng nào trong mô hình OSI",
+    "options": [
+      "Ứng dụng",
+      "Trình diễn",
+      "Phiên",
+      "Giao vận"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 123,
+    "question": "Thuật ngữ SMTP là viết tắt của cụm từ nào?",
+    "options": [
+      "Simple Mail Transmission Protocol",
+      "Simplex Mail Transfer Protocol",
+      "Simple Mail Transport Protocol",
+      "Simple Mail Transfer Protocol"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 124,
+    "question": "SMTP là giao thức được dùng để làm gì?",
+    "options": [
+      "Trao đổi các siêu văn bản",
+      "Trao đổi thư điện tử",
+      "Trao đổi các tệp Video",
+      "Trao đổi các tệp âm thanh"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 125,
+    "question": "Một máy chủ cung cấp cả hai dịch vụ FTP và WWW, làm sao để máy chủ phân biệt các yêu câu (request) giữa hai dịch vụ này ?",
+    "options": [
+      "Dựa vào hai giao thức TCP & UDP",
+      "Dựa vào hai tên miền",
+      "Dựa vào hai địa chỉ IP",
+      "Dựa vào hai số hiệu cổng TCP/UDP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 126,
+    "question": "DNS là thuật ngữ viết tắt của cụm từ nào?",
+    "options": [
+      "Domain Name Server",
+      "Domain Name System",
+      "Domain Naming System",
+      "Domaining Name System"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 127,
+    "question": "ISP (nhà cung cấp dịch vụ Internet) là thuật ngữ viết tắt của cụm từ sau?",
+    "options": [
+      "Internet Service Provider",
+      "Inter-connectoin Service Provider",
+      "Internet Server Provider",
+      "Internet Service Providing"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 128,
+    "question": "ISP là gì?",
+    "options": [
+      "Là nhà cung cấp dịch vụ đường truyền cho phép truy cập đến Internet như: Dial-Up, ADSL,....",
+      "Là nhà cung cấp các dịch vụ truy cập thông tin trên Internet như e-mail, Web,...",
+      "Là nhà cung cấp dịch vụ khác như: DNS, Hosting Web,...",
+      "Cả ba phát biểu đã nêu đều đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 129,
+    "question": "Để cấp phát địa chỉ IP động, người ta sử dụng dịch vụ có giao thức nào?",
+    "options": [
+      "DNS",
+      "FTP",
+      "DHCP",
+      "HTTP"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 130,
+    "question": "Giao thức nào thực hiện chức năng của tầng ứng dụng?",
+    "options": [
+      "IP",
+      "HTTP",
+      "TCP",
+      "NFS"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 131,
+    "question": "Hai người muốn gửi và nhận thư điện tử với nhau bằng dịch vụ E-Mail thì",
+    "options": [
+      "Phải cùng đang online.",
+      "Không nhất thiết cùng đang online.",
+      "Không cần có dịch vụ E-mail",
+      "Các ý đã nêu không có ý đúng"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 132,
+    "question": "Dịch vụ thư điện tử nào sau đây cho phép đăng ký sử dụng miễn phí?",
+    "options": [
+      "gmail.com",
+      "mail.vnu.edu.vn",
+      "mail.epu.edu.vn",
+      "mail.ioit.ac.vn"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 133,
+    "question": "Giao thức nào sau đây có thể dùng để nhận thư điện tử?",
+    "options": [
+      "POP3",
+      "IMAP",
+      "HTTP",
+      "Cả ba giao thức đã nêu"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 134,
+    "question": "Khi người dùng đăng nhập vào hòm thư của mình và gửi thư (có đính kèm file) cho người bạn, những nguyên nhân nào có thể gây ra lỗi khi gửi thư?",
+    "options": [
+      "Do địa chỉ người nhận được thiết lập không đúng",
+      "Do dịch vụ E –mail máy chủ thư của người nhận không hoạt động",
+      "Do người nhận hiện không online trên mạng",
+      "Do địa chỉ người nhận được thiết lập không đúng hoặc do dịch vụ E –mail máy chủ thư của người nhận không hoạt động"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 135,
+    "question": "Thư điện tử của người dùng thường được lưu và quản lý ở đâu?",
+    "options": [
+      "Máy chủ thư của người gửi",
+      "Máy chủ thư của người nhận",
+      "Máy khách của người nhận",
+      "Máy chủ thư của người gửi và Máy khách của người nhận"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 136,
+    "question": "Trong mô hình Internet Mail, các máy chủ thư trao đổi thư điện tử với nhau bằng giao thức nào?",
+    "options": [
+      "IMAP",
+      "POP3",
+      "HTTP",
+      "SMTP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 137,
+    "question": "Trong mô hình Internet Mail, người dùng thư có thể gửi thư bằng giao thức nào?",
+    "options": [
+      "IMAP",
+      "HTTP",
+      "SMTP",
+      "HTTP & SMTP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 138,
+    "question": "Dịch vụ thư điện tử cho phép trao đổi thông tin ở dạng nào?",
+    "options": [
+      "Văn bản (kể cả văn bản dạng HTML )",
+      "Hình ảnh",
+      "Âm thanh",
+      "Cả ba dạng đã nêu"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 139,
+    "question": "Nhược điểm của việc nhận thư điện tử thông qua giao thức HTTP so với việc nhận thư qua giao thức POP3, IMAP là gì?",
+    "options": [
+      "Độ tin cậy kém",
+      "Tốc độ nhận thư chậm",
+      "Kích thước thư hạn chế",
+      "Độ tin cậy kém và Kích thước thư hạn chế."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 140,
+    "question": "Chức năng nào sau đây cho phép nhận thư điện tử?",
+    "options": [
+      "Inbox",
+      "Reply",
+      "Forward",
+      "Compose"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 141,
+    "question": "Chức năng nào sau đây cho phép chuyển tiếp thư điện tử tới người nhận?",
+    "options": [
+      "Inbox",
+      "Reply",
+      "Forward",
+      "Compose"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 142,
+    "question": "Chức năng nào sau đây cho phép soạn thư điện tử?",
+    "options": [
+      "Inbox",
+      "Reply",
+      "Forward",
+      "Compose"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 143,
+    "question": "Chức năng nào sau đây cho phép đính kèm một tệp hay nhiều tệp với thư điện tử?",
+    "options": [
+      "Attachment",
+      "Reply",
+      "Forward",
+      "Compose"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 144,
+    "question": "SPAM là gì?",
+    "options": [
+      "Là một loại Virus máy tính",
+      "Là một loại phần mềm gián điệp (Spyware)",
+      "Là một loại sâu máy tính (worm)",
+      "Là loại thư điện tử rác mà người dùng không muốn nhận"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 145,
+    "question": "Để sử dụng Outlook Express cho việc nhận thư, máy chủ thư (Mail Server) phải hỗ trợ giao thức nào?",
+    "options": [
+      "HTTP",
+      "POP3",
+      "FTP",
+      "SMTP"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 146,
+    "question": "Bản chất của trình duyệt Web là gì?",
+    "options": [
+      "Một hệ biên dịch",
+      "Một phần mềm cho phép soạn các văn bản HTML",
+      "Một phần mềm cho phép soạn các văn bản XHTML",
+      "Một phần mềm cho phép soạn các văn bản HTML hoặc Một phần mềm cho phép soạn các văn bản XHTML."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 147,
+    "question": "HyperLink là gì?",
+    "options": [
+      "Siêu liên kết",
+      "Siêu văn bản",
+      "Ngôn ngữ siêu liên kết",
+      "Ngôn ngữ siêu văn bản"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 148,
+    "question": "Hypertext là gì?",
+    "options": [
+      "Siêu liên kết",
+      "Siêu văn bản",
+      "Ngôn ngữ siêu liên kết",
+      "Ngôn ngữ siêu văn bản"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 149,
+    "question": "Các siêu văn bản có thể liên kết với nhau thông qua phương tiện nào?",
+    "options": [
+      "Các yêu cầu (request)",
+      "Các siêu liên kết",
+      "URL",
+      "Các yêu cầu (request) hoặc Các siêu liên kết."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 150,
+    "question": "Dịch vụ nào sau đây hoạt động không theo mô hình Khách/Chủ?",
+    "options": [
+      "E-Mail",
+      "WWW (World Wide Web)",
+      "FTP (File Transfer Protocol)",
+      "Telnet"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 151,
+    "question": "Thông tin kết quả được trả về từ máy chủ Web cho máy khách Web ở dạng nào?",
+    "options": [
+      "HTML",
+      "ASP",
+      "PHP",
+      "ASP.NET"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 152,
+    "question": "Số hiệu cổng mặc định của dịch vụ WWW là bao nhiêu",
+    "options": [
+      "80",
+      "23",
+      "110",
+      "11"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 153,
+    "question": "Số hiệu cổng mặc định của dịch vụ Telnet là bao nhiêu",
+    "options": [
+      "80",
+      "23",
+      "110",
+      "11"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 154,
+    "question": "Số hiệu cổng mặc định của dịch vụ FTP là bao nhiêu",
+    "options": [
+      "80",
+      "21",
+      "110",
+      "25"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 155,
+    "question": "Số hiệu cổng mặc định của dịch vụ E - mail dựa trên giao thức SMTP là bao nhiêu",
+    "options": [
+      "80",
+      "23",
+      "110",
+      "25"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 156,
+    "question": "Số hiệu cổng mặc định của dịch vụ mail dựa trên giao thức POP3 là bao nhiêu",
+    "options": [
+      "80",
+      "23",
+      "110",
+      "25"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 157,
+    "question": "Số hiệu cổng mặc định của dịch vụ mail dựa trên giao thức DNS là bao nhiêu",
+    "options": [
+      "80",
+      "53",
+      "110",
+      "25"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 158,
+    "question": "Chức năng xác lập địa chỉ cổng dịch vụ cho các gói dữ liệu truyền thông được thực hiện bởi tầng chức năng nào trong mô hình OSI?",
+    "options": [
+      "Application",
+      "Network",
+      "Session",
+      "Transport"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 159,
+    "question": "Chức năng đánh số thứ tự cho gói dữ liệu truyền thông được thực hiện bởi tầng chức năng nào",
+    "options": [
+      "Application",
+      "Transport",
+      "Network",
+      "Presentation"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 160,
+    "question": "Việc đánh số thứ tự cho các gói tin của tầng giao vận có ý nghĩa gì?",
+    "options": [
+      "Để định danh cho mỗi gói tin",
+      "Để phân loại gói tin cho các dịch vụ trao đổi thông tin ở tầng trên",
+      "Để xác định số thứ tự khi gửi và sắp xếp chúng khi nhận",
+      "Nhằm để phát hiện lỗi truyền thông"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 161,
+    "question": "Việc đánh số hiệu cổng cho các gói tin của tầng giao vận có ý nghĩa gì?",
+    "options": [
+      "Để định danh cho mỗi gói tin",
+      "Để phân loại gói tin cho các dịch vụ trao đổi thông tin ở tầng trên",
+      "Để xác định số thứ tự khi gửi và sắp xếp chúng khi nhận",
+      "Nhằm để phát hiện lỗi truyền thông"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 162,
+    "question": "Việc chia nhỏ các gói tin tại tầng giao vận trước khi gửi đi có ý nghĩa gì?",
+    "options": [
+      "Để phát hiện lỗi truyền thông",
+      "Để nâng cao hiệu suất và độ tin cậy trong trao đổi thông tin trên mạng",
+      "Để nâng cao độ an toàn truyền thông mạng",
+      "Để điều khiển lưu lượng truyền thông, tránh tắc nghẽn"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 163,
+    "question": "Tầng giao vận có thể cung cấp chức năng nào?",
+    "options": [
+      "Thiết lập số hiệu cổng dịch vụ của thực thể gửi và thực thể nhận",
+      "Phát hiện và xử lý lỗi truyền thông",
+      "Điều khiển lưu lượng truyền thông",
+      "Cả ba ý đã nêu đều đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 164,
+    "question": "Giao thức nào sau đây thuộc tầng giao vận",
+    "options": [
+      "UCP",
+      "UDP",
+      "TDP",
+      "TDC"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 165,
+    "question": "TCP là giao thức",
+    "options": [
+      "Không hướng nối",
+      "Có hướng nối",
+      "Vừa có hướng nối vừa không có hướng nối tùy thuộc vào yêu cầu truyền tin",
+      "Có hướng nối nhưng không chặt chẽ."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 166,
+    "question": "Trường thông tin Sequence Number trong cấu trúc gói số liệu TCP dùng để làm gì?",
+    "options": [
+      "Lưu số thứ tự truyền của các gói tin",
+      "Lưu mã xử lý lỗi của gói tin",
+      "Lưu thông tin điều khiển lưu lượng",
+      "Lưu thông tin điều khiển xung đột"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 167,
+    "question": "Trường thông tin Checksum trong cấu trúc gói số liệu TCP dùng để làm gì?",
+    "options": [
+      "Lưu số thứ tự của các gói tin",
+      "Lưu mã xử lý lỗi của gói tin",
+      "Lưu thông tin điều khiển lưu lượng",
+      "Lưu thông tin điều khiển xung đột"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 168,
+    "question": "Trường thông tin ACK trong cấu trúc gói số liệu TCP dùng để làm gì?",
+    "options": [
+      "Lưu số thứ tự của các gói tin",
+      "Lưu thông tin về gói tin nhận có bị lỗi hay không",
+      "Lưu mã kiểm soát lỗi cho toàn bộ gói tin",
+      "Lưu thông tin điều khiển xung đột"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 169,
+    "question": "Trường thông tin Source Port trong cấu trúc gói số liệu TCP dùng để làm gì?",
+    "options": [
+      "Lưu số thứ tự của các gói tin",
+      "Lưu thông tin về gói tin nhận có bị lỗi hay không",
+      "Lưu mã kiểm soát lỗi cho toàn bộ gói tin",
+      "Lưu thông tin về số hiệu cổng dịch vụ của trạm gửi"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 170,
+    "question": "Giao thức nào sau đây là giao thức không có kết nối?",
+    "options": [
+      "UDP",
+      "IP",
+      "ICMP",
+      "Cả ba giao thức UDP, IP, ICMP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 171,
+    "question": "Giao thức nào sau thực hiện chức năng của tầng giao vận?",
+    "options": [
+      "TCP",
+      "ICMP",
+      "UDP",
+      "TCP và UDP"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 172,
+    "question": "Đặc điểm của giao thức TCP là gì?",
+    "options": [
+      "Truyền các gói dữ liệu theo đúng thứ tự",
+      "Có khả năng gây ra tắc nghẽn đường truyền",
+      "Truyền lại các gói dữ liệu bị mất trên đường truyền",
+      "Truyền các gói dữ liệu theo đúng thứ tự và truyền lại các gói dữ liệu bị mất trên đường truyền"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 173,
+    "question": "Đặc điểm của giao thức UDP là gì?",
+    "options": [
+      "Truyền các gói dữ liệu theo đúng thứ tự",
+      "Truyền lại các gói dữ liệu mất trên đường truyền",
+      "Không truyền lại các gói dữ liệu bị lỗi",
+      "Truyền các gói dữ liệu theo đúng thứ tự và Truyền lại các gói dữ liệu mất trên đường truyền"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 174,
+    "question": "Giao thức TCP thích ứng với các ứng dụng nào sau?",
+    "options": [
+      "Ứng dụng thời gian thực",
+      "Ứng dụng truyền tin tin cậy",
+      "Ứng dụng truyền dữ liệu đa phương tiện như âm thanh, hình ảnh",
+      "Ứng dụng thời gian thực và Ứng dụng truyền dữ liệu đa phương tiện như âm thanh, hình ảnh"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 175,
+    "question": "Giao thức UDP thích ứng với các ứng dụng nào sau?",
+    "options": [
+      "Ứng dụng thời gian thực",
+      "Ứng dụng truyền tin tin cậy",
+      "Ứng dụng truyền dữ liệu đa phương tiện như âm thanh, hình ảnh",
+      "Ứng dụng thời gian thực và Ứng dụng truyền dữ liệu đa phương tiện như âm thanh, hình ảnh"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 176,
+    "question": "Phát biểu nào sau đây là đúng?",
+    "options": [
+      "Giao thức truyền thông UDP tin cậy hơn so với giao thức truyền thông TCP",
+      "Giao thức truyền thông TCP đơn giản hơn so với giao thức truyền thông UDP",
+      "Giao thức truyền thông UDP đơn giản hơn so với giao thức truyền thông TCP nhưng Giao thức truyền thông TCP tin cậy hơn so với giao thức truyền thông UDP",
+      "Giao thức truyền thông UDP tin cậy hơn so với giao thức truyền thông TCP nhưng Giao thức truyền thông TCP đơn giản hơn so với giao thức truyền thông UDP"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 177,
+    "question": "Giao thức truyền thông UDP",
+    "options": [
+      "Không cung cấp chức năng sắp xếp thứ tự truyền thông của các gói tin",
+      "Cung cấp chức năng sắp xếp thứ tự truyền thông của các gói tin",
+      "Cung cấp chức năng truyền tin cậy cho các gói tin",
+      "Không cung cấp dịch vụ truyền quảng bá"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 178,
+    "question": "Giao thức truyền thông UDP?",
+    "options": [
+      "Không có cơ chế kiểm tra và báo nhận ACK",
+      "Có cơ chế kiểm tra và báo nhận ACK",
+      "Không có cơ chế kiểm tra và báo nhận ACK đồng thời không có đánh số thứ tự các gói tin",
+      "Không có cơ chế kiểm tra và báo nhận ACK đồng thời nhưng có đánh số thứ tự các gói tin"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 179,
+    "question": "Nguyên nhân nào dẫn đến giao thức UDP là giao thức truyền thông không tin cậy?",
+    "options": [
+      "Không có cơ chế kiểm tra và báo nhận gói tin",
+      "Không cung cấp chức năng kiểm tra thứ tự truyền của gói tin",
+      "Không có cơ chế xử lý lỗi cho gói tin",
+      "Cả ba nguyên nhân đã nêu"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 180,
+    "question": "Việc thiết lập địa chỉ cổng dịch vụ cho mỗi gói tin TCP nhằm để làm gì?",
+    "options": [
+      "Nhằm để phân loại và sắp xếp, xác định gói tin thuộc về dịch vụ trao đổi thông tin nào.",
+      "Để định danh gói tin TCP",
+      "Để sắp xếp các gói tin cho đúng thứ tự gửi và nhận",
+      "Nhằm để điều khiển truyền thông gói tin"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 181,
+    "question": "Định nghĩa địa chỉ IP được thực hiện tại tầng nào trong các tầng sau?",
+    "options": [
+      "Liên kết dữ liệu",
+      "Mạng",
+      "Giao vận",
+      "Vật lý"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 182,
+    "question": "Việc định nghĩa địa chỉ IP tại tầng mạng có ý nghĩa gì?",
+    "options": [
+      "Để định danh một máy tính hay một giao diện trên mạng và cho phép các máy tính trong liên mạng có thể trao đổi thông tin với nhau",
+      "Không có ý nghĩa gì cả",
+      "Để các máy tính trong một mạng có thể trao đổi thông tin với nhau",
+      "Nhằm đảm bảo an ninh mạng máy tính"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 183,
+    "question": "Gói tin tại tầng mạng trong bộ giao thức TCP/IP có tên gọi là gì?",
+    "options": [
+      "Datagram",
+      "Dlink",
+      "Frame",
+      "Ethernet"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 184,
+    "question": "Tầng mạng không thực hiện chức năng nào sau đây?",
+    "options": [
+      "Tìm đường đi trên mạng tốt nhất theo những tiêu chuẩn nhất định",
+      "Cập nhật các thông tin về mạng sử dụng cho việc chọn đường",
+      "Sắp xếp các gói dữ liệu khi nhận",
+      "Phát hiện và xử lý lỗi truyền thông"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 185,
+    "question": "Gói tin ở tầng mạng chứa các thông tin nào sau đây?",
+    "options": [
+      "Địa chỉ IP của máy tính gửi và địa chỉ IP của máy nhận",
+      "Địa chỉ IP của máy tính gửi và địa chỉ IP của máy nhận và kích thước gói tin IP, thời gian sống của gói tin IP",
+      "Số thứ tự truyền thông",
+      "Số thứ tự truyền thông và Số biên nhận gói tin"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 186,
+    "question": "Nguyên nhân nào có thể dẫn đến hai thực thể tầng mạng của hai máy tính trong mạng không trao đổi thông tin với nhau?",
+    "options": [
+      "Do đường truyền mạng bị lỗi",
+      "Do giao thức tầng liên kết dữ liệu bị lỗi",
+      "Do giao thức tầng vật lý dữ liệu bị lỗi",
+      "Cả ba ý đã nêu đều đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 187,
+    "question": "Hãy tính giá trị serial number của một card mạng có địa chỉ 03:65:FF:32:A6:73 và biểu diễn giá trị này dưới dạng Hexa?",
+    "options": [
+      "Không thể tính được",
+      "0365",
+      "FF32.A673",
+      "32A673"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 188,
+    "question": "Phát biểu nào sau đây là đúng?",
+    "options": [
+      "Địa chỉ IP của mỗi máy tính không thể thay đổi bởi người sử dụng, còn địa chỉ MAC có thể thay đổi bởi người sử dụng",
+      "Địa chỉ IP của mỗi máy tính có thể thay đổi bởi người sử dụng, và địa chỉ MAC cũng có thể thay đổi bởi người sử dụng",
+      "Địa chỉ IP của mỗi máy tính có thể thay đổi bởi người sử dụng, còn địa chỉ MAC có không thể thay đổi bởi người sử dụng",
+      "Địa chỉ IP của mỗi máy tính không thể thay đổi bởi người sử dụng, và địa chỉ MAC cũng không thể thay đổi bởi người sử dụng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 189,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 192.168.100.0 và Subnet Mask là 255.255.255.0 ?",
+    "options": [
+      "192.168.1.1",
+      "192.167.100.10",
+      "192.168.100.254",
+      "192.168.100.255"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 190,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 192.168.10.128 và Subnet Mask là 255.255.255.252 ?",
+    "options": [
+      "192.168.10.129",
+      "192.167.11.10",
+      "192.168.10.137",
+      "192.168.10.133"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 191,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 10.20.64.0 và subnet Mask là 255.255.240.0 ?",
+    "options": [
+      "10.20.91.86",
+      "10.20.78.68",
+      "10.21.68.86",
+      "10.20.5.1"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 192,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 192.32.0.0 và Subnet Mask là 255.224.0.0 ?",
+    "options": [
+      "192.68.1.1",
+      "192.86.100.10",
+      "192.33.100.254",
+      "191.168.100.255"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 193,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 10.16.0.0 và có Subnet Mask là 255.240.0.0 ?",
+    "options": [
+      "10.18.254.1",
+      "10.33.100.10",
+      "11.18.100.2",
+      "10.48.100.55"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 194,
+    "question": "Địa chỉ IP nào dưới đây nằm trong mạng có địa chỉ mạng là 192.168.128.0 và Subnet Mask là 255.255.192.0 ?",
+    "options": [
+      "192.168.200.1",
+      "192.167.10.10",
+      "192.168.100.254",
+      "192.168.129.25"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 195,
+    "question": "Việc phân chia các mạng thành mạng con có lợi ích gì?",
+    "options": [
+      "Giảm thời gian sử dụng CPU do giảm các gói tin quảng bá",
+      "Giới hạn phạm vi các sự cố xẩy ra trên từng mạng con mà không ảnh hưởng tới toàn mạng LAN",
+      "Giảm tắc nghẽn mạng do giảm các gói tin quảng bá",
+      "Cả ba ý đã nêu"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 196,
+    "question": "Địa chỉ mạng được xác định bằng cách nào ?",
+    "options": [
+      "Chuyển đổi IP và Subnet Mask thành chuỗi các bít nhị phân, sau đó thực hiện phép toán logic AND cho các cặp bit tương ứng của hai đối tượng trên",
+      "Chuyển đổi IP và Subnet Mask thành chuỗi các bít nhị phân, sau đó thực hiện phép toán logic OR cho các cặp bit tương ứng của hai đối tượng trên",
+      "Chuyển đổi IP và Subnet Mask thành chuỗi các bít nhị phân, sau đó thực hiện phép toán logic NOR cho các cặp bit tương ứng của hai đối tượng trên",
+      "Chuyển đổi IP và Subnet Mask thành chuỗi các bít nhị phân, sau đó thực hiện phép toán logic NAND cho các cặp bit tương ứng của hai đối tượng trên"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 197,
+    "question": "Ý nghĩa của Subnet Mask là gì?",
+    "options": [
+      "Nhằm để xác định địa chỉ Host",
+      "Nhằm để xác định địa chỉ mạng",
+      "Nhằm để phân chia các mạng thành mạng con",
+      "Cả ba ý đã nêu đều đúng"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 198,
+    "question": "Căn cứ vào đâu để máy tính chuyển gói tin đến Router khi trao đổi thông tin với các máy tính ngoài LAN?",
+    "options": [
+      "Địa chỉ IP đích",
+      "Địa chỉ mạng đích",
+      "Subnet Mask",
+      "Địa chỉ IP đích và Địa chỉ mạng đích"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 199,
+    "question": "Phát biểu nào sau đây cho biết ý nghĩa của địa chỉ MAC?",
+    "options": [
+      "Độ dài 32 bits, viết dưới dạng xxx.xxx.xxx.xxx",
+      "Độ dài 64 bits, viết dưới dạng: yy:yy:yy:yy:yy:yy:yy:yy",
+      "Cho phép xác định vị trí địa lý của một thiết bị",
+      "Cho phép xác định duy nhất một thiết bị"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 200,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp C?",
+    "options": [
+      "129.219.145.255",
+      "221.218.253.255",
+      "190.44.255.255",
+      "190.12.253.255"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 201,
+    "question": "Địa chỉ IP nào dưới đây thuộc lớp C có thể thiết lập cho máy tính?",
+    "options": [
+      "129.219.145.255",
+      "221.218.253.255",
+      "200.44.22.25",
+      "190.12.253.255"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 202,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp A có thể thiết lập cho máy tính?",
+    "options": [
+      "126.255.255.255",
+      "221.218.253.255",
+      "200.44.22.25",
+      "125.12.23.55"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 203,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp A?",
+    "options": [
+      "129.219.145.255",
+      "221.218.253.255",
+      "190.44.255.255",
+      "122.12.253.255"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 204,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp B?",
+    "options": [
+      "133.219.145.255",
+      "221.218.253.255",
+      "90.44.255.255",
+      "22.12.253.255"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 205,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp B có thể thiết lập cho máy tính?",
+    "options": [
+      "140.12.255.255",
+      "221.218.253.255",
+      "200.44.22.25",
+      "150.12.23.55"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 206,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp D có thể thiết lập cho máy tính?",
+    "options": [
+      "240.12.25.255",
+      "221.218.253.255",
+      "200.44.22.25",
+      "225.12.23.55"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 207,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp D?",
+    "options": [
+      "120.219.145.255",
+      "239.218.253.255",
+      "190.44.255.255",
+      "190.12.253.255"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 208,
+    "question": "Số lượng bit nhiều nhất có thể mượn để chia subnets của địa chỉ IP lớp C là bao nhiêu?",
+    "options": [
+      "2",
+      "4",
+      "6",
+      "8"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 209,
+    "question": "Số lượng bit nhiều nhất có thể mượn để chia subnets của địa chỉ IP lớp A là bao nhiêu?",
+    "options": [
+      "8",
+      "16",
+      "24",
+      "22"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 210,
+    "question": "Số lượng bit nhiều nhất có thể mượn để chia subnets của địa chỉ IP lớp B là bao nhiêu?",
+    "options": [
+      "8",
+      "16",
+      "10",
+      "14"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 211,
+    "question": "Trong mạng có các máy tính dùng giao thức TCP/IP và Subnet Mask là 255.255.255.0, cặp máy tính nào sau đây liên thông với nhau?",
+    "options": [
+      "192.168.1.3 và 192.168.100.1",
+      "192.168.15.1 và 192.168.15.254",
+      "192.168.100.15 và 192.186.100.16",
+      "172.25.11.1 và 172.26.11.2"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 212,
+    "question": "Trong mạng có các máy tính dùng giao thức TCP/IP và Subnet Mask là 255.255.255.252, cặp máy tính nào sau đây liên thông với nhau?",
+    "options": [
+      "192.168.1.3 và 192.168.1.8",
+      "192.168.15.17 và 192.168.15.20",
+      "192.168.10.115 và 192.186.100.216",
+      "171.25.11.1 và 172.26.11.2"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 213,
+    "question": "Trong mạng có các máy tính dùng giao thức TCP/IP và Subnet Mask là 255.255.224.0, cặp máy tính nào sau đây liên thông với nhau?",
+    "options": [
+      "192.167.100.2 và 192.168.100.1",
+      "192.168.33.223 và 192.168.29.222",
+      "222.111.48.15 và 222.111.61.16",
+      "172.25.11.1 và 172.25.211.2"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 214,
+    "question": "Trong mạng có các máy tính dùng giao thức TCP/IP và Subnet Mask là 255.248.0.0, cặp máy tính nào sau đây liên thông với nhau?",
+    "options": [
+      "10.20.100.3 và 10.28.3.1",
+      "191.168.15.1 và 192.168.15.2",
+      "192.240.100.15 và 192.250.100.16",
+      "172.25.11.1 và 172.26.11.2"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 215,
+    "question": "Trong mạng máy tính dùng giao thức TCP/IP và Subnet Mask là 255.255.255.224 hãy xác định địa chỉ broadcast của mạng nếu biết rằng một máy tính trong mạng có địa chỉ 192.168.1.1",
+    "options": [
+      "192.168.1.0",
+      "192.168.1.30",
+      "192.168.255.255",
+      "192.168.1.31"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 216,
+    "question": "Trong mạng máy tính dùng giao thức TCP/IP và Subnet Mask là 255.255.252.0, hãy xác định địa chỉ broadcast của mạng nếu biết rằng một máy tính trong mạng có địa chỉ 192.168.30.1",
+    "options": [
+      "10.20.17.255",
+      "192.168.31.255",
+      "192.168.30.255",
+      "192.168.255.31"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 217,
+    "question": "Trong mạng máy tính dùng giao thức TCP/IP và Subnet Mask là 255.240.0.0 hãy xác định địa chỉ broadcast của mạng nếu biết rằng một máy tính trong mạng có địa chỉ 192.33.37.1",
+    "options": [
+      "192.9.255.255",
+      "192.255.0.255",
+      "192.47.255.255",
+      "192.37.255.255"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 218,
+    "question": "Địa chỉ IP nào sau đây là địa chỉ không thể gắn với các giao diện(host hoặc net) trong mạng?",
+    "options": [
+      "92.0.0.1",
+      "255.255.255.255",
+      "100.100.255.255",
+      "200.100.255.254"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 219,
+    "question": "Địa chỉ IP nào sau đây là địa chỉ có thể đặt cho host?",
+    "options": [
+      "142.168.255.255",
+      "255.255.255.254",
+      "142.68.0.0",
+      "200.192.168.0"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 220,
+    "question": "Địa chỉ IP nào sau đây là địa chỉ có thể gắn cho một giao diện host?",
+    "options": [
+      "127.255.0.255",
+      "255.255.255.255",
+      "191.255.0.0",
+      "223.68.78.0"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 221,
+    "question": "Địa chỉ IP nào sau đây là địa chỉ có thể gán cho host?",
+    "options": [
+      "126.255.255.255",
+      "168.168.255.255",
+      "222.222.222.0",
+      "68.168.255.255"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 222,
+    "question": "Địa chỉ IP 112.14.12.8 được viết dưới dạng nhị phân là:",
+    "options": [
+      "01100000.00110000.01101111.10110111",
+      "01110000.00001110.00001100.00001000",
+      "01110000.00001110.11000000.00110011",
+      "0.11.0.11"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 223,
+    "question": "Địa chỉ IP nào dưới đây thuộc địa chỉ lớp B?",
+    "options": [
+      "127.26.36.85",
+      "211.39.87.100",
+      "191.123.59.5",
+      "199.236.35.12"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 224,
+    "question": "Hiện nay, vì sao nhiều máy tính không trực tiếp kết nối trực tiếp với Internet (có địa chỉ IP chính danh Internet) mà phải nhờ một hệ thống máy tính đại diện?",
+    "options": [
+      "Nhằm đảm bảo sự an toàn trong trao đổi thông tin của chúng",
+      "Nhằm để nâng cao hiệu quả truyền thông",
+      "Do không gian địa chỉ IP của mạng Internet là hữu hạn",
+      "Nhằm đảm bảo sự an toàn trong trao đổi thông tin của chúng và Nhằm để nâng cao hiệu quả truyền thông."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 225,
+    "question": "Cặp địa chỉ IP cùng với subnet mask nào sau đây không thể sử dụng để đặt cấu hình cho một trạm (host hoặc net)?",
+    "options": [
+      "IP 10.10.10.255, Subnet Mask: 255.255.255.0",
+      "IP 10.10.10.224, Subnet Mask: 255.255.255.240",
+      "IP 10.10.10.192, Subnet Mask: 255.255.255.252",
+      "IP 10.10.252.254, Subnet Mask: 255.255.252.0"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 226,
+    "question": "Địa chỉ IP cùng với subnet mask nào có thể sử dụng để đặt cấu hình cho một trạm(host hoặc net)?",
+    "options": [
+      "IP 110.110.10.255, Subnet Mask: 255.0.0.0",
+      "IP 200.100.10.255, Subnet Mask: 255.255.255.0",
+      "IP 168.255.0.0, Subnet Mask: 255.255.0.0",
+      "IP 110.110.10.255, Subnet Mask: 255.0.0.0 và IP 168.255.0.0, Subnet Mask: 255.255.0.0"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 227,
+    "question": "Cặp địa chỉ IP cùng với subnet mask nào không thể sử dụng để đặt cấu hình cho một trạm (host hoặc net)?",
+    "options": [
+      "IP 13.13.255.255, Subnet Mask: 255.255.255.0",
+      "IP 133.133.1.0, Subnet Mask: 255.255.0.0",
+      "IP 213.213.255.0, Subnet Mask: 255.255.255.0",
+      "IP 13.13.255.255, Subnet Mask: 255.255.255.0 và IP 213.213.255.0, Subnet Mask: 255.255.255.0"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 228,
+    "question": "Hãy chọn địa chỉ không nằm cùng mạng với các địa chỉ còn lại?",
+    "options": [
+      "203.29.100.100/255.255.255.240",
+      "203.29.100.110/255.255.255.240",
+      "203.29.103.113/255.255.255.240",
+      "203.29.100.98/255.255.255.240"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 229,
+    "question": "Giá trị nào là Subnetmask mặc định cho lớp A?",
+    "options": [
+      "255.0.0.255",
+      "255.255.0.0",
+      "255.0.0.0",
+      "255.255.255.0"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 230,
+    "question": "Giá trị nào là Subnetmask mặc định cho lớp B?",
+    "options": [
+      "255.0.0.255",
+      "255.255.0.0",
+      "255.0.255.0",
+      "255.255.255.0"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 231,
+    "question": "Giá trị nào là Subnetmask mặc định cho lớp C?",
+    "options": [
+      "255.0.0.255",
+      "255.255.0.0",
+      "255.0.255.255",
+      "255.255.255.0"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 232,
+    "question": "Mỗi mạng thuộc lớp A có thể thiết lập bao nhiêu địa chỉ IP của máy trạm ?",
+    "options": [
+      "2^24 - 2",
+      "2^16 - 2",
+      "2^8 - 2",
+      "2^20 - 2"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 233,
+    "question": "Mỗi mạng thuộc lớp B có thể thiết lập bao nhiêu địa chỉ IP của máy trạm",
+    "options": [
+      "2^24 - 2",
+      "2^16 - 2",
+      "2^8 - 2",
+      "2^20 - 2"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 234,
+    "question": "Mỗi mạng thuộc lớp C có thể thiết lập bao nhiêu địa chỉ IP của máy trạm",
+    "options": [
+      "2^24 - 2",
+      "2^16 - 2",
+      "2^8 - 2",
+      "2^20 - 2"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 235,
+    "question": "Có bao nhiêu địa chỉ mạng (Net IP) thuộc lớp A?",
+    "options": [
+      "27",
+      "214",
+      "224",
+      "216"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 236,
+    "question": "Có bao nhiêu địa chỉ mạng (Net IP) thuộc lớp B?",
+    "options": [
+      "27",
+      "214",
+      "224",
+      "216"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 237,
+    "question": "Có bao nhiêu địa chỉ mạng (Net IP) thuộc lớp C?",
+    "options": [
+      "28",
+      "224",
+      "221",
+      "216"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 238,
+    "question": "Kích thước của địa chỉ IPv4 gồm bao nhiêu bit?",
+    "options": [
+      "16",
+      "32",
+      "64",
+      "128"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 239,
+    "question": "Trường thông tin Header Checksum trong cấu trúc gói số liệu IP dùng để làm gì?",
+    "options": [
+      "Điều khiển lưu lượng",
+      "Kiểm soát lỗi của dữ liệu truyền thông",
+      "Kiểm soát lỗi kết nối",
+      "Kiểm soát trạng thái xung đột truyền thông xẩy ra trên mạng"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 240,
+    "question": "Trường thông tin Time To Live trong cấu trúc gói số liệu IP dùng để làm gì",
+    "options": [
+      "Xử lý tắc nghẽn truyền thông trên mạng",
+      "Kiểm soát trạng thái xung đột truyền thông xẩy ra trên mạng",
+      "Kiểm soát thời gian truyền của gói tin",
+      "Kiểm soát lỗi truyền thông trên mạng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 241,
+    "question": "Độ dài tối đa của gói tin IP là bao nhiêu byte?",
+    "options": [
+      "65563",
+      "65536",
+      "65000",
+      "65525"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 242,
+    "question": "Trường thông tin Protocol trong cấu trúc gói số liệu IP dùng để làm gì?",
+    "options": [
+      "Xác định giao thức tầng dưới mà nó giao tiếp",
+      "Xác định giao thức tầng trên mà nó giao tiếp",
+      "Mô tả mã của của giao thức IP",
+      "Định danh cho gói số liệu IP"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 243,
+    "question": "Một máy tính trên mạng có thể cài đặt được tối đa bao nhiêu địa chỉ IP?",
+    "options": [
+      "Một",
+      "Nhiều",
+      "Không cần cài đặt địa chỉ IP",
+      "Một hoặc không cần cài đặt địa chỉ IP"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 244,
+    "question": "Một địa chỉ IP có thể định danh cho bao nhiêu máy tính trong mạng?",
+    "options": [
+      "Một",
+      "Hai",
+      "Ba",
+      "Nhiều"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 245,
+    "question": "Ưu điểm của việc cấp phát địa chỉ IP động trong LAN so với việc thiết lập địa chỉ IP tĩnh?",
+    "options": [
+      "Người dùng trong LAN không cần quan tâm đến việc thiết lập địa chỉ IP",
+      "Việc sử dụng trong LAN không gian địa chỉ IP trở nên tiết kiệm hơn",
+      "Làm tăng tốc độ trao đổi thông tin",
+      "Người dùng trong LAN không cần quan tâm đến việc thiết lập địa chỉ IP và Việc sử dụng trong LAN không gian địa chỉ IP trở nên tiết kiệm hơn."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 246,
+    "question": "Nhược điểm của việc cấp phát địa chỉ IP động trong LAN so với việc thiết lập địa chỉ IP tĩnh?",
+    "options": [
+      "Việc định vị các máy theo địa chỉ IP trở nên khó khăn hơn",
+      "Nếu máy chủ DHCP không hoạt động thì LAN cũng không hoạt động",
+      "Góp phần gây ra tắc nghẽn truyền thông trong LAN",
+      "Việc định vị các máy theo địa chỉ IP trở nên khó khăn hơn và Nếu máy chủ DHCP không hoạt động thì LAN cũng không hoạt động"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 247,
+    "question": "Một tên miền (DomainName) có thể tương ứng với bao nhiêu địa chỉ IP?",
+    "options": [
+      "Một",
+      "Hai",
+      "Ba",
+      "Nhiều"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 248,
+    "question": "Một địa chỉ IP có thể ứng với bao nhiêu tên miền (DomainName) ?",
+    "options": [
+      "Một",
+      "Hai",
+      "Ba",
+      "Nhiều"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 249,
+    "question": "Một tên miền ứng với một địa chỉ IP của một máy chủ Web đã được thiết lập và quản lý bởi máy chủ DNS, nguyên nhân nào có thể dẫn đến người dùng không thể truy cập máy chủ đó bằng tên miền được.",
+    "options": [
+      "Do máy chủ Web không hoạt động",
+      "Do máy chủ Web không kết nối được với máy chủ DNS",
+      "Do máy chủ DNS không hoạt động",
+      "Câu a và c đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 250,
+    "question": "Một tên miền ứng với một địa chỉ IP của một máy chủ Web đã được thiết lập và quản lý bởi máy chủ DNS, nguyên nhân nào có thể dẫn đến người dùng không thể truy cập máy chủ đó bằng tên miền được.",
+    "options": [
+      "Do kết nối giữa người dùng và máy chủ Web bị lỗi",
+      "Do kết nối giữa người dùng và máy chủ DNS bị lỗi",
+      "Do máy chủ Web không kết nối được với máy chủ DNS",
+      "Câu a và b đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 251,
+    "question": "Nếu một máy trạm (WebClient) và máy chủ Web (Webserver) cùng ở trong một LAN, nguyên nhân nào có thể dẫn đến việc máy trạm không thể truy cập thông tin trên máy chủ Web được?",
+    "options": [
+      "Do đường truyền trong LAN bị lỗi",
+      "Do máy chủ Web có cài đặt thêm dịch vụ E-Mail",
+      "Do dịch vụ Web của máy chủ không hoạt động",
+      "Do đường truyền trong LAN bị lỗi hoặc Do dịch vụ Web của máy chủ không hoạt động"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 252,
+    "question": "Nếu một máy trạm (WebClient) và máy chủ Web (Webserver) cùng ở trong một LAN, nguyên nhân nào có thể dẫn đến việc máy trạm không thể truy cập thông tin trên máy chủ Web được?",
+    "options": [
+      "Do địa chỉ IP của máy trạm và máy chủ Web không cùng địa chỉ mạng",
+      "Do máy chủ Web có cài đặt thêm dịch vụ E-Mail",
+      "Do trình duyệt Web (WebBrowser) của máy trạm bị lỗi",
+      "Do địa chỉ IP của máy trạm và máy chủ Web không cùng địa chỉ mạng hoặc Do trình duyệt Web (WebBrowser) của máy trạm bị lỗi"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 253,
+    "question": "Dịch vụ DHCP hoạt động theo mô hình nào?",
+    "options": [
+      "Hoạt động theo mô hình Khách/Chủ",
+      "Không hoạt động theo mô hình Khách/Chủ",
+      "Hoạt động theo mô hình đồng đẳng",
+      "Vừa hoạt động theo mô hình Khách/Chủ vừa hoạt động theo mô hình đồng đẳng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 254,
+    "question": "Hệ thống máy chủ quản lý tên miền của Việt Nam do tổ chức nào quản lý?",
+    "options": [
+      "FPT",
+      "Viettel",
+      "VNNIC",
+      "SaigonNet"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 255,
+    "question": "Ý nghĩa cơ bản của tên miền là gì?",
+    "options": [
+      "Giúp cho người dùng dễ dàng truy cập thông tin trên mạng theo tên miền mà không cần phải nhớ địa chỉ IP.",
+      "Cho phép quản lý các máy tính trên mạng Internet thuận lợi hơn theo sự phân cấp của tên miền",
+      "Cho phép người dùng truy cập thông tin với tốc độ nhanh hơn",
+      "Cho phép xác định vị trí vật lý của các máy tính dễ dàng"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 256,
+    "question": "Chức năng Cache của dịch vụ Proxy có ý nghĩa gì?",
+    "options": [
+      "Nâng cao tính bảo mật thông tin khi người dùng truy cập Internet",
+      "Nâng cao tốc độ và hiệu quả truy cập thông tin trên Internet",
+      "Nâng cao nhằm để tránh các truy nhập bất hợp pháp từ ngoài Internet vào mạng trong",
+      "Câu a và b đúng"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 257,
+    "question": "Miền có tên nào sau đây được gán cho nước mỹ?",
+    "options": [
+      "AU",
+      "COM",
+      "US",
+      "FR"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 258,
+    "question": "Địa chỉ IP là:",
+    "options": [
+      "Địa chỉ logic của một máy tính.",
+      "Một số nguyên 32 bit.",
+      "Một record chứa hai field chính: địa chỉ network và địa chỉ host trong network.",
+      "Cả ba câu trên đều đúng."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 259,
+    "question": "Địa chỉ IP là:",
+    "options": [
+      "Địa chỉ của từng chương trình.",
+      "Địa chỉ của từng máy.",
+      "Địa chỉ của người sử dụng đặt ra.",
+      "Cả ba câu trên đều đúng."
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 260,
+    "question": "Địa chỉ IP được biểu diễn tượng trưng bằng:",
+    "options": [
+      "Một giá trị nhị phân 32 bit.",
+      "Một giá trị thập phân có chấm.",
+      "Một giá trị thập lục phân có chấm.",
+      "Cả ba câu trên đều đúng."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 261,
+    "question": "Địa chỉ IP nào là địa chỉ thuộc lớp A:",
+    "options": [
+      "172.29.2.0",
+      "172.29.0.2",
+      "192.168.134.255",
+      "127.10.1.1"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 262,
+    "question": "Địa chỉ nào sau đây là địa chỉ broadcast của mạng lớp B:",
+    "options": [
+      "149.255.255.255",
+      "149.6.255.255.255",
+      "149.6.7.255",
+      "Tất cả đều sai"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 263,
+    "question": "Chức năng xác lập cơ chế truy nhập đường truyền được thực hiện bởi tầng chức năng nào?",
+    "options": [
+      "Data Link",
+      "Network",
+      "Transport",
+      "Physical"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 264,
+    "question": "Chức năng xác lập chuẩn đầu nối, dây cáp, tốc độ truyền, điện áp,... được thực hiện bởi tầng chức năng nào?",
+    "options": [
+      "Transport",
+      "Network",
+      "Data Link",
+      "Physical"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 265,
+    "question": "Ý nghĩa của dữ liệu không được gán cho các tầng nào sau đây?",
+    "options": [
+      "Transport",
+      "Network",
+      "Data Link",
+      "Physical"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 266,
+    "question": "Khi gói tin bị mất hoặc bị lỗi thì tầng liên kết dữ liệu sẽ làm gì?",
+    "options": [
+      "Tự khôi phục hoặc sửa lại gói tin bị mất hoặc bị lỗi đó",
+      "Đưa ra yêu cầu cho trạm nguồn gửi lại gói tin bị lỗi hoặc mất",
+      "Huỷ phiên trao đổi dữ liệu, đưa ra thông báo lỗi cho trạm nguồn",
+      "Cả 3 ý đã nêu đều đúng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 267,
+    "question": "Thông thường, tầng liên kết dữ liệu sử dụng kỹ thuật nào để điều khiển tốc độ gửi và tốc độ nhận?",
+    "options": [
+      "Báo nhận",
+      "Kỹ thuật hàng đợi",
+      "Đưa ra quy định về tốc độ gửi và tốc độ nhận",
+      "Cả ba ý đã nêu đúng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 268,
+    "question": "Việc định nghĩa địa chỉ MAC tại tầng liên kết dữ liệu có ý nghĩa gì?",
+    "options": [
+      "Để định danh một máy tính hoặc một giao diện trên mạng và cho phép các máy tính trong liên mạng có thể trao đổi thông tin với nhau",
+      "Để định danh một thiết bị trên mạng và cho phép các máy tính trong một mạng có thể trao đổi thông tin với nhau.",
+      "Để định danh một máy tính trên mạng",
+      "Nhằm nâng cao độ tin cậy trong truyền tin"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": true
+  },
+  {
+    "id": 269,
+    "question": "Gói tin tại tầng liên kết dữ liệu có tên gọi là gì?",
+    "options": [
+      "Datagram",
+      "Dlink",
+      "Frame",
+      "Ethernet"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 270,
+    "question": "Tầng nào trong mô hình OSI định nghĩa địa chỉ vật lý?",
+    "options": [
+      "Liên kết dữ liệu",
+      "Vật lý",
+      "Mạng",
+      "Giao vận"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": true
+  },
+  {
+    "id": 271,
+    "question": "Chức năng cơ bản của tầng liên kết dữ liệu là gì?",
+    "options": [
+      "Định địa chỉ vật lý",
+      "Điều khiển truy nhập đường truyền",
+      "Điều khiển kết nối logic",
+      "Tất cả các chức năng đã nêu."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 272,
+    "question": "Chức năng cơ bản của tầng vật lý trong mô hình OSI là gì?",
+    "options": [
+      "Chuyển đổi dữ liệu số trong máy tính thành tín hiệu đường truyền và ngược lại",
+      "Thiết lập địa chỉ vật lý",
+      "Xác định phương thức truyền thông và tốc độ truyền thông",
+      "Chuyển đổi dữ liệu số trong máy tính thành tín hiệu đường truyền và ngược lại, Xác định phương thức truyền thông và tốc độ truyền thông"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 273,
+    "question": "Dữ liệu tại tầng vật lý trong mô hình OSI có cấu trúc như thế nào?",
+    "options": [
+      "Có cấu trúc header và chuỗi các bit",
+      "Là chuỗi các bit nhị phân có cấu trúc",
+      "Là chuỗi các bit nhị phân không có cấu trúc",
+      "Không có dữ liệu tại tầng vật lý"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 274,
+    "question": "Chức năng nào sau đây không là chức năng của tầng vật lý?",
+    "options": [
+      "Định địa chỉ IP",
+      "Thiết lập khuôn dạng gói tin",
+      "Thích ứng với đường truyền mạng",
+      "Định nghĩa IP và thiết lập khuôn dạng gói tin."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 275,
+    "question": "Tầng liên kết dữ liệu có thể thực hiện chức năng nào sau đây?",
+    "options": [
+      "Cung cấp chức năng phát hiện và khắc phục lỗi đối với mỗi gói dữ liệu truyền thông",
+      "Điều khiển tốc độ truyền tin",
+      "Thực hiện điều khiển việc truy cập đường truyền chung",
+      "Cả 3 ý đã nêu đều đúng."
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 276,
+    "question": "Tầng nào trong mô hình OSI làm việc với các tín hiệu điện:",
+    "options": [
+      "Data Link.",
+      "Network.",
+      "Physical.",
+      "Session"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 277,
+    "question": "Đơn vị dữ liệu của tầng Physical là:",
+    "options": [
+      "Frame",
+      "Packet",
+      "Segment",
+      "Bit"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 278,
+    "question": "Các thành phần tạo nên mạng máy tính là gì?",
+    "options": [
+      "Các máy tính, hệ thống đường truyền vật lý",
+      "Các thiết bị mạng như Hub, Switch, Router,..",
+      "Giao thức mạng",
+      "Tất cả thành phần máy tính, hệ thống truyền thông vật lý, các thiết bị hub, switch, router và phần mềm giao thức mạng."
+    ],
+    "correctAnswerIndices": [
+      4
+    ],
+    "explanation": true
+  },
+  {
+    "id": 279,
+    "question": "Nguyên nhân nào gây ra việc hai máy tính (kết nối vật lý đã thông) trong mạng không thể trao đổi thông tin với nhau?",
+    "options": [
+      "Do hai máy tính cài đặt hai hệ điều hành khác nhau?",
+      "Do hai máy tính không được cài đặt cùng giao thức trao đổi thông tin",
+      "Do hai máy tính đó có cấu hình phần cứng khác nhau",
+      "Câu do hai máy tính cài đặt hai hệ điều hành khác nhau và do hai máy tính đó có cấu hình phần cứng khác nhau."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 280,
+    "question": "Thiết bị kết nối giữa các trạm và đường truyền chính trong mạng dạng vòng (RING) thường được sử dụng là thiết bị nào?",
+    "options": [
+      "Hub",
+      "Repeater",
+      "Bridge",
+      "NIC"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": true
+  },
+  {
+    "id": 281,
+    "question": "Sắp xếp thứ tự từ thấp đến cao của các thiết bị trung tâm về vai trò mở rộng kết nối mạng máy tính?",
+    "options": [
+      "Hub, Bridge, Router, Switch",
+      "Hub, Switch, Bridge, Router",
+      "Hub, Bridge, Switch, Router",
+      "Hub, Switch, Router, Bridge"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 282,
+    "question": "Thiết bị nào sau đây không có chức năng mở rộng kết nối mạng?",
+    "options": [
+      "Repeater",
+      "Modem",
+      "NIC",
+      "Hub"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": true
+  },
+  {
+    "id": 283,
+    "question": "Thiết bị nào sau không cần thiết để sử dụng trong mạng cục bộ?",
+    "options": [
+      "Hub",
+      "Bridge",
+      "Switch",
+      "Router"
+    ],
+    "correctAnswerIndices": [
+      4
+    ],
+    "explanation": true
+  },
+  {
+    "id": 284,
+    "question": "Giao thức nào cho phép các router liên lạc với nhau để trao đổi thông tin về trạng thái của các kết nối giữa chúng ?",
+    "options": [
+      "BGP (Border Gateway Protocol)",
+      "OSPF (Open Shortest Path First)",
+      "IGRP (Interior Gateway Routing Protocol)",
+      "RIP (Routing_Information_Protocol)"
+    ],
+    "correctAnswerIndices": [
+      4
+    ],
+    "explanation": true
+  }
+]
