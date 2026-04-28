@@ -219,14 +219,14 @@ void main() {
     );
     final controller = _attachController(
       _buildController(
-        accountAuthController: AccountAuthController(
-          authService: _StreamAuthService(
-            currentUser: _FakeUser(),
-            authStates: Stream<User?>.value(_FakeUser()),
-          ),
-        ),
         localCacheService: localCacheService,
         cloudSyncService: cloudSyncService,
+      ),
+      authController: AccountAuthController(
+        authService: _StreamAuthService(
+          currentUser: _FakeUser(),
+          authStates: Stream<User?>.value(_FakeUser()),
+        ),
       ),
     );
     controller.initialize();
@@ -257,16 +257,16 @@ void main() {
     );
     final controller = _attachController(
       _buildController(
-        accountAuthController: AccountAuthController(
-          authService: _StreamAuthService(
-            currentUser: _FakeUser(),
-            authStates: Stream<User?>.value(_FakeUser()),
-          ),
-        ),
         localCacheService: _MemoryLocalCacheService(
           initialPayload: localPayload,
         ),
         cloudSyncService: _FakeCloudSyncService(throwOnFetch: true),
+      ),
+      authController: AccountAuthController(
+        authService: _StreamAuthService(
+          currentUser: _FakeUser(),
+          authStates: Stream<User?>.value(_FakeUser()),
+        ),
       ),
     );
     controller.initialize();
@@ -282,7 +282,6 @@ void main() {
 }
 
 HomeController _buildController({
-  AccountAuthController? accountAuthController,
   LocalCacheService? localCacheService,
   SchoolApiService? schoolApiService,
   CloudSyncService? cloudSyncService,
@@ -302,9 +301,6 @@ HomeController _buildController({
   );
 
   return HomeController(
-    accountAuthController:
-        accountAuthController ??
-        AccountAuthController(authService: _FakeAuthService()),
     attachmentStorageService:
         attachmentStorageService ?? _FakeAttachmentStorageService(),
     schoolSyncCoordinator: SchoolSyncCoordinator(
@@ -321,9 +317,16 @@ HomeController _buildController({
   );
 }
 
-HomeController _attachController(HomeController controller) {
+HomeController _attachController(
+  HomeController controller, {
+  AccountAuthController? authController,
+}) {
   final container = ProviderContainer(
-    overrides: [homeControllerProvider.overrideWith(() => controller)],
+    overrides: [
+      homeControllerProvider.overrideWith(() => controller),
+      if (authController != null)
+        accountAuthControllerProvider.overrideWithValue(authController),
+    ],
   );
   final subscription = container.listen<HomeState>(
     homeControllerProvider,

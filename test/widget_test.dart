@@ -231,9 +231,6 @@ HomeController _buildController({
   FakeSchoolApiService? schoolApiService,
 }) {
   return HomeController(
-    accountAuthController: AccountAuthController(
-      authService: FakeAuthService(),
-    ),
     schoolApiService: schoolApiService ?? FakeSchoolApiService(),
     localCacheService: localCacheService ?? FakeLocalCacheService(),
     attachmentStorageService: FakeAttachmentStorageService(),
