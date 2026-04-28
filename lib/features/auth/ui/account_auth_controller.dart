@@ -2,12 +2,18 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/home_action_result.dart';
 import '../../home/domain/home_flow_models.dart';
 import '../data/auth_service.dart';
 
-class AccountAuthController {
+/// Provides the shared [AccountAuthController] for auth flows.
+final accountAuthControllerProvider = Provider<AccountAuthController>(
+  (ref) => AccountAuthController(),
+);
+
+final class AccountAuthController {
   AccountAuthController({AuthService? authService})
     : _authService = authService ?? AuthService();
 

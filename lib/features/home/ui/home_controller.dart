@@ -86,8 +86,7 @@ final class HomeController extends Notifier<HomeState> {
     SchoolSyncCoordinator? schoolSyncCoordinator,
     EventMutationService? eventMutationService,
     StudentSyncCredentialsService? studentSyncCredentialsService,
-  }) : _accountAuthController =
-           accountAuthController ?? AccountAuthController(),
+  }) : _accountAuthControllerOverride = accountAuthController,
        _weatherService = weatherService ?? WeatherService() {
     final resolvedLocalCacheService = localCacheService ?? LocalCacheService();
     final resolvedCloudSyncService = cloudSyncService ?? CloudSyncService();
@@ -136,7 +135,7 @@ final class HomeController extends Notifier<HomeState> {
   static const int pastDayRange = 365;
   static const int futureDayRange = 365;
 
-  final AccountAuthController _accountAuthController;
+  final AccountAuthController? _accountAuthControllerOverride;
   final WeatherService _weatherService;
   late final AttachmentStorageService _attachmentStorageService;
   late final DashboardPersistenceService _dashboardPersistenceService;
@@ -171,6 +170,9 @@ final class HomeController extends Notifier<HomeState> {
   Future<void>? _initialCloudRestoreFuture;
   int _cloudRestoreGeneration = 0;
   bool _isDisposed = false;
+
+  AccountAuthController get _accountAuthController =>
+      _accountAuthControllerOverride ?? ref.read(accountAuthControllerProvider);
 
   DateTime get today => _today;
   DateTime get selectedDate => _selectedDate;

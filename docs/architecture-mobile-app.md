@@ -75,7 +75,7 @@ NÃ³ chá»‹u trÃ¡ch nhiá»‡m:
 
 ### `AccountAuthController`
 
-- Bá»c `AuthService`
+- Bọc `AuthService` qua `accountAuthControllerProvider`
 - Má»Ÿ bottom sheet Ä‘Äƒng nháº­p email/password
 - Gá»i Ä‘Äƒng nháº­p Google
 - Xá»­ lÃ½ sign out

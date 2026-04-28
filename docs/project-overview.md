@@ -56,7 +56,7 @@
 | NhÃ³m | CÃ´ng nghá»‡ | Ghi chÃº |
 | --- | --- | --- |
 | UI | Flutter Material 3 | `lib/app.dart`, `lib/theme/app_theme.dart` |
-| State/UI flow | Riverpod Notifier + controller | HomeController, AccountAuthController |
+| State/UI flow | Riverpod Notifier + provider/controller | HomeController, AccountAuthController |
 | Auth | Firebase Auth, Google Sign-In | ÄÄƒng nháº­p cloud lÃ  tÃ¹y chá»n |
 | Local storage | SharedPreferences | LÆ°u `LocalCachePayload` |
 | Notifications | `flutter_local_notifications`, `timezone` | Chá»‰ cháº¡y Android |
