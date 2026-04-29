@@ -15,6 +15,10 @@ id = "31068b0b4a114537b650b2f6be0e5185"
 binding = "FILES"
 bucket_name = "note-app"
 
+[assets]
+directory = "../assets/quiz"
+binding = "ASSETS"
+
 [vars]
 APP_ENV = "development"
 FIREBASE_PROJECT_ID = "sinhvien-a9d4e"

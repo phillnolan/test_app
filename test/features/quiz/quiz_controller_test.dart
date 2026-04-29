@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/features/quiz/data/quiz_models.dart';
@@ -18,6 +21,82 @@ void main() {
       greaterThan(0),
     );
   });
+
+  test(
+    'cloudflare quiz repository loads quiz data from worker routes',
+    () async {
+      final client = _FakeHttpClient((request) async {
+        final path = request.url.path;
+        if (path == '/quiz/catalog') {
+          return http.StreamedResponse(
+            Stream.value(
+              utf8.encode(
+                jsonEncode({
+                  'banks': [
+                    {
+                      'id': 'sample',
+                      'code': 'SAMPLE',
+                      'title': 'Sample Bank',
+                      'description': 'Test bank',
+                      'questionCount': 2,
+                      'sourceQuestionCount': 2,
+                      'skippedQuestionCount': 0,
+                      'accentColor': 0xff123456,
+                      'assetPath': 'assets/quiz/banks/sample.json',
+                    },
+                  ],
+                }),
+              ),
+            ),
+            200,
+            request: request,
+            headers: const {'content-type': 'application/json; charset=utf-8'},
+          );
+        }
+
+        if (path == '/quiz/banks/sample') {
+          return http.StreamedResponse(
+            Stream.value(
+              utf8.encode(
+                jsonEncode([
+                  {
+                    'id': 1,
+                    'question': 'Question one?',
+                    'options': ['A', 'B'],
+                    'correctAnswer': 0,
+                  },
+                ]),
+              ),
+            ),
+            200,
+            request: request,
+            headers: const {'content-type': 'application/json; charset=utf-8'},
+          );
+        }
+
+        return http.StreamedResponse(
+          Stream.value(const <int>[]),
+          404,
+          request: request,
+        );
+      });
+
+      final repository = CloudflareQuizRepository(
+        client: client,
+        workerUrl: 'https://worker.test',
+        fallbackRepository: AssetQuizRepository(),
+      );
+
+      final catalog = await repository.loadCatalog();
+      expect(catalog, hasLength(1));
+      expect(catalog.single.id, 'sample');
+
+      final bank = await repository.loadBank(catalog.single);
+      expect(bank.metadata.id, 'sample');
+      expect(bank.questions, hasLength(1));
+      expect(bank.questions.single.question, 'Question one?');
+    },
+  );
 
   test('quiz question parser tolerates boolean explanation markers', () {
     final question = QuizQuestion.fromJson({
@@ -247,6 +326,18 @@ final class FakeQuizRepository implements QuizRepository {
       throw StateError('Missing fake quiz bank: ${metadata.id}');
     }
     return bank;
+  }
+}
+
+final class _FakeHttpClient extends http.BaseClient {
+  _FakeHttpClient(this._handler);
+
+  final Future<http.StreamedResponse> Function(http.BaseRequest request)
+  _handler;
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    return _handler(request);
   }
 }
 

@@ -4,6 +4,7 @@ export interface Env {
   DB: D1Database;
   CACHE: KVNamespace;
   FILES: R2Bucket;
+  ASSETS: Fetcher;
   APP_ENV: string;
   FIREBASE_PROJECT_ID: string;
 }
@@ -34,6 +35,14 @@ export default {
 
     if (url.pathname === "/health") {
       return json({ ok: true, data: { status: "healthy", env: env.APP_ENV } });
+    }
+
+    if (url.pathname === "/quiz/catalog" && request.method === "GET") {
+      return getQuizCatalog(env);
+    }
+
+    if (url.pathname.startsWith("/quiz/banks/") && request.method === "GET") {
+      return getQuizBank(url, env);
     }
 
     const auth = await verifyFirebaseToken(request, env);
@@ -409,6 +418,31 @@ async function downloadAttachment(
   );
 
   return withCors(new Response(object.body, { status: 200, headers }));
+}
+
+async function getQuizCatalog(env: Env): Promise<Response> {
+  return serveQuizAsset(env, "/quiz_manifest.json");
+}
+
+async function getQuizBank(url: URL, env: Env): Promise<Response> {
+  const bankId = decodeURIComponent(url.pathname.slice("/quiz/banks/".length));
+  if (!bankId || !/^[a-z0-9-]+$/i.test(bankId)) {
+    return json({ ok: false, error: "Invalid quiz bank id." }, { status: 400 });
+  }
+
+  return serveQuizAsset(env, `/banks/${bankId}.json`);
+}
+
+async function serveQuizAsset(env: Env, assetPath: string): Promise<Response> {
+  const assetResponse = await env.ASSETS.fetch(
+    new Request(`https://assets.local${assetPath}`),
+  );
+
+  if (assetResponse.status === 404) {
+    return json({ ok: false, error: "Quiz asset not found." }, { status: 404 });
+  }
+
+  return withCors(assetResponse);
 }
 
 function buildCacheKey(firebaseUid: string, snapshotKey: string): string {

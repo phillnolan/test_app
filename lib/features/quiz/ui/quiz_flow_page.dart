@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/program_subject.dart';
+import '../../home/ui/home_controller.dart';
 import '../data/quiz_models.dart';
 import 'quiz_controller.dart';
 
@@ -12,6 +14,36 @@ class QuizPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final homeState = ref.watch(homeControllerProvider);
+
+    if (homeState.isLoadingLocalCache ||
+        homeState.isRestoringCloudData ||
+        homeState.isLinkingStudent) {
+      return const SafeArea(child: Center(child: CircularProgressIndicator()));
+    }
+
+    final curriculumSubjects = homeState.payload.curriculumSubjects;
+    final hasSyncedCurriculum =
+        homeState.signedInUser != null &&
+        homeState.payload.profile != null &&
+        curriculumSubjects.isNotEmpty;
+
+    if (!hasSyncedCurriculum) {
+      return const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: Center(
+            child: _QuizInlineNotice(
+              icon: Icons.sync_problem_outlined,
+              title: 'Cần đồng bộ tài khoản',
+              message:
+                  'Hãy đăng nhập và đồng bộ dữ liệu sinh viên để xem các môn quiz.',
+            ),
+          ),
+        ),
+      );
+    }
+
     final catalogAsync = ref.watch(quizCatalogProvider);
 
     return SafeArea(
@@ -28,16 +60,16 @@ class QuizPage extends ConsumerWidget {
           ),
         ),
         data: (banks) {
-          final subjects = _buildQuizSubjects(banks);
+          final subjects = _buildQuizSubjects(banks, curriculumSubjects);
           if (subjects.isEmpty) {
             return const Padding(
               padding: EdgeInsets.all(16),
               child: Center(
                 child: _QuizInlineNotice(
-                  icon: Icons.quiz_outlined,
-                  title: 'Chưa có môn nào',
+                  icon: Icons.school_outlined,
+                  title: 'Chưa có môn quiz phù hợp',
                   message:
-                      'Không tìm thấy bộ quiz nào trong manifest hiện tại.',
+                      'Dữ liệu đã đồng bộ nhưng hiện chưa có môn quiz nào khớp với chương trình đào tạo.',
                 ),
               ),
             );
@@ -128,13 +160,13 @@ final class _QuizSetSelectionPage extends ConsumerWidget {
                             final deck = decks[index];
                             return _QuizDeckCard(
                               label: deck.label,
+                              accentColor: Color(deck.bank.accentColor),
                               isEnabled: !quizState.isStarting,
                               onTap: () {
                                 unawaited(
                                   _startAndOpenQuiz(
                                     context: context,
                                     ref: ref,
-                                    subject: subject,
                                     deck: deck,
                                   ),
                                 );
@@ -154,7 +186,6 @@ final class _QuizSetSelectionPage extends ConsumerWidget {
   Future<void> _startAndOpenQuiz({
     required BuildContext context,
     required WidgetRef ref,
-    required _QuizSubjectGroup subject,
     required _QuizDeck deck,
   }) async {
     final controller = ref.read(quizControllerProvider.notifier);
@@ -303,23 +334,42 @@ class _QuizSubjectCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final accentColor = Color(subject.primaryBank.accentColor);
+    final backgroundColor = Color.alphaBlend(
+      accentColor.withValues(alpha: 0.08),
+      colorScheme.surfaceContainerLow,
+    );
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      color: colorScheme.surfaceContainerLow,
+      color: backgroundColor,
+      surfaceTintColor: accentColor.withValues(alpha: 0.18),
       child: InkWell(
         onTap: onTap,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              subject.title,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: 4,
+                  color: accentColor.withValues(alpha: 0.55),
+                ),
+              ),
             ),
-          ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  subject.title,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -329,34 +379,54 @@ class _QuizSubjectCard extends StatelessWidget {
 class _QuizDeckCard extends StatelessWidget {
   const _QuizDeckCard({
     required this.label,
+    required this.accentColor,
     required this.isEnabled,
     required this.onTap,
   });
 
   final String label;
+  final Color accentColor;
   final bool isEnabled;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final backgroundColor = Color.alphaBlend(
+      accentColor.withValues(alpha: 0.08),
+      colorScheme.surfaceContainerLow,
+    );
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      color: colorScheme.surfaceContainerLow,
+      color: backgroundColor,
+      surfaceTintColor: accentColor.withValues(alpha: 0.18),
       child: InkWell(
         onTap: isEnabled ? onTap : null,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              label,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: 4,
+                  color: accentColor.withValues(alpha: 0.55),
+                ),
+              ),
             ),
-          ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -810,7 +880,10 @@ class _QuizInlineNotice extends StatelessWidget {
   }
 }
 
-List<_QuizSubjectGroup> _buildQuizSubjects(List<QuizBankMetadata> banks) {
+List<_QuizSubjectGroup> _buildQuizSubjects(
+  List<QuizBankMetadata> banks,
+  List<ProgramSubject> curriculumSubjects,
+) {
   final grouped = <String, List<QuizBankMetadata>>{};
   for (final bank in banks) {
     final key = _quizSubjectKey(bank);
@@ -818,6 +891,13 @@ List<_QuizSubjectGroup> _buildQuizSubjects(List<QuizBankMetadata> banks) {
   }
 
   return grouped.entries
+      .where(
+        (entry) => _quizSubjectMatchesCurriculum(
+          entry.key,
+          entry.value,
+          curriculumSubjects,
+        ),
+      )
       .map((entry) {
         final subjectBanks = entry.value.toList()
           ..sort((left, right) {
@@ -878,6 +958,46 @@ String _quizSpecialDeckLabel(QuizBankMetadata bank) {
   return 'Đề $suffix';
 }
 
+bool _quizSubjectMatchesCurriculum(
+  String subjectKey,
+  List<QuizBankMetadata> banks,
+  List<ProgramSubject> curriculumSubjects,
+) {
+  final quizTexts = <String>{
+    _normalizeQuizText(subjectKey),
+    for (final bank in banks) _normalizeQuizText(bank.id),
+    for (final bank in banks) _normalizeQuizText(bank.code),
+    for (final bank in banks) _normalizeQuizText(bank.title),
+  }.where((value) => value.isNotEmpty).toList(growable: false);
+
+  if (quizTexts.isEmpty) {
+    return false;
+  }
+
+  final curriculumTexts = <String>{
+    for (final subject in curriculumSubjects) ...[
+      _normalizeQuizText(subject.subjectCode),
+      _normalizeQuizText(subject.subjectName),
+      _normalizeQuizText(subject.knowledgeBlock),
+      _normalizeQuizText(subject.curriculumGroup),
+    ],
+  }.where((value) => value.isNotEmpty).toList(growable: false);
+
+  if (curriculumTexts.isEmpty) {
+    return false;
+  }
+
+  for (final quizText in quizTexts) {
+    for (final curriculumText in curriculumTexts) {
+      if (_quizTextMatches(quizText, curriculumText)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 int _quizPracticeDeckCount(int questionCount) {
   final derived = (questionCount / quizPracticeDeckSize).ceil();
   return derived.clamp(3, 12);
@@ -909,6 +1029,95 @@ String _formatCount(int value) {
   }
   final formatted = buffer.toString();
   return value < 0 ? '-$formatted' : formatted;
+}
+
+bool _quizTextMatches(String left, String right) {
+  if (left.isEmpty || right.isEmpty) {
+    return false;
+  }
+
+  return left == right || left.contains(right) || right.contains(left);
+}
+
+String _normalizeQuizText(String value) {
+  final lower = value.toLowerCase().trim();
+  const replacements = {
+    'à': 'a',
+    'á': 'a',
+    'ạ': 'a',
+    'ả': 'a',
+    'ã': 'a',
+    'â': 'a',
+    'ầ': 'a',
+    'ấ': 'a',
+    'ậ': 'a',
+    'ẩ': 'a',
+    'ẫ': 'a',
+    'ă': 'a',
+    'ằ': 'a',
+    'ắ': 'a',
+    'ặ': 'a',
+    'ẳ': 'a',
+    'ẵ': 'a',
+    'è': 'e',
+    'é': 'e',
+    'ẹ': 'e',
+    'ẻ': 'e',
+    'ẽ': 'e',
+    'ê': 'e',
+    'ề': 'e',
+    'ế': 'e',
+    'ệ': 'e',
+    'ể': 'e',
+    'ễ': 'e',
+    'ì': 'i',
+    'í': 'i',
+    'ị': 'i',
+    'ỉ': 'i',
+    'ĩ': 'i',
+    'ò': 'o',
+    'ó': 'o',
+    'ọ': 'o',
+    'ỏ': 'o',
+    'õ': 'o',
+    'ô': 'o',
+    'ồ': 'o',
+    'ố': 'o',
+    'ộ': 'o',
+    'ổ': 'o',
+    'ỗ': 'o',
+    'ơ': 'o',
+    'ờ': 'o',
+    'ớ': 'o',
+    'ợ': 'o',
+    'ở': 'o',
+    'ỡ': 'o',
+    'ù': 'u',
+    'ú': 'u',
+    'ụ': 'u',
+    'ủ': 'u',
+    'ũ': 'u',
+    'ư': 'u',
+    'ừ': 'u',
+    'ứ': 'u',
+    'ự': 'u',
+    'ử': 'u',
+    'ữ': 'u',
+    'ỳ': 'y',
+    'ý': 'y',
+    'ỵ': 'y',
+    'ỷ': 'y',
+    'ỹ': 'y',
+    'đ': 'd',
+  };
+
+  final buffer = StringBuffer();
+  for (final rune in lower.runes) {
+    final char = String.fromCharCode(rune);
+    buffer.write(replacements[char] ?? char);
+  }
+
+  return buffer.toString().replaceAll(RegExp(r'[^a-z0-9]+'), ' ').trim();
 }
 
 _QuizOptionState _quizOptionState({

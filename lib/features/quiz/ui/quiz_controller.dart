@@ -8,7 +8,7 @@ import '../data/quiz_repository.dart';
 
 /// Provides the quiz repository used by the feature.
 final quizRepositoryProvider = Provider<QuizRepository>((ref) {
-  return AssetQuizRepository();
+  return CloudflareQuizRepository();
 });
 
 /// Loads the quiz catalog for the UI.
@@ -24,7 +24,7 @@ final quizControllerProvider = NotifierProvider<QuizController, QuizState>(
 /// Controls the active quiz session.
 final class QuizController extends Notifier<QuizState> {
   QuizController({QuizRepository? repository})
-    : _repository = repository ?? AssetQuizRepository();
+    : _repository = repository ?? CloudflareQuizRepository();
 
   final QuizRepository _repository;
 
