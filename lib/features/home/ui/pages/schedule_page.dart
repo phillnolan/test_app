@@ -852,10 +852,10 @@ class _PendingCloudChip extends StatelessWidget {
     };
     final tooltip = switch (status) {
       _CloudIndicatorStatus.syncing =>
-        isDeleting ? 'Đang xóa trên cloud' : 'Đang đẩy lên cloud',
+        isDeleting ? 'Đang xóa trên Teledrive' : 'Đang đẩy lên Teledrive',
       _CloudIndicatorStatus.deferred =>
-        'Đang chờ mạng hoặc sẽ tự thử lại để đẩy lên cloud',
-      _CloudIndicatorStatus.synced => 'Đã lưu trên cloud',
+        'Đang chờ mạng hoặc sẽ tự thử lại để đẩy lên Teledrive',
+      _CloudIndicatorStatus.synced => 'Đã lưu trên Teledrive',
     };
 
     return Tooltip(

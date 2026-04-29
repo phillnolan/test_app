@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../models/student_profile.dart';
+import '../../../../services/teldrive_models.dart';
 import '../widgets/home_common_widgets.dart';
 
 class AccountPage extends StatelessWidget {
@@ -31,7 +31,7 @@ class AccountPage extends StatelessWidget {
   });
 
   final bool isAuthAvailable;
-  final User? user;
+  final TeldriveSessionInfo? user;
   final StudentProfile? profile;
   final String? linkedStudentUsername;
   final bool isSyncing;
@@ -59,16 +59,16 @@ class AccountPage extends StatelessWidget {
         linkedStudentUsername!.trim().isNotEmpty;
     final hasLocalStudent = profile != null;
     final statusLabel = isSigningOut
-        ? 'Đang đăng xuất'
+        ? 'Đang ngắt kết nối'
         : isRestoringCloudData
-        ? 'Đang tải dữ liệu tài khoản'
+        ? 'Đang tải dữ liệu Teledrive'
         : isLinkingStudent
         ? 'Đang hoàn tất liên kết'
         : switch ((user != null, hasLinkedStudent, hasLocalStudent)) {
             (false, _, true) => 'Đã đồng bộ cục bộ',
-            (false, _, false) => 'Chưa đăng nhập',
+            (false, _, false) => 'Chưa liên kết Teledrive',
             (true, true, true) => 'Đã liên kết',
-            (true, true, false) => 'Có liên kết cloud',
+            (true, true, false) => 'Có liên kết Teledrive',
             (true, false, _) => 'Chờ liên kết sinh viên',
           };
 
@@ -81,7 +81,7 @@ class AccountPage extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          'Đăng nhập tài khoản ứng dụng, liên kết với tài khoản sinh viên và quản lý toàn bộ dữ liệu học tập, ghi chú, ảnh, tệp ở một nơi.',
+          'Liên kết với tài khoản Teledrive riêng của bạn để đồng bộ dữ liệu học tập, ghi chú, ảnh, tệp ở một nơi.',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: Theme.of(context).colorScheme.onSurfaceVariant,
           ),
@@ -103,9 +103,9 @@ class AccountPage extends StatelessWidget {
         if (!isAuthAvailable)
           const PlaceholderInfoCard(
             icon: Icons.cloud_off_outlined,
-            title: 'Firebase chưa sẵn sàng',
+            title: 'Chưa liên kết Teledrive',
             description:
-                'App chưa khởi tạo Firebase. Hãy kiểm tra cấu hình nếu muốn đăng nhập và liên kết dữ liệu cloud.',
+                'Nhập URL Teldrive và access token để bật đồng bộ Teledrive cho tài khoản này.',
           )
         else if (user == null)
           _SignedOutCard(
@@ -368,7 +368,7 @@ class _SignedOutCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Đăng nhập tài khoản ứng dụng',
+            'Liên kết Teledrive',
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
@@ -376,20 +376,20 @@ class _SignedOutCard extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             profile == null
-                ? 'Đăng nhập để liên kết dữ liệu khi bạn đồng bộ tài khoản sinh viên.'
-                : 'Bạn đang có dữ liệu của ${profile!.displayName}. Đăng nhập để liên kết và sao lưu toàn bộ dữ liệu này lên cloud.',
+                ? 'Liên kết để sao lưu và đồng bộ dữ liệu khi bạn tải lịch học hoặc ghi chú mới.'
+                : 'Bạn đang có dữ liệu của ${profile!.displayName}. Liên kết Teledrive để sao lưu toàn bộ dữ liệu này.',
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: onGoogleAuth,
             icon: const Icon(Icons.account_circle_outlined),
-            label: const Text('Tiếp tục với Google'),
+            label: const Text('Liên kết Teledrive'),
           ),
           const SizedBox(height: 10),
           OutlinedButton.icon(
             onPressed: onEmailAuth,
-            icon: const Icon(Icons.mail_outline),
-            label: const Text('Email và mật khẩu'),
+            icon: const Icon(Icons.link_outlined),
+            label: const Text('Nhập URL và token'),
           ),
         ],
       ),
@@ -404,7 +404,7 @@ class _SignedInCard extends StatelessWidget {
     required this.onSignOut,
   });
 
-  final User user;
+  final TeldriveSessionInfo user;
   final bool isSigningOut;
   final VoidCallback onSignOut;
 
@@ -421,31 +421,29 @@ class _SignedInCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            user.displayName?.trim().isNotEmpty == true
-                ? user.displayName!
-                : (user.email ?? 'Tài khoản ứng dụng'),
+            user.name.trim().isNotEmpty ? user.name : user.userName,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 8),
           Text(
-            user.email ?? 'Đã đăng nhập',
+            'Teledrive • ${user.userName}',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 14),
-          FilledButton.tonalIcon(
-            onPressed: isSigningOut ? null : onSignOut,
-            icon: isSigningOut
-                ? const SizedBox(
+            FilledButton.tonalIcon(
+              onPressed: isSigningOut ? null : onSignOut,
+              icon: isSigningOut
+                  ? const SizedBox(
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.logout),
-            label: Text(isSigningOut ? 'Đang đăng xuất...' : 'Đăng xuất'),
+                      )
+                  : const Icon(Icons.logout),
+            label: Text(isSigningOut ? 'Đang ngắt kết nối...' : 'Ngắt kết nối'),
           ),
         ],
       ),
@@ -502,9 +500,9 @@ class _StudentLinkCard extends StatelessWidget {
         linkedStudentUsername!.trim().toLowerCase() ==
             profile!.username.trim().toLowerCase();
     final description = isRestoringCloudData
-        ? 'Đang tải dữ liệu từ cloud của tài khoản đã liên kết. Tạm thời khóa đồng bộ để tránh chồng lấn dữ liệu.'
+        ? 'Đang tải dữ liệu từ Teledrive của tài khoản đã liên kết. Tạm thời khóa đồng bộ để tránh chồng lấn dữ liệu.'
         : isLinkingStudent
-        ? 'Đang lưu liên kết giữa tài khoản ứng dụng và ${profile?.displayName ?? linkedStudentUsername ?? 'sinh viên hiện tại'}. Vui lòng chờ hoàn tất.'
+        ? 'Đang lưu liên kết giữa tài khoản Teledrive và ${profile?.displayName ?? linkedStudentUsername ?? 'sinh viên hiện tại'}. Vui lòng chờ hoàn tất.'
         : profile == null
         ? 'Chưa có tài khoản sinh viên nào được đồng bộ trên thiết bị này.'
         : linkedStudentUsername == null

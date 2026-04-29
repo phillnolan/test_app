@@ -96,7 +96,7 @@ class _EnhancedNoteEditorSheetState extends State<EnhancedNoteEditorSheet> {
                         builder: (context) => AlertDialog(
                           title: const Text('Xóa ghi chú cá nhân?'),
                           content: const Text(
-                            'Ghi chú này sẽ bị xóa khỏi thiết bị và cloud.',
+                            'Ghi chú này sẽ bị xóa khỏi thiết bị và Teledrive.',
                           ),
                           actions: [
                             TextButton(

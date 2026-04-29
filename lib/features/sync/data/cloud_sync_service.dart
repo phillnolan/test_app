@@ -1,86 +1,32 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 import '../../../models/event_attachment.dart';
 import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
+import '../../../services/teldrive_api_client.dart';
+import '../../../services/teldrive_models.dart';
 import '../../attachments/data/file_bytes_reader_stub.dart'
     if (dart.library.io) '../../attachments/data/file_bytes_reader_io.dart';
-import 'api_concurrency.dart';
 
 class CloudSyncService {
-  CloudSyncService({http.Client? client}) : _client = client ?? http.Client();
+  CloudSyncService({TeldriveApiClient? client})
+    : _client = client ?? TeldriveApiClient();
 
-  final http.Client _client;
+  final TeldriveApiClient _client;
 
-  static const String _defaultWorkerUrl =
-      'https://sinhvien-worker.nkocpk99012.workers.dev';
-  static const String _baseUrl = String.fromEnvironment(
-    'CLOUDFLARE_WORKER_URL',
-    defaultValue: _defaultWorkerUrl,
-  );
+  static const String _payloadFileName = 'sinhvien-app-dashboard.json';
+  static const String _attachmentPrefix = 'sinhvien-app-attachment';
 
-  bool get isConfigured => _baseUrl.isNotEmpty;
+  bool get isConfigured => true;
 
   Future<void> upsertNote(StudentEvent event) async {
-    final stopwatch = Stopwatch()..start();
-    final headers = await _authHeaders();
-    if (headers == null) {
-      _logTiming(
-        'upsertNote skipped ${event.id}',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-      );
-      return;
-    }
-
-    final response = await _client.post(
-      Uri.parse('$_baseUrl/notes'),
-      headers: headers,
-      body: jsonEncode({
-        'id': event.id,
-        'eventId': event.id,
-        'eventType': event.type.name,
-        'content': event.note ?? '',
-      }),
-    );
-    _logTiming(
-      'upsertNote ${event.id}',
-      elapsedMs: stopwatch.elapsedMilliseconds,
-      extra: 'status=${response.statusCode}',
-    );
+    _logTiming('upsertNote ${event.id}', elapsedMs: 0, extra: 'noop');
   }
 
   Future<void> upsertTask(StudentEvent event) async {
-    final stopwatch = Stopwatch()..start();
-    final headers = await _authHeaders();
-    if (headers == null) {
-      _logTiming(
-        'upsertTask skipped ${event.id}',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-      );
-      return;
-    }
-
-    final response = await _client.post(
-      Uri.parse('$_baseUrl/tasks'),
-      headers: headers,
-      body: jsonEncode({
-        'id': event.id,
-        'title': event.title,
-        'note': event.note ?? '',
-        'startAt': event.start.toIso8601String(),
-        'endAt': event.end.toIso8601String(),
-        'isDone': event.isDone,
-      }),
-    );
-    _logTiming(
-      'upsertTask ${event.id}',
-      elapsedMs: stopwatch.elapsedMilliseconds,
-      extra: 'status=${response.statusCode}',
-    );
+    _logTiming('upsertTask ${event.id}', elapsedMs: 0, extra: 'noop');
   }
 
   Future<void> upsertEventsBatch(List<StudentEvent> events) async {
@@ -88,117 +34,63 @@ class CloudSyncService {
       return;
     }
 
-    final stopwatch = Stopwatch()..start();
-    final headers = await _authHeaders();
-    if (headers == null) {
-      _logTiming(
-        'upsertEventsBatch skipped',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-        extra: 'count=${events.length}',
-      );
-      return;
-    }
-
-    try {
-      final response = await _client.post(
-        Uri.parse('$_baseUrl/sync-events/batch'),
-        headers: headers,
-        body: jsonEncode({
-          'events': events.map(_eventSyncPayload).toList(growable: false),
-        }),
-      );
-      if (response.statusCode < 400) {
-        _logTiming(
-          'upsertEventsBatch',
-          elapsedMs: stopwatch.elapsedMilliseconds,
-          extra: 'status=${response.statusCode} count=${events.length}',
-        );
-        return;
-      }
-
-      _logTiming(
-        'upsertEventsBatch fallback',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-        extra: 'status=${response.statusCode} count=${events.length}',
-      );
-    } catch (error) {
-      _logTiming(
-        'upsertEventsBatch fallback error',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-        extra: 'error=$error count=${events.length}',
-      );
-    }
-
-    await runWithConcurrencyLimit(
-      events
-          .map(
-            (event) => () async {
-              await upsertNote(event);
-              if (event.type == StudentEventType.personalTask) {
-                await upsertTask(event);
-              }
-            },
-          )
-          .toList(growable: false),
-      limit: 6,
+    _logTiming(
+      'upsertEventsBatch',
+      elapsedMs: 0,
+      extra: 'noop count=${events.length}',
     );
   }
 
   Future<void> saveSyncCache(LocalCachePayload payload) async {
     final stopwatch = Stopwatch()..start();
-    final headers = await _authHeaders();
-    if (headers == null) {
-      _logTiming(
-        'saveSyncCache skipped',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-      );
-      return;
-    }
-
-    final response = await _client.post(
-      Uri.parse('$_baseUrl/sync-cache'),
-      headers: headers,
-      body: jsonEncode({
-        'snapshotKey': 'dashboard',
-        'payload': payload.toJson(),
-        'ttlSeconds': 60 * 60 * 6,
-      }),
+    final jsonBytes = utf8.encode(jsonEncode(payload.toJson()));
+    await _replaceSingleFile(
+      fileName: _payloadFileName,
+      bytes: Uint8List.fromList(jsonBytes),
+      contentType: 'application/json; charset=utf-8',
     );
     _logTiming(
       'saveSyncCache',
       elapsedMs: stopwatch.elapsedMilliseconds,
       extra:
-          'status=${response.statusCode} synced=${payload.syncedEvents.length} personal=${payload.personalEvents.length}',
+          'synced=${payload.syncedEvents.length} personal=${payload.personalEvents.length}',
     );
   }
 
   Future<void> clearAccountData() async {
-    final headers = await _authHeaders(includeJsonContentType: false);
-    if (headers == null) return;
-
-    await _client.delete(Uri.parse('$_baseUrl/account-data'), headers: headers);
+    await _client.deleteFilesByNamePrefix(_payloadFileName);
+    await _client.deleteFilesByNamePrefix(_attachmentPrefix);
   }
 
   Future<LocalCachePayload?> fetchSyncCache({
     String snapshotKey = 'dashboard',
   }) async {
-    final headers = await _authHeaders(includeJsonContentType: false);
-    if (headers == null) return null;
+    final fileName = snapshotKey == 'dashboard'
+        ? _payloadFileName
+        : 'sinhvien-app-$snapshotKey.json';
+    final file = await _client.findFileByName(fileName);
+    if (file == null || file.id.isEmpty) {
+      return null;
+    }
 
-    final response = await _client.get(
-      Uri.parse('$_baseUrl/sync-cache?key=$snapshotKey'),
-      headers: headers,
+    final bytes = await _client.downloadFileBytes(
+      fileId: file.id,
+      fileName: file.name,
     );
-    if (response.statusCode >= 400 || response.body.isEmpty) return null;
+    if (bytes == null || bytes.isEmpty) {
+      return null;
+    }
 
-    final decoded = jsonDecode(response.body);
-    if (decoded is! Map<String, dynamic>) return null;
-    final data = decoded['data'];
-    if (data is! Map) return null;
-
-    return LocalCachePayload.fromJson(
-      data.map((key, value) => MapEntry(key.toString(), value)),
-    );
+    try {
+      final decoded = jsonDecode(utf8.decode(bytes));
+      if (decoded is! Map<String, dynamic>) {
+        return null;
+      }
+      return LocalCachePayload.fromJson(decoded);
+    } catch (error) {
+      debugPrint('CloudSyncService: failed to decode sync cache: $error');
+      return null;
+    }
   }
 
   Future<EventAttachment> uploadAttachment({
@@ -206,12 +98,11 @@ class CloudSyncService {
     required String eventId,
   }) async {
     final stopwatch = Stopwatch()..start();
-    final headers = await _authHeaders(includeJsonContentType: false);
-    if (headers == null || attachment.remoteKey != null) {
+    if (attachment.remoteKey != null) {
       _logTiming(
         'uploadAttachment skipped ${attachment.name}',
         elapsedMs: stopwatch.elapsedMilliseconds,
-        extra: 'event=$eventId hasRemote=${attachment.remoteKey != null}',
+        extra: 'event=$eventId hasRemote=true',
       );
       return attachment;
     }
@@ -228,92 +119,113 @@ class CloudSyncService {
       return attachment;
     }
 
-    final request = http.Request(
-      'POST',
-      Uri.parse('$_baseUrl/attachments/upload'),
+    final fileName = _buildAttachmentFileName(eventId, attachment);
+    final created = await _client.createFile(
+      name: fileName,
+      type: 'file',
+      mimeType: _contentTypeForName(attachment.name),
+      encrypted: false,
+      size: bytes.length,
     );
-    request.headers.addAll({
-      ...headers,
-      'x-file-name': attachment.name,
-      'x-event-id': eventId,
-      'content-type': _contentTypeForName(attachment.name),
-    });
-    request.bodyBytes = bytes;
-
-    final streamed = await _client.send(request);
-    final response = await http.Response.fromStream(streamed);
-    if (response.statusCode >= 400) {
-      _logTiming(
-        'uploadAttachment failed ${attachment.name}',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-        extra:
-            'event=$eventId status=${response.statusCode} bytes=${bytes.length}',
-      );
-      return attachment;
-    }
-
-    final json = jsonDecode(response.body) as Map<String, dynamic>;
-    final data = (json['data'] as Map?)?.map(
-      (key, value) => MapEntry(key.toString(), value),
+    final uploadId = created.uploadId ?? created.id;
+    final uploadedPart = await _client.uploadFilePart(
+      uploadId: uploadId,
+      fileName: fileName,
+      partName: fileName,
+      partNo: 1,
+      bytes: bytes,
+      encrypted: false,
+      contentType: _contentTypeForName(attachment.name),
     );
-    final objectKey = data?['objectKey']?.toString();
-    if (objectKey == null || objectKey.isEmpty) {
-      _logTiming(
-        'uploadAttachment missing-key ${attachment.name}',
-        elapsedMs: stopwatch.elapsedMilliseconds,
-        extra: 'event=$eventId bytes=${bytes.length}',
-      );
-      return attachment;
-    }
+    await _client.finalizeFile(
+      fileId: created.id,
+      fileName: fileName,
+      uploadId: uploadId,
+      size: bytes.length,
+      parts: [TeldriveFilePart.fromUploadPart(uploadedPart)],
+      encrypted: false,
+    );
 
     _logTiming(
       'uploadAttachment ${attachment.name}',
       elapsedMs: stopwatch.elapsedMilliseconds,
-      extra:
-          'event=$eventId bytes=${bytes.length} status=${response.statusCode}',
+      extra: 'event=$eventId bytes=${bytes.length}',
     );
 
-    return attachment.copyWith(remoteKey: objectKey);
+    return attachment.copyWith(remoteKey: created.id, bytesBase64: null);
   }
 
   Future<Uint8List?> downloadAttachmentBytes(EventAttachment attachment) async {
-    final headers = await _authHeaders(includeJsonContentType: false);
     final objectKey = attachment.remoteKey;
-    if (headers == null || objectKey == null || objectKey.isEmpty) {
+    if (objectKey == null || objectKey.isEmpty) {
       return attachment.bytesBase64 == null
           ? null
           : base64Decode(attachment.bytesBase64!);
     }
 
-    final response = await _client.get(
-      Uri.parse(
-        '$_baseUrl/attachments/download?key=${Uri.encodeQueryComponent(objectKey)}',
-      ),
-      headers: headers,
+    final file = await _client.getFileById(objectKey);
+    if (file == null) {
+      return attachment.bytesBase64 == null
+          ? null
+          : base64Decode(attachment.bytesBase64!);
+    }
+
+    final bytes = await _client.downloadFileBytes(
+      fileId: file.id,
+      fileName: file.name,
     );
-    if (response.statusCode >= 400) {
+    if (bytes == null || bytes.isEmpty) {
       return attachment.bytesBase64 == null
           ? null
           : base64Decode(attachment.bytesBase64!);
     }
 
-    return response.bodyBytes;
+    return bytes;
   }
 
-  Future<Map<String, String>?> _authHeaders({
-    bool includeJsonContentType = true,
+  Future<void> _replaceSingleFile({
+    required String fileName,
+    required Uint8List bytes,
+    required String contentType,
   }) async {
-    if (!isConfigured) return null;
+    final existing = await _client.findFileByName(fileName);
+    if (existing != null) {
+      await _client.deleteFilesByIds([existing.id]);
+    }
 
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return null;
+    final created = await _client.createFile(
+      name: fileName,
+      type: 'file',
+      mimeType: contentType,
+      encrypted: false,
+      size: bytes.length,
+    );
+    final uploadId = created.uploadId ?? created.id;
+    final uploadedPart = await _client.uploadFilePart(
+      uploadId: uploadId,
+      fileName: fileName,
+      partName: fileName,
+      partNo: 1,
+      bytes: bytes,
+      encrypted: false,
+      contentType: contentType,
+    );
+    await _client.finalizeFile(
+      fileId: created.id,
+      fileName: fileName,
+      uploadId: uploadId,
+      size: bytes.length,
+      parts: [TeldriveFilePart.fromUploadPart(uploadedPart)],
+      encrypted: false,
+    );
+  }
 
-    final token = await user.getIdToken();
-    return {
-      if (includeJsonContentType)
-        'content-type': 'application/json; charset=utf-8',
-      'authorization': 'Bearer $token',
-    };
+  String _buildAttachmentFileName(
+    String eventId,
+    EventAttachment attachment,
+  ) {
+    final safeName = attachment.name.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    return '$_attachmentPrefix-$eventId-${attachment.id}-$safeName';
   }
 
   String _contentTypeForName(String fileName) {
@@ -330,25 +242,13 @@ class CloudSyncService {
     return 'application/octet-stream';
   }
 
-  Map<String, dynamic> _eventSyncPayload(StudentEvent event) {
-    return {
-      'id': event.id,
-      'type': event.type.name,
-      'title': event.title,
-      'note': event.note ?? '',
-      'startAt': event.start.toIso8601String(),
-      'endAt': event.end.toIso8601String(),
-      'isDone': event.isDone,
-    };
-  }
-
   void _logTiming(String step, {required int elapsedMs, String? extra}) {
     if (!kDebugMode) {
       return;
     }
 
     debugPrint(
-      '[CloudSyncTiming] $step took ${elapsedMs}ms'
+      '[TeldriveSyncTiming] $step took ${elapsedMs}ms'
       '${extra == null ? '' : ' | $extra'}',
     );
   }

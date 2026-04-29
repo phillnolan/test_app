@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,6 +18,7 @@ import 'package:sinhvien_app/models/student_event.dart';
 import 'package:sinhvien_app/models/student_profile.dart';
 import 'package:sinhvien_app/features/attachments/data/attachment_storage_service.dart';
 import 'package:sinhvien_app/services/device_effects_service.dart';
+import 'package:sinhvien_app/services/teldrive_models.dart';
 import 'package:sinhvien_app/features/widget/data/widget_sync_service.dart';
 import 'package:sinhvien_app/features/sync/data/cloud_sync_service.dart';
 import 'package:sinhvien_app/features/sync/data/dashboard_persistence_service.dart';
@@ -281,8 +281,8 @@ void main() {
       ),
       authController: AccountAuthController(
         authService: _StreamAuthService(
-          currentUser: _FakeUser(),
-          authStates: Stream<User?>.value(_FakeUser()),
+          currentUser: _fakeSession(),
+          authStates: Stream<TeldriveSessionInfo?>.value(_fakeSession()),
         ),
       ),
     );
@@ -321,8 +321,8 @@ void main() {
       ),
       authController: AccountAuthController(
         authService: _StreamAuthService(
-          currentUser: _FakeUser(),
-          authStates: Stream<User?>.value(_FakeUser()),
+          currentUser: _fakeSession(),
+          authStates: Stream<TeldriveSessionInfo?>.value(_fakeSession()),
         ),
       ),
     );
@@ -411,20 +411,26 @@ class _StreamAuthService extends AuthService {
   _StreamAuthService({required this.currentUser, required this.authStates});
 
   @override
-  final User? currentUser;
+  final TeldriveSessionInfo? currentUser;
 
-  final Stream<User?> authStates;
+  final Stream<TeldriveSessionInfo?> authStates;
 
   @override
   bool get isAvailable => true;
 
   @override
-  Stream<User?> authStateChanges() => authStates;
+  Stream<TeldriveSessionInfo?> authStateChanges() => authStates;
 }
 
-class _FakeUser extends Fake implements User {
-  @override
-  String get uid => 'fake-uid';
+TeldriveSessionInfo _fakeSession() {
+  return TeldriveSessionInfo(
+    name: 'Student',
+    userName: 'student',
+    userId: 42,
+    isPremium: false,
+    hash: 'fake-hash',
+    expires: DateTime(2030, 1, 1),
+  );
 }
 
 class _MemoryLocalCacheService extends LocalCacheService {

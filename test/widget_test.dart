@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +11,8 @@ import 'package:sinhvien_app/features/quiz/ui/quiz_controller.dart';
 import 'package:sinhvien_app/features/quiz/data/quiz_repository.dart';
 import 'package:sinhvien_app/features/weather/data/weather_forecast.dart';
 import 'package:sinhvien_app/features/weather/data/weather_service.dart';
+import 'package:sinhvien_app/services/teldrive_api_client.dart';
+import 'package:sinhvien_app/services/teldrive_models.dart';
 import 'package:sinhvien_app/features/sync/data/cloud_sync_service.dart';
 import 'package:sinhvien_app/features/sync/data/local_cache_service.dart';
 import 'package:sinhvien_app/features/sync/data/school_api_service.dart';
@@ -226,10 +227,7 @@ void main() {
     final controller = AccountAuthController(
       authService: FakeAuthService(
         available: true,
-        emailError: FirebaseAuthException(
-          code: 'wrong-password',
-          message: 'Sai mật khẩu.',
-        ),
+        emailError: TeldriveApiException('Sai mật khẩu.'),
       ),
     );
 
@@ -259,7 +257,7 @@ void main() {
     );
 
     expect(result.isSuccess, isTrue);
-    expect(result.message, 'Đăng nhập tài khoản thành công.');
+    expect(result.message, 'Đã liên kết Teledrive thành công.');
   });
 
   test('account auth controller returns sign up success message', () async {
@@ -276,7 +274,7 @@ void main() {
     );
 
     expect(result.isSuccess, isTrue);
-    expect(result.message, 'Đăng ký tài khoản thành công.');
+    expect(result.message, 'Đã lưu cấu hình Teledrive thành công.');
   });
 }
 
@@ -323,47 +321,57 @@ class FakeAuthService extends AuthService {
   FakeAuthService({this.available = false, this.emailError, this.googleError});
 
   final bool available;
-  final FirebaseAuthException? emailError;
-  final FirebaseAuthException? googleError;
+  final TeldriveApiException? emailError;
+  final TeldriveApiException? googleError;
 
   @override
   bool get isAvailable => available;
 
   @override
-  User? get currentUser => null;
+  TeldriveSessionInfo? get currentUser => null;
 
   @override
-  Stream<User?> authStateChanges() => const Stream<User?>.empty();
+  Stream<TeldriveSessionInfo?> authStateChanges() =>
+      const Stream<TeldriveSessionInfo?>.empty();
 
   @override
-  Future<UserCredential> signInWithEmail({
+  Future<TeldriveSessionInfo> signInWithEmail({
     required String email,
     required String password,
   }) async {
     if (emailError != null) throw emailError!;
-    return FakeUserCredential();
+    return _fakeSession();
   }
 
   @override
-  Future<UserCredential> registerWithEmail({
+  Future<TeldriveSessionInfo> registerWithEmail({
     required String email,
     required String password,
   }) async {
     if (emailError != null) throw emailError!;
-    return FakeUserCredential();
+    return _fakeSession();
   }
 
   @override
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<TeldriveSessionInfo?> signInWithGoogle() async {
     if (googleError != null) throw googleError!;
-    return FakeUserCredential();
+    return _fakeSession();
   }
 
   @override
   Future<void> signOut() async {}
 }
 
-class FakeUserCredential extends Fake implements UserCredential {}
+TeldriveSessionInfo _fakeSession() {
+  return TeldriveSessionInfo(
+    name: 'Student',
+    userName: 'student',
+    userId: 42,
+    isPremium: false,
+    hash: 'fake-hash',
+    expires: DateTime(2030, 1, 1),
+  );
+}
 
 class FakeSchoolApiService extends SchoolApiService {
   FakeSchoolApiService({SchoolSyncSnapshot? snapshot})

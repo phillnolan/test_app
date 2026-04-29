@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../models/home_action_result.dart';
+import '../../../services/teldrive_api_client.dart';
+import '../../../services/teldrive_models.dart';
 import '../../home/domain/home_flow_models.dart';
 import '../data/auth_service.dart';
 
-/// Provides the shared [AccountAuthController] for auth flows.
+/// Provides the shared [AccountAuthController] for Teldrive connection flows.
 final accountAuthControllerProvider = Provider<AccountAuthController>(
   (ref) => AccountAuthController(),
 );
@@ -21,40 +22,34 @@ final class AccountAuthController {
 
   bool get isAvailable => _authService.isAvailable;
 
-  User? get currentUser => _authService.currentUser;
+  TeldriveSessionInfo? get currentUser => _authService.currentUser;
 
-  StreamSubscription<User?> listenAuthState(ValueChanged<User?> onChanged) {
+  StreamSubscription<TeldriveSessionInfo?> listenAuthState(
+    ValueChanged<TeldriveSessionInfo?> onChanged,
+  ) {
     return _authService.authStateChanges().listen(onChanged);
   }
 
   Future<HomeActionResult> submitEmailAuth(EmailAuthResult result) async {
     final messages = switch (result.mode) {
       EmailAuthMode.signIn => (
-        success: 'Đăng nhập tài khoản thành công.',
-        failure: 'Không thể đăng nhập.',
+        success: 'Đã liên kết Teledrive thành công.',
+        failure: 'Không thể liên kết Teledrive.',
       ),
       EmailAuthMode.register => (
-        success: 'Đăng ký tài khoản thành công.',
-        failure: 'Không thể đăng ký.',
+        success: 'Đã lưu cấu hình Teledrive thành công.',
+        failure: 'Không thể lưu cấu hình Teledrive.',
       ),
     };
 
     try {
-      if (result.mode == EmailAuthMode.signIn) {
-        await _authService.signInWithEmail(
-          email: result.email,
-          password: result.password,
-        );
-      } else {
-        await _authService.registerWithEmail(
-          email: result.email,
-          password: result.password,
-        );
-      }
-
+      await _authService.signInWithEmail(
+        email: result.email,
+        password: result.password,
+      );
       return HomeActionResult.success(messages.success);
-    } on FirebaseAuthException catch (error) {
-      return HomeActionResult.failure(error.message ?? messages.failure);
+    } on TeldriveApiException catch (error) {
+      return HomeActionResult.failure(error.message);
     } catch (_) {
       return HomeActionResult.failure(messages.failure);
     }
@@ -63,18 +58,16 @@ final class AccountAuthController {
   Future<HomeActionResult> signInWithGoogle() async {
     try {
       await _authService.signInWithGoogle();
-      return const HomeActionResult.success('Đã đăng nhập Google.');
-    } on FirebaseAuthException catch (error) {
-      return HomeActionResult.failure(
-        error.message ?? 'Không thể đăng nhập Google.',
-      );
+      return const HomeActionResult.success('Đã làm mới kết nối Teledrive.');
+    } on TeldriveApiException catch (error) {
+      return HomeActionResult.failure(error.message);
     } catch (_) {
-      return const HomeActionResult.failure('Không thể đăng nhập Google.');
+      return const HomeActionResult.failure('Không thể làm mới Teledrive.');
     }
   }
 
   Future<HomeActionResult> signOut() async {
     await _authService.signOut();
-    return const HomeActionResult.success('Đã đăng xuất.');
+    return const HomeActionResult.success('Đã ngắt kết nối Teledrive.');
   }
 }

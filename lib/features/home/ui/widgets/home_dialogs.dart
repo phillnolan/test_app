@@ -357,11 +357,11 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
     final isSignIn = _mode == EmailAuthMode.signIn;
 
     return _CredentialActionSheet(
-      icon: isSignIn ? Icons.login_rounded : Icons.person_add_alt_1_rounded,
-      title: isSignIn ? 'Đăng nhập bằng email' : 'Tạo tài khoản ứng dụng',
+      icon: isSignIn ? Icons.cloud_sync_outlined : Icons.save_outlined,
+      title: isSignIn ? 'Liên kết Teledrive' : 'Lưu cấu hình Teledrive',
       subtitle: isSignIn
-          ? 'Dùng email để mở dữ liệu cloud và liên kết với tài khoản sinh viên.'
-          : 'Tạo tài khoản ứng dụng mới để lưu ghi chú, ảnh, tệp và dữ liệu đồng bộ.',
+          ? 'Nhập URL Teledrive và access token của tài khoản riêng.'
+          : 'Lưu cấu hình để dùng lại nhanh trong những lần đồng bộ sau.',
       bottomInset: bottomInset,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,13 +370,13 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
             segments: const [
               ButtonSegment(
                 value: EmailAuthMode.signIn,
-                icon: Icon(Icons.login_rounded),
-                label: Text('Đăng nhập'),
+                icon: Icon(Icons.link_outlined),
+                label: Text('Liên kết'),
               ),
               ButtonSegment(
                 value: EmailAuthMode.register,
-                icon: Icon(Icons.person_add_alt_1_rounded),
-                label: Text('Đăng ký'),
+                icon: Icon(Icons.save_outlined),
+                label: Text('Lưu lại'),
               ),
             ],
             selected: {_mode},
@@ -387,20 +387,20 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
           const SizedBox(height: 16),
           _SheetField(
             controller: _emailController,
-            labelText: 'Email',
-            hintText: 'Nhập email của bạn',
-            prefixIcon: Icons.mail_outline,
+            labelText: 'URL Teledrive',
+            hintText: 'Ví dụ: https://teledrive.example.com',
+            prefixIcon: Icons.public_outlined,
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
           ),
           const SizedBox(height: 12),
           _SheetField(
             controller: _passwordController,
-            labelText: 'Mật khẩu',
+            labelText: 'Access token',
             hintText: isSignIn
-                ? 'Nhập mật khẩu để đăng nhập'
-                : 'Tạo mật khẩu cho tài khoản mới',
-            prefixIcon: Icons.lock_outline,
+                ? 'Dán access_token từ cookie Teledrive'
+                : 'Lưu token để dùng lại nhanh hơn',
+            prefixIcon: Icons.key_outlined,
             obscureText: _obscurePassword,
             textInputAction: TextInputAction.done,
             onSubmitted: (_) => _submit(),
@@ -418,8 +418,8 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
           const SizedBox(height: 12),
           _SubmitHint(
             text: isSignIn
-                ? 'Sau khi đăng nhập, app sẽ kiểm tra liên kết dữ liệu sinh viên hiện có.'
-                : 'Sau khi tạo tài khoản, app có thể liên kết ngay với dữ liệu sinh viên đang có trên máy.',
+                ? 'Sau khi liên kết, app sẽ đọc dữ liệu Teledrive và mở đồng bộ đám mây.'
+                : 'Mở Teledrive trong trình duyệt, copy access token rồi lưu lại.',
           ),
           const SizedBox(height: 18),
           Row(
@@ -458,11 +458,11 @@ class _EmailAuthSheetState extends State<EmailAuthSheet> {
 
     final isSignIn = _mode == EmailAuthMode.signIn;
     final confirmed = await _confirmSubmit(
-      title: isSignIn ? 'Xác nhận đăng nhập?' : 'Xác nhận đăng ký?',
+      title: isSignIn ? 'Xác nhận liên kết?' : 'Xác nhận lưu cấu hình?',
       content: isSignIn
-          ? 'Bạn sắp đăng nhập bằng email "$email". Tiếp tục chứ?'
-          : 'Bạn sắp tạo tài khoản mới với email "$email". Tiếp tục chứ?',
-      actionLabel: isSignIn ? 'Đăng nhập' : 'Đăng ký',
+          ? 'Bạn sắp liên kết Teledrive với URL "$email". Tiếp tục chứ?'
+          : 'Bạn sắp lưu cấu hình Teledrive cho URL "$email". Tiếp tục chứ?',
+      actionLabel: isSignIn ? 'Liên kết' : 'Lưu lại',
     );
     if (confirmed != true || !mounted) {
       return;
