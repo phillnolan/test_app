@@ -10,6 +10,7 @@ import '../../../models/school_sync_snapshot.dart';
 import '../../../models/student_event.dart';
 import '../../../models/student_profile.dart';
 import '../../../services/http_client_factory.dart';
+import 'api_concurrency.dart';
 
 class SchoolApiService {
   SchoolApiService({http.Client? client})
@@ -26,45 +27,86 @@ class SchoolApiService {
   Future<SchoolSyncSnapshot> sync({
     required String username,
     required String password,
+    void Function(double progress)? onProgress,
   }) async {
+    var emittedProgress = 0.0;
+
+    void emitProgress(double value) {
+      if (onProgress == null) {
+        return;
+      }
+
+      final nextProgress = value.clamp(emittedProgress, 1.0).toDouble();
+      if (nextProgress <= emittedProgress) {
+        return;
+      }
+
+      emittedProgress = nextProgress;
+      onProgress(emittedProgress);
+    }
+
     final accessToken = await _login(username: username, password: password);
+    emitProgress(0.05);
     final headers = {
       'Accept': 'application/json, text/plain, */*',
       'Authorization': 'Bearer $accessToken',
     };
 
-    final studentFuture = _getJsonWithRetry(
-      '$_baseHost/api/student/getstudentbylogin',
+    final examsFuture = _fetchExamsWithRetry(
       headers,
+      onProgress: (progress) {
+        emitProgress(_lerpProgress(0.20, 0.55, progress));
+      },
     );
-    final marksFuture = _getJsonWithRetry(
-      '$_baseHost/api/studentsubjectmark/getListMarkDetailStudent',
-      headers,
-    );
-    final tuitionFuture = _getJsonWithRetry(
-      '$_baseHost/api/student/viewstudentpayablebyLoginUser',
-      headers,
-    );
-    final timetableFuture = _getJsonWithRetry(
-      '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
-      headers,
-    );
-    final examsFuture = _fetchExamsWithRetry(headers);
 
-    final studentJson = await studentFuture;
+    final mainResults = await runWithConcurrencyLimit<dynamic>(
+      [
+        () => _getJsonWithRetry(
+          '$_baseHost/api/student/getstudentbylogin',
+          headers,
+        ),
+        () => _getJsonWithRetry(
+          '$_baseHost/api/studentsubjectmark/getListMarkDetailStudent',
+          headers,
+        ),
+        () => _getJsonWithRetry(
+          '$_baseHost/api/student/viewstudentpayablebyLoginUser',
+          headers,
+        ),
+        () => _getJsonWithRetry(
+          '$_baseHost/api/StudentCourseSubject/studentLoginUser/14',
+          headers,
+        ),
+      ],
+      limit: 4,
+      onProgress: (completed, total) {
+        emitProgress(_lerpProgress(0.05, 0.20, completed / total));
+      },
+    );
+
+    final studentJson = mainResults[0];
     final curriculumProgramIds = _resolveCurriculumProgramIds(studentJson);
-    final curriculumPayloads = <dynamic>[];
-    for (final programId in curriculumProgramIds) {
-      final curriculumJson = await _getJsonWithRetry(
-        '$_baseHost/api/programsubject/tree/$programId/1/10000',
-        headers,
-      );
-      curriculumPayloads.add(curriculumJson);
-    }
-    final marksJson = await marksFuture;
-    final tuitionJson = await tuitionFuture;
-    final timetableJson = await timetableFuture;
+    final curriculumPayloads = await runWithConcurrencyLimit<dynamic>(
+      curriculumProgramIds
+          .map(
+            (programId) =>
+                () => _getJsonWithRetry(
+                  '$_baseHost/api/programsubject/tree/$programId/1/10000',
+                  headers,
+                ),
+          )
+          .toList(growable: false),
+      limit: 4,
+      onProgress: (completed, total) {
+        emitProgress(_lerpProgress(0.55, 0.90, completed / total));
+      },
+    );
     final examsJson = await examsFuture;
+    emitProgress(0.90);
+
+    final marksJson = mainResults[1];
+    final tuitionJson = mainResults[2];
+    final timetableJson = mainResults[3];
 
     final profile = StudentProfile.fromApi(
       studentJson is Map<String, dynamic> ? studentJson : null,
@@ -95,13 +137,14 @@ class SchoolApiService {
   }
 
   Future<List<dynamic>> _fetchExamsWithRetry(
-    Map<String, String> headers,
-  ) async {
-    final firstPass = await _fetchExams(headers);
+    Map<String, String> headers, {
+    void Function(double progress)? onProgress,
+  }) async {
+    final firstPass = await _fetchExams(headers, onProgress: onProgress);
     if (firstPass.isNotEmpty) return firstPass;
 
     await Future<void>.delayed(const Duration(milliseconds: 600));
-    return _fetchExams(headers);
+    return _fetchExams(headers, onProgress: onProgress);
   }
 
   Future<String> _login({
@@ -136,35 +179,66 @@ class SchoolApiService {
     return json['access_token'].toString();
   }
 
-  Future<List<dynamic>> _fetchExams(Map<String, String> headers) async {
+  Future<List<dynamic>> _fetchExams(
+    Map<String, String> headers, {
+    void Function(double progress)? onProgress,
+  }) async {
     final aggregated = <dynamic>[];
     final seenExamPayloads = <String>{};
 
+    final tasks = <Future<List<dynamic>> Function()>[];
     for (final routeId in _examStudentRouteIds) {
       for (
         var semesterId = _examSemesterStart;
         semesterId <= _examSemesterEnd;
         semesterId++
       ) {
-        try {
-          final result = await _getJsonWithRetry(
-            '$_baseHost/api/semestersubjectexamroom/getListRoomByStudentByLoginUser/$routeId/$semesterId/1',
-            headers,
-            attempts: 2,
-          );
-          for (final item in _normalizeList(result)) {
-            final fingerprint = jsonEncode(item);
-            if (seenExamPayloads.add(fingerprint)) {
-              aggregated.add(item);
-            }
-          }
-        } catch (_) {
-          continue;
+        final currentRouteId = routeId;
+        final currentSemesterId = semesterId;
+        tasks.add(
+          () => _fetchExamPayload(
+            routeId: currentRouteId,
+            semesterId: currentSemesterId,
+            headers: headers,
+          ),
+        );
+      }
+    }
+
+    final examPayloads = await runWithConcurrencyLimit<List<dynamic>>(
+      tasks,
+      limit: 6,
+      onProgress: (completed, total) {
+        onProgress?.call(total == 0 ? 1 : completed / total);
+      },
+    );
+    for (final payload in examPayloads) {
+      for (final item in payload) {
+        final fingerprint = jsonEncode(item);
+        if (seenExamPayloads.add(fingerprint)) {
+          aggregated.add(item);
         }
       }
     }
 
     return aggregated;
+  }
+
+  Future<List<dynamic>> _fetchExamPayload({
+    required int routeId,
+    required int semesterId,
+    required Map<String, String> headers,
+  }) async {
+    try {
+      final result = await _getJsonWithRetry(
+        '$_baseHost/api/semestersubjectexamroom/getListRoomByStudentByLoginUser/$routeId/$semesterId/1',
+        headers,
+        attempts: 2,
+      );
+      return _normalizeList(result);
+    } catch (_) {
+      return const <dynamic>[];
+    }
   }
 
   Future<dynamic> _getJson(String url, Map<String, String> headers) async {
@@ -652,6 +726,10 @@ class SchoolApiService {
 
   dynamic _decodeJson(String body) {
     return jsonDecode(body);
+  }
+
+  double _lerpProgress(double start, double end, double progress) {
+    return start + ((end - start) * progress.clamp(0.0, 1.0));
   }
 }
 

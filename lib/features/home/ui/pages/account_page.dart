@@ -12,6 +12,7 @@ class AccountPage extends StatelessWidget {
     required this.profile,
     required this.linkedStudentUsername,
     required this.isSyncing,
+    required this.syncProgress,
     required this.isLinkingStudent,
     required this.isRestoringCloudData,
     required this.isSigningOut,
@@ -34,6 +35,7 @@ class AccountPage extends StatelessWidget {
   final StudentProfile? profile;
   final String? linkedStudentUsername;
   final bool isSyncing;
+  final double? syncProgress;
   final bool isLinkingStudent;
   final bool isRestoringCloudData;
   final bool isSigningOut;
@@ -122,6 +124,7 @@ class AccountPage extends StatelessWidget {
           profile: profile,
           linkedStudentUsername: linkedStudentUsername,
           isSyncing: isSyncing,
+          syncProgress: syncProgress,
           isLinkingStudent: isLinkingStudent,
           isRestoringCloudData: isRestoringCloudData,
           hasSavedSyncCredentials: hasSavedSyncCredentials,
@@ -455,6 +458,7 @@ class _StudentLinkCard extends StatelessWidget {
     required this.profile,
     required this.linkedStudentUsername,
     required this.isSyncing,
+    required this.syncProgress,
     required this.isLinkingStudent,
     required this.isRestoringCloudData,
     required this.hasSavedSyncCredentials,
@@ -466,6 +470,7 @@ class _StudentLinkCard extends StatelessWidget {
   final StudentProfile? profile;
   final String? linkedStudentUsername;
   final bool isSyncing;
+  final double? syncProgress;
   final bool isLinkingStudent;
   final bool isRestoringCloudData;
   final bool hasSavedSyncCredentials;
@@ -476,8 +481,13 @@ class _StudentLinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isBusy = isSyncing || isLinkingStudent || isRestoringCloudData;
+    final syncPercentLabel = isSyncing && syncProgress != null
+        ? '${(syncProgress! * 100).round()}%'
+        : null;
     final syncLabel = isSyncing
-        ? 'Đang đồng bộ...'
+        ? syncPercentLabel == null
+              ? 'Đang đồng bộ...'
+              : 'Đang đồng bộ $syncPercentLabel'
         : isRestoringCloudData
         ? 'Đang tải dữ liệu...'
         : isLinkingStudent
@@ -545,7 +555,20 @@ class _StudentLinkCard extends StatelessWidget {
           ),
           if (isBusy) ...[
             const SizedBox(height: 14),
-            const LinearProgressIndicator(),
+            if (syncPercentLabel != null) ...[
+              Text(
+                'Đã đồng bộ $syncPercentLabel',
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+            LinearProgressIndicator(
+              value: isSyncing ? syncProgress : null,
+              minHeight: 5,
+            ),
           ],
           const SizedBox(height: 14),
           if (profile != null) ...[

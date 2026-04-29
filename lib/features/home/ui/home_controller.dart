@@ -34,6 +34,7 @@ final class HomeState {
     required this.selectedDate,
     required this.payload,
     required this.isSyncing,
+    required this.syncProgress,
     required this.isLoadingLocalCache,
     required this.isLoadingWeather,
     required this.isLinkingStudent,
@@ -54,6 +55,7 @@ final class HomeState {
   final LocalCachePayload payload;
   final WeatherForecast? weatherForecast;
   final bool isSyncing;
+  final double? syncProgress;
   final bool isLoadingLocalCache;
   final bool isLoadingWeather;
   final bool isLinkingStudent;
@@ -148,11 +150,15 @@ final class HomeController extends Notifier<HomeState> {
   WeatherForecast? _weatherForecast;
   bool _eventCacheDirty = true;
   List<StudentEvent> _cachedAllEvents = const <StudentEvent>[];
-  final Map<int, List<StudentEvent>> _cachedEventsByDay = <int, List<StudentEvent>>{};
-  final Map<int, List<Color>> _cachedIndicatorColorsByDay = <int, List<Color>>{};
-  final Map<int, CalendarEventLevel> _cachedEventLevelsByDay = <int, CalendarEventLevel>{};
+  final Map<int, List<StudentEvent>> _cachedEventsByDay =
+      <int, List<StudentEvent>>{};
+  final Map<int, List<Color>> _cachedIndicatorColorsByDay =
+      <int, List<Color>>{};
+  final Map<int, CalendarEventLevel> _cachedEventLevelsByDay =
+      <int, CalendarEventLevel>{};
 
   bool _isSyncing = false;
+  double? _syncProgress;
   bool _isLoadingLocalCache = true;
   bool _isLoadingWeather = true;
   bool _isLinkingStudent = false;
@@ -200,6 +206,7 @@ final class HomeController extends Notifier<HomeState> {
   }
 
   bool get isSyncing => _isSyncing;
+  double? get syncProgress => _syncProgress;
   bool get isLoadingLocalCache => _isLoadingLocalCache;
   bool get isLoadingWeather => _isLoadingWeather;
   bool get isLinkingStudent => _isLinkingStudent;
@@ -387,20 +394,15 @@ final class HomeController extends Notifier<HomeState> {
       ..clear()
       ..addEntries(
         eventsByDay.entries.map(
-          (entry) => MapEntry(
-            entry.key,
-            List<StudentEvent>.unmodifiable(entry.value),
-          ),
+          (entry) =>
+              MapEntry(entry.key, List<StudentEvent>.unmodifiable(entry.value)),
         ),
       );
     _cachedIndicatorColorsByDay
       ..clear()
       ..addEntries(
         indicatorColorsByDay.entries.map(
-          (entry) => MapEntry(
-            entry.key,
-            List<Color>.unmodifiable(entry.value),
-          ),
+          (entry) => MapEntry(entry.key, List<Color>.unmodifiable(entry.value)),
         ),
       );
     _cachedEventLevelsByDay
@@ -420,6 +422,7 @@ final class HomeController extends Notifier<HomeState> {
       payload: _payload,
       weatherForecast: _weatherForecast,
       isSyncing: _isSyncing,
+      syncProgress: _syncProgress,
       isLoadingLocalCache: _isLoadingLocalCache,
       isLoadingWeather: _isLoadingWeather,
       isLinkingStudent: _isLinkingStudent,
@@ -546,7 +549,11 @@ final class HomeController extends Notifier<HomeState> {
       username: credentials.username,
       password: credentials.password,
       currentPayload: _payload,
+      onProgress: (progress) {
+        _updateSyncProgress(progress * 0.7);
+      },
     );
+    _updateSyncProgress(0.72);
     final incomingStudent = _studentUsernameForPayload(syncResult.payload);
     final currentLocalStudent = _studentUsernameForPayload(_payload);
     final requiresLocalReplacementConfirmation =
@@ -567,6 +574,7 @@ final class HomeController extends Notifier<HomeState> {
 
     final remotePayload = await _dashboardPersistenceService
         .fetchRemotePayload();
+    _updateSyncProgress(0.75);
     final currentLinkedStudent = _studentUsernameForPayload(remotePayload);
     _linkedStudentUsername = currentLinkedStudent;
 
@@ -636,11 +644,34 @@ final class HomeController extends Notifier<HomeState> {
   }
 
   void setSyncInProgress(bool value) {
-    if (_isDisposed || _isSyncing == value) {
+    if (_isDisposed) {
+      return;
+    }
+
+    if (_isSyncing == value) {
+      if (!value && _syncProgress != null) {
+        _syncProgress = null;
+        _emit();
+      }
       return;
     }
 
     _isSyncing = value;
+    _syncProgress = value ? 0.0 : null;
+    _emit();
+  }
+
+  void _updateSyncProgress(double value) {
+    if (_isDisposed || !_isSyncing) {
+      return;
+    }
+
+    final clampedValue = value.clamp(0.0, 1.0).toDouble();
+    if (_syncProgress == clampedValue) {
+      return;
+    }
+
+    _syncProgress = clampedValue;
     _emit();
   }
 
@@ -653,7 +684,9 @@ final class HomeController extends Notifier<HomeState> {
 
     try {
       if (_signedInUser != null && clearExistingCloudData) {
+        _updateSyncProgress(0.76);
         await _dashboardPersistenceService.clearCloudAccountData();
+        _updateSyncProgress(0.78);
       }
 
       await _persistAndApplyPayload(
@@ -663,7 +696,11 @@ final class HomeController extends Notifier<HomeState> {
         linkedStudentUsername: _signedInUser == null
             ? null
             : _studentUsernameForPayload(plan.payload),
+        onProgress: (progress) {
+          _updateSyncProgress(0.78 + (progress * 0.18));
+        },
       );
+      _updateSyncProgress(0.96);
       try {
         await _saveLinkedStudentCredentials(
           payload: plan.payload,
@@ -682,6 +719,7 @@ final class HomeController extends Notifier<HomeState> {
 
       _showSyncReminder = false;
       _currentTab = 0;
+      _updateSyncProgress(1.0);
       _emit();
 
       return const HomeActionResult.success('Đồng bộ thành công!');
@@ -1171,9 +1209,13 @@ final class HomeController extends Notifier<HomeState> {
     DateTime? selectedDate,
     String? linkedStudentUsername,
     bool syncToCloud = true,
+    void Function(double progress)? onProgress,
   }) async {
     final persistedPayload = syncToCloud
-        ? await _dashboardPersistenceService.persistPayload(nextPayload)
+        ? await _dashboardPersistenceService.persistPayload(
+            nextPayload,
+            onProgress: onProgress,
+          )
         : await _dashboardPersistenceService.persistPayloadLocally(nextPayload);
     try {
       await _attachmentStorageService.deleteUnusedAttachments(

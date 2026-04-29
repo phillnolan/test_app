@@ -9,6 +9,7 @@ import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
 import '../../attachments/data/file_bytes_reader_stub.dart'
     if (dart.library.io) '../../attachments/data/file_bytes_reader_io.dart';
+import 'api_concurrency.dart';
 
 class CloudSyncService {
   CloudSyncService({http.Client? client}) : _client = client ?? http.Client();
@@ -79,6 +80,67 @@ class CloudSyncService {
       'upsertTask ${event.id}',
       elapsedMs: stopwatch.elapsedMilliseconds,
       extra: 'status=${response.statusCode}',
+    );
+  }
+
+  Future<void> upsertEventsBatch(List<StudentEvent> events) async {
+    if (events.isEmpty) {
+      return;
+    }
+
+    final stopwatch = Stopwatch()..start();
+    final headers = await _authHeaders();
+    if (headers == null) {
+      _logTiming(
+        'upsertEventsBatch skipped',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'count=${events.length}',
+      );
+      return;
+    }
+
+    try {
+      final response = await _client.post(
+        Uri.parse('$_baseUrl/sync-events/batch'),
+        headers: headers,
+        body: jsonEncode({
+          'events': events.map(_eventSyncPayload).toList(growable: false),
+        }),
+      );
+      if (response.statusCode < 400) {
+        _logTiming(
+          'upsertEventsBatch',
+          elapsedMs: stopwatch.elapsedMilliseconds,
+          extra: 'status=${response.statusCode} count=${events.length}',
+        );
+        return;
+      }
+
+      _logTiming(
+        'upsertEventsBatch fallback',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'status=${response.statusCode} count=${events.length}',
+      );
+    } catch (error) {
+      _logTiming(
+        'upsertEventsBatch fallback error',
+        elapsedMs: stopwatch.elapsedMilliseconds,
+        extra: 'error=$error count=${events.length}',
+      );
+    }
+
+    await runWithConcurrencyLimit(
+      events
+          .map(
+            (event) => () async {
+              await upsertNote(event);
+              if (event.type == StudentEventType.personalTask) {
+                await upsertTask(event);
+              }
+            },
+          )
+          .toList(growable: false),
+      limit: 6,
     );
   }
 
@@ -266,6 +328,18 @@ class CloudSyncService {
     if (lower.endsWith('.gif')) return 'image/gif';
     if (lower.endsWith('.webp')) return 'image/webp';
     return 'application/octet-stream';
+  }
+
+  Map<String, dynamic> _eventSyncPayload(StudentEvent event) {
+    return {
+      'id': event.id,
+      'type': event.type.name,
+      'title': event.title,
+      'note': event.note ?? '',
+      'startAt': event.start.toIso8601String(),
+      'endAt': event.end.toIso8601String(),
+      'isDone': event.isDone,
+    };
   }
 
   void _logTiming(String step, {required int elapsedMs, String? extra}) {

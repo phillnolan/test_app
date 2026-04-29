@@ -56,6 +56,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     ref.watch(homeControllerProvider);
     ref.listen<HomeState>(homeControllerProvider, _handleControllerChanged);
+    final isSyncActivity =
+        _controller.isSyncing ||
+        _controller.isLinkingStudent ||
+        _controller.isRestoringCloudData;
+    final syncProgress = _controller.syncProgress;
 
     final pages = <Widget>[
       _buildGradesPage(),
@@ -67,7 +72,22 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
     return Scaffold(
       body: SafeArea(
-        child: IndexedStack(index: _controller.currentTab, children: pages),
+        child: Column(
+          children: [
+            if (isSyncActivity)
+              SizedBox(
+                height: 3,
+                width: double.infinity,
+                child: LinearProgressIndicator(value: syncProgress),
+              ),
+            Expanded(
+              child: IndexedStack(
+                index: _controller.currentTab,
+                children: pages,
+              ),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _controller.currentTab,
@@ -200,6 +220,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       profile: _controller.payload.profile,
       linkedStudentUsername: _controller.linkedStudentUsername,
       isSyncing: _controller.isSyncing,
+      syncProgress: _controller.syncProgress,
       isLinkingStudent: _controller.isLinkingStudent,
       isRestoringCloudData: _controller.isRestoringCloudData,
       isSigningOut: _controller.isSigningOut,

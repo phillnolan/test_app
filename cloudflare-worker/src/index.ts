@@ -19,6 +19,26 @@ type AuthContext = {
   name?: string;
 };
 
+type SyncEventPayload = {
+  id?: string;
+  type?: string;
+  title?: string;
+  note?: string;
+  startAt?: string;
+  endAt?: string;
+  isDone?: boolean;
+};
+
+type NormalizedSyncEvent = {
+  id: string;
+  type: string;
+  title?: string;
+  note: string;
+  startAt?: string;
+  endAt?: string;
+  isDone?: boolean;
+};
+
 const googleJwks = createRemoteJWKSet(
   new URL(
     "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
@@ -62,6 +82,10 @@ export default {
 
     if (url.pathname === "/tasks" && request.method === "POST") {
       return upsertTask(request, env, auth.data.uid);
+    }
+
+    if (url.pathname === "/sync-events/batch" && request.method === "POST") {
+      return upsertSyncEventsBatch(request, env, auth.data.uid);
     }
 
     if (url.pathname === "/sync-cache" && request.method === "POST") {
@@ -234,6 +258,108 @@ async function upsertTask(
     .run();
 
   return json({ ok: true, data: { id: body.id } });
+}
+
+async function upsertSyncEventsBatch(
+  request: Request,
+  env: Env,
+  firebaseUid: string,
+): Promise<Response> {
+  const body = (await request.json()) as { events?: SyncEventPayload[] };
+  const events = body.events ?? [];
+  if (!Array.isArray(events)) {
+    return json({ ok: false, error: "Missing events payload." }, { status: 400 });
+  }
+
+  const normalizedEvents: NormalizedSyncEvent[] = [];
+
+  for (const rawEvent of events) {
+    const id = rawEvent?.id?.trim();
+    const type = rawEvent?.type?.trim();
+    if (!id || !type) {
+      return json(
+        { ok: false, error: "Each event must include id and type." },
+        { status: 400 },
+      );
+    }
+
+    if (type === "personalTask") {
+      const title = rawEvent.title?.trim();
+      const startAt = rawEvent.startAt?.trim();
+      const endAt = rawEvent.endAt?.trim();
+      if (!title || !startAt || !endAt) {
+        return json(
+          {
+            ok: false,
+            error: "Personal tasks require title, startAt, and endAt.",
+          },
+          { status: 400 },
+        );
+      }
+    }
+
+    normalizedEvents.push({
+      id,
+      type,
+      title: rawEvent.title?.trim(),
+      note: rawEvent.note ?? "",
+      startAt: rawEvent.startAt?.trim(),
+      endAt: rawEvent.endAt?.trim(),
+      isDone: rawEvent.isDone,
+    });
+  }
+
+  const batchSize = 25;
+  for (let index = 0; index < normalizedEvents.length; index += batchSize) {
+    const now = new Date().toISOString();
+    const statements: D1PreparedStatement[] = [];
+    const chunk = normalizedEvents.slice(index, index + batchSize);
+
+    for (const event of chunk) {
+      statements.push(
+        env.DB.prepare(
+          `INSERT INTO notes (id, firebase_uid, event_id, event_type, content, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET
+             content = excluded.content,
+             updated_at = excluded.updated_at`,
+        ).bind(event.id, firebaseUid, event.id, event.type, event.note, now, now),
+      );
+
+      if (event.type === "personalTask") {
+        statements.push(
+          env.DB.prepare(
+            `INSERT INTO personal_tasks
+              (id, firebase_uid, title, note, start_at, end_at, is_done, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+             ON CONFLICT(id) DO UPDATE SET
+               title = excluded.title,
+               note = excluded.note,
+               start_at = excluded.start_at,
+               end_at = excluded.end_at,
+               is_done = excluded.is_done,
+               updated_at = excluded.updated_at`,
+          ).bind(
+            event.id,
+            firebaseUid,
+            event.title,
+            event.note,
+            event.startAt,
+            event.endAt,
+            event.isDone ? 1 : 0,
+            now,
+            now,
+          ),
+        );
+      }
+    }
+
+    if (statements.length > 0) {
+      await env.DB.batch(statements);
+    }
+  }
+
+  return json({ ok: true, data: { count: events.length } });
 }
 
 async function saveSyncCache(

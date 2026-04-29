@@ -22,10 +22,12 @@ class SchoolSyncCoordinator {
     required String username,
     required String password,
     required LocalCachePayload currentPayload,
+    void Function(double progress)? onProgress,
   }) async {
     final snapshot = await _schoolApiService.sync(
       username: username,
       password: password,
+      onProgress: onProgress,
     );
     return SchoolSyncResult(
       payload: _payloadFromSnapshot(snapshot, currentPayload),

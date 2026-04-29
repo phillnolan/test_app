@@ -334,6 +334,7 @@ class FakeSchoolApiService extends SchoolApiService {
   Future<SchoolSyncSnapshot> sync({
     required String username,
     required String password,
+    void Function(double progress)? onProgress,
   }) async {
     return _snapshot;
   }
@@ -378,6 +379,9 @@ class FakeCloudSyncService extends CloudSyncService {
 
   @override
   Future<void> upsertTask(StudentEvent event) async {}
+
+  @override
+  Future<void> upsertEventsBatch(List<StudentEvent> events) async {}
 
   @override
   Future<void> saveSyncCache(LocalCachePayload payload) async {}

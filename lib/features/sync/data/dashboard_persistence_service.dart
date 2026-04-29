@@ -6,6 +6,7 @@ import '../../../models/event_attachment.dart';
 import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
 import '../../../services/device_effects_service.dart';
+import 'api_concurrency.dart';
 import 'cloud_sync_service.dart';
 import 'local_cache_service.dart';
 
@@ -141,13 +142,22 @@ class DashboardPersistenceService {
     );
   }
 
-  Future<LocalCachePayload> persistPayload(LocalCachePayload payload) async {
+  Future<LocalCachePayload> persistPayload(
+    LocalCachePayload payload, {
+    void Function(double progress)? onProgress,
+  }) async {
+    onProgress?.call(0.0);
     await _localCacheService.save(payload);
     await _deviceEffectsService.refreshDeviceState(payload);
+    onProgress?.call(0.05);
 
     try {
-      final syncedPayload = await _syncPayloadToCloud(payload);
+      final syncedPayload = await _syncPayloadToCloud(
+        payload,
+        onProgress: onProgress,
+      );
       await _localCacheService.save(syncedPayload);
+      onProgress?.call(1.0);
       return syncedPayload;
     } catch (_) {
       return payload;
@@ -256,8 +266,9 @@ class DashboardPersistenceService {
   }
 
   Future<LocalCachePayload> _syncPayloadToCloud(
-    LocalCachePayload payload,
-  ) async {
+    LocalCachePayload payload, {
+    void Function(double progress)? onProgress,
+  }) async {
     final totalStopwatch = Stopwatch()..start();
     _logTiming(
       'syncPayload start',
@@ -265,13 +276,22 @@ class DashboardPersistenceService {
           'synced=${payload.syncedEvents.length} personal=${payload.personalEvents.length}',
     );
 
+    void emitProgress(double value) {
+      onProgress?.call(value);
+    }
+
+    emitProgress(0.05);
     final attachmentsSyncedStopwatch = Stopwatch()..start();
-    final updatedSyncedEvents = await _uploadMissingAttachments(
-      payload.syncedEvents,
+    final allEvents = [...payload.syncedEvents, ...payload.personalEvents];
+    final uploadedEvents = await _uploadMissingAttachments(
+      allEvents,
+      onProgress: (progress) {
+        emitProgress(_lerpProgress(0.05, 0.75, progress));
+      },
     );
-    final updatedPersonalEvents = await _uploadMissingAttachments(
-      payload.personalEvents,
-    );
+    final syncedCount = payload.syncedEvents.length;
+    final updatedSyncedEvents = uploadedEvents.take(syncedCount).toList();
+    final updatedPersonalEvents = uploadedEvents.skip(syncedCount).toList();
     _logTiming(
       'uploadMissingAttachments total',
       elapsedMs: attachmentsSyncedStopwatch.elapsedMilliseconds,
@@ -282,33 +302,25 @@ class DashboardPersistenceService {
       syncedEvents: updatedSyncedEvents,
       personalEvents: updatedPersonalEvents,
     );
+    emitProgress(0.8);
 
-    final syncedNotesStopwatch = Stopwatch()..start();
-    for (final event in updatedSyncedEvents) {
-      await _cloudSyncService.upsertNote(event);
-    }
+    final eventsUpsertStopwatch = Stopwatch()..start();
+    final upsertFuture = _cloudSyncService
+        .upsertEventsBatch([...updatedSyncedEvents, ...updatedPersonalEvents])
+        .then((_) {
+          emitProgress(0.9);
+        });
+    final saveSyncCacheFuture = _cloudSyncService
+        .saveSyncCache(syncedPayload)
+        .then((_) {
+          emitProgress(1.0);
+        });
+    await Future.wait([upsertFuture, saveSyncCacheFuture]);
     _logTiming(
-      'upsert synced-event notes',
-      elapsedMs: syncedNotesStopwatch.elapsedMilliseconds,
-      extra: 'count=${updatedSyncedEvents.length}',
-    );
-
-    final personalEventsStopwatch = Stopwatch()..start();
-    for (final event in updatedPersonalEvents) {
-      await _cloudSyncService.upsertNote(event);
-      await _cloudSyncService.upsertTask(event);
-    }
-    _logTiming(
-      'upsert personal-event note/task',
-      elapsedMs: personalEventsStopwatch.elapsedMilliseconds,
-      extra: 'count=${updatedPersonalEvents.length}',
-    );
-
-    final saveSyncCacheStopwatch = Stopwatch()..start();
-    await _cloudSyncService.saveSyncCache(syncedPayload);
-    _logTiming(
-      'saveSyncCache total',
-      elapsedMs: saveSyncCacheStopwatch.elapsedMilliseconds,
+      'upsert events + saveSyncCache',
+      elapsedMs: eventsUpsertStopwatch.elapsedMilliseconds,
+      extra:
+          'synced=${updatedSyncedEvents.length} personal=${updatedPersonalEvents.length}',
     );
     _logTiming(
       'syncPayload complete',
@@ -335,24 +347,17 @@ class DashboardPersistenceService {
       ..sort((a, b) => a.start.compareTo(b.start));
 
     final changedEventsStopwatch = Stopwatch()..start();
-    for (final event in changedEvents) {
-      final eventStopwatch = Stopwatch()..start();
-      final uploadedEvent = await _uploadMissingAttachmentsForEvent(event);
+    final uploadedChangedEvents = await _uploadMissingAttachments(
+      changedEvents,
+    );
+    for (final uploadedEvent in uploadedChangedEvents) {
       syncedPayload = _replaceEventInPayload(syncedPayload, uploadedEvent);
-      await _cloudSyncService.upsertNote(uploadedEvent);
-      if (uploadedEvent.type == StudentEventType.personalTask) {
-        await _cloudSyncService.upsertTask(uploadedEvent);
-      }
-      _logTiming(
-        'sync changed event ${event.id}',
-        elapsedMs: eventStopwatch.elapsedMilliseconds,
-        extra: 'type=${event.type.name}',
-      );
     }
+    await _cloudSyncService.upsertEventsBatch(uploadedChangedEvents);
     _logTiming(
       'sync changed events total',
       elapsedMs: changedEventsStopwatch.elapsedMilliseconds,
-      extra: 'count=${changedEvents.length}',
+      extra: 'count=${uploadedChangedEvents.length}',
     );
 
     _logTiming(
@@ -370,49 +375,52 @@ class DashboardPersistenceService {
   }
 
   Future<List<StudentEvent>> _uploadMissingAttachments(
-    List<StudentEvent> events,
-  ) async {
-    final updatedEvents = <StudentEvent>[];
-    for (final event in events) {
-      final eventStopwatch = Stopwatch()..start();
-      final uploadedAttachments = <EventAttachment>[];
-      for (final attachment in event.attachments) {
-        uploadedAttachments.add(
-          await _cloudSyncService.uploadAttachment(
-            attachment: attachment,
-            eventId: event.id,
-          ),
-        );
-      }
-      _logTiming(
-        'event attachments ${event.id}',
-        elapsedMs: eventStopwatch.elapsedMilliseconds,
-        extra: 'count=${event.attachments.length}',
-      );
-      updatedEvents.add(event.copyWith(attachments: uploadedAttachments));
-    }
-    return updatedEvents;
+    List<StudentEvent> events, {
+    void Function(double progress)? onProgress,
+  }) async {
+    return runWithConcurrencyLimit(
+      events
+          .map(
+            (event) => () async {
+              final eventStopwatch = Stopwatch()..start();
+              final uploadedAttachments = await _uploadAttachmentsForEvent(
+                event,
+              );
+              _logTiming(
+                'event attachments ${event.id}',
+                elapsedMs: eventStopwatch.elapsedMilliseconds,
+                extra: 'count=${event.attachments.length}',
+              );
+              return event.copyWith(attachments: uploadedAttachments);
+            },
+          )
+          .toList(growable: false),
+      limit: 4,
+      onProgress: (completed, total) {
+        onProgress?.call(total == 0 ? 1 : completed / total);
+      },
+    );
   }
 
-  Future<StudentEvent> _uploadMissingAttachmentsForEvent(
+  Future<List<EventAttachment>> _uploadAttachmentsForEvent(
     StudentEvent event,
   ) async {
-    final eventStopwatch = Stopwatch()..start();
-    final uploadedAttachments = <EventAttachment>[];
-    for (final attachment in event.attachments) {
-      uploadedAttachments.add(
-        await _cloudSyncService.uploadAttachment(
-          attachment: attachment,
-          eventId: event.id,
-        ),
-      );
+    if (event.attachments.isEmpty) {
+      return const <EventAttachment>[];
     }
-    _logTiming(
-      'event attachments ${event.id}',
-      elapsedMs: eventStopwatch.elapsedMilliseconds,
-      extra: 'count=${event.attachments.length}',
+
+    return runWithConcurrencyLimit(
+      event.attachments
+          .map(
+            (attachment) =>
+                () => _cloudSyncService.uploadAttachment(
+                  attachment: attachment,
+                  eventId: event.id,
+                ),
+          )
+          .toList(growable: false),
+      limit: 4,
     );
-    return event.copyWith(attachments: uploadedAttachments);
   }
 
   DateTime _normalizedDate(DateTime value) {
@@ -616,6 +624,10 @@ class DashboardPersistenceService {
         // Keep note/task sync successful even if snapshot refresh fails.
       }
     });
+  }
+
+  double _lerpProgress(double start, double end, double progress) {
+    return start + ((end - start) * progress.clamp(0.0, 1.0));
   }
 
   void _logTiming(String step, {int? elapsedMs, String? extra}) {

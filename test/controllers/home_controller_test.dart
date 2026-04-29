@@ -46,65 +46,61 @@ void main() {
     },
   );
 
-  testWidgets(
-    'HomeController caches calendar lookups by day',
-    (WidgetTester tester) async {
-      final controller = _attachController(
-        _buildController(
-          localCacheService: _MemoryLocalCacheService(
-            initialPayload: LocalCachePayload(
-              syncedEvents: [
-                StudentEvent(
-                  id: 'class-1',
-                  title: 'Lop hoc sang',
-                  start: DateTime(2026, 4, 3, 8, 0),
-                  end: DateTime(2026, 4, 3, 9, 0),
-                  type: StudentEventType.classSchedule,
-                  color: const Color(0xFFDDE7FF),
-                ),
-                StudentEvent(
-                  id: 'exam-1',
-                  title: 'Thi giua ky',
-                  start: DateTime(2026, 4, 3, 9, 30),
-                  end: DateTime(2026, 4, 3, 11, 0),
-                  type: StudentEventType.exam,
-                  color: const Color(0xFFFFDAD6),
-                ),
-                StudentEvent(
-                  id: 'task-1',
-                  title: 'On bai',
-                  start: DateTime(2026, 4, 4, 8, 0),
-                  end: DateTime(2026, 4, 4, 9, 0),
-                  type: StudentEventType.personalTask,
-                  color: const Color(0xFFDDF4E4),
-                ),
-              ],
-            ),
+  testWidgets('HomeController caches calendar lookups by day', (
+    WidgetTester tester,
+  ) async {
+    final controller = _attachController(
+      _buildController(
+        localCacheService: _MemoryLocalCacheService(
+          initialPayload: LocalCachePayload(
+            syncedEvents: [
+              StudentEvent(
+                id: 'class-1',
+                title: 'Lop hoc sang',
+                start: DateTime(2026, 4, 3, 8, 0),
+                end: DateTime(2026, 4, 3, 9, 0),
+                type: StudentEventType.classSchedule,
+                color: const Color(0xFFDDE7FF),
+              ),
+              StudentEvent(
+                id: 'exam-1',
+                title: 'Thi giua ky',
+                start: DateTime(2026, 4, 3, 9, 30),
+                end: DateTime(2026, 4, 3, 11, 0),
+                type: StudentEventType.exam,
+                color: const Color(0xFFFFDAD6),
+              ),
+              StudentEvent(
+                id: 'task-1',
+                title: 'On bai',
+                start: DateTime(2026, 4, 4, 8, 0),
+                end: DateTime(2026, 4, 4, 9, 0),
+                type: StudentEventType.personalTask,
+                color: const Color(0xFFDDF4E4),
+              ),
+            ],
           ),
         ),
-      );
-      controller.initialize();
-      await tester.pump();
+      ),
+    );
+    controller.initialize();
+    await tester.pump();
 
-      final eventsOnThird = controller.eventsForDate(DateTime(2026, 4, 3));
-      expect(eventsOnThird, hasLength(2));
-      expect(eventsOnThird.first.id, 'class-1');
-      expect(
-        controller.indicatorsForDate(DateTime(2026, 4, 3)),
-        hasLength(2),
-      );
-      expect(
-        controller.eventLevelForDate(DateTime(2026, 4, 3)),
-        CalendarEventLevel.important,
-      );
-      expect(
-        controller.eventLevelForDate(DateTime(2026, 4, 4)),
-        CalendarEventLevel.normal,
-      );
+    final eventsOnThird = controller.eventsForDate(DateTime(2026, 4, 3));
+    expect(eventsOnThird, hasLength(2));
+    expect(eventsOnThird.first.id, 'class-1');
+    expect(controller.indicatorsForDate(DateTime(2026, 4, 3)), hasLength(2));
+    expect(
+      controller.eventLevelForDate(DateTime(2026, 4, 3)),
+      CalendarEventLevel.important,
+    );
+    expect(
+      controller.eventLevelForDate(DateTime(2026, 4, 4)),
+      CalendarEventLevel.normal,
+    );
 
-      controller.disposeForTesting();
-    },
-  );
+    controller.disposeForTesting();
+  });
 
   testWidgets(
     'syncSchoolData requires confirmation before replacing another student',
@@ -474,6 +470,7 @@ class _FakeSchoolApiService extends SchoolApiService {
   Future<SchoolSyncSnapshot> sync({
     required String username,
     required String password,
+    void Function(double progress)? onProgress,
   }) async {
     return _snapshot;
   }
@@ -516,6 +513,9 @@ class _FakeCloudSyncService extends CloudSyncService {
 
   @override
   Future<void> upsertTask(StudentEvent event) async {}
+
+  @override
+  Future<void> upsertEventsBatch(List<StudentEvent> events) async {}
 
   @override
   Future<void> saveSyncCache(LocalCachePayload payload) async {}
