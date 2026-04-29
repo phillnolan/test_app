@@ -1,12 +1,12 @@
 [
   {
     "id": 1,
-    "question": "MOT TRONG NHUNG DAC DIEM CO BAN CUA NEN KINH TE TRI THUC LA:",
+    "question": "Một trong những đặc điểm cơ bản của nền kinh tế tri thức là:",
     "options": [
-      "MAY MOC THAY THE TOAN BO LAO DONG CUA CON NGUOI",
-      "SU DUNG PHUONG PHAP LAO DONG THU CONG",
-      "UNG DUNG CO MUC DO NHUNG THANH TUU CUA KHOA HOC, CONG NGHE",
-      "TRI THUC TRO THANH LUC LUONG SAN XUAT TRUC TIEP, LA NGUON LUC QUAN TRONG HANG đầu, quyết định sự tăng trưởng và phát triển kinh tế"
+      "Máy móc thay thế toàn bộ lao động của con người",
+      "Sử dụng phương pháp lao động thủ công",
+      "Ứng dụng có mức độ những thành tựu của khoa học, công nghệ",
+      "Tri thức trở thành lực lượng sản xuất trực tiếp, là nguồn lực quan trọng hàng đầu, quyết định sự tăng trưởng và phát triển kinh tế"
     ],
     "correctAnswerIndices": [
       3
@@ -15,12 +15,12 @@
   },
   {
     "id": 2,
-    "question": "THOI GIAN LAO DONG XA HOI CAN THIET LA:",
+    "question": "Thời gian lao động xã hội cần thiết là:",
     "options": [
-      "TRINH DO KI THUAT TRUNG BINH, TRINH DO KHEO LEO TRUNG BINH",
-      "GOM TAT CA CAC DAP AN",
-      "SO THOI GIAN CAN THIET DE SAN XUAT MOT HANG HOA TRONG DIEU KIEN BINH thường của xã hội.",
-      "CUONG DO LAO DONG TRUNG BINH SO VOI HOAN CANH XA HOI NHAT DINH"
+      "Trình độ kĩ thuật trung bình, trình độ khéo léo trung bình",
+      "Gồm tất cả các đáp án",
+      "Số thời gian cần thiết để sản xuất một hàng hóa trong điều kiện bình thường của xã hội.",
+      "Cường độ lao động trung bình so với hoàn cảnh xã hội nhất định"
     ],
     "correctAnswerIndices": [
       2
@@ -29,12 +29,12 @@
   },
   {
     "id": 3,
-    "question": "CAC NHAN DINH SAU DAY DUNG VE GIA TRI THOI GIAN LAO DONG THANG DU SIEU ngạch",
+    "question": "Các nhận định sau đây đúng về giá trị thời gian lao động thặng dư siêu ngạch",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "THU DUOC DO TANG NANG SUAT LAO DONG XA HOI",
-      "THU DUOC DO TANG NANG SUAT LAO DONG CA BIET",
-      "THU DUOC DO RUT NGAN THOI GIAN LAO DONG CAN THIET"
+      "Các đáp án đều đúng",
+      "Thu được do tăng năng suất lao động xã hội",
+      "Thu được do tăng năng suất lao động cá biệt",
+      "Thu được do rút ngắn thời gian lao động cần thiết"
     ],
     "correctAnswerIndices": [
       2
@@ -43,12 +43,12 @@
   },
   {
     "id": 4,
-    "question": "NHAN DINH NAO SAU DAY DUNG VE CHUC NANG PHUONG PHAP LUAN CUA KINH TE chính trị Mác-Lênin:",
+    "question": "Nhận định nào sau đây đúng về chức năng phương pháp luận của kinh tế chính trị Mác-Lênin:",
     "options": [
-      "NHUNG NGUYEN LY CUA KINH TE CHINH TRI CUNG CAP TRI THUC LY LUAN KINH TE để người học vận dụng vào hoạt động kinh tế đạt hiệu quả cao.",
-      "KINH TE CHINH TRI NGHIEN CUU CAC QUAN HE SAN XUAT, BAO GOM RUT RA CAC quy luật, phạm trù kinh tế làm cơ sở cho hoạt động kinh tế.",
-      "KINH TE CHINH TRI NGHIEN CUU CAC QUAN HE SAN SUAT NHAM RUT RA CAC QUY luật phạm trù kinh tế làm cơ sở để căn cứ vào để thỏa mãn nhu cầu lợi ích kinh tế",
-      "CAC DAP AN DEU DUNG"
+      "Những nguyên lý của kinh tế chính trị cung cấp tri thức lý luận kinh tế để người học vận dụng vào hoạt động kinh tế đạt hiệu quả cao.",
+      "Kinh tế chính trị nghiên cứu các quan hệ sản xuất, bao gồm rút ra các quy luật, phạm trù kinh tế làm cơ sở cho hoạt động kinh tế.",
+      "Kinh tế chính trị nghiên cứu các quan hệ sản suất nhằm rút ra các quy luật phạm trù kinh tế làm cơ sở để căn cứ vào để thỏa mãn nhu cầu lợi ích kinh tế",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       2
@@ -57,12 +57,12 @@
   },
   {
     "id": 5,
-    "question": "GIA TRI HANG HOA THU DUOC DO TANG CUONG DO LAO DONG LA GIA TRI THANG DU:",
+    "question": "Giá trị hàng hóa thu được do tăng cường độ lao động là giá trị thặng dư :",
     "options": [
-      "TUYET DOI",
-      "CA BIET",
-      "TUONG DOI",
-      "SIEU NGACH"
+      "Tuyệt đối",
+      "Cá biệt",
+      "Tương đối",
+      "Siêu ngạch"
     ],
     "correctAnswerIndices": [
       0
@@ -71,12 +71,12 @@
   },
   {
     "id": 6,
-    "question": "GIA TRI SU DUNG HANG HOA LA DO:",
+    "question": "Giá trị sử dụng hàng hóa là do:",
     "options": [
-      "LAO DONG TRUU TUONG TAO RA",
-      "LAO DONG CAC BIET TAO RA",
-      "LAO DONG XA HOI TAO RA",
-      "LAO DONG CU THE TAO RA"
+      "Lao động trừu tượng tạo ra",
+      "Lao động các biệt tạo ra",
+      "Lao động xã hội tạo ra",
+      "Lao động cụ thể tạo ra"
     ],
     "correctAnswerIndices": [
       3
@@ -85,12 +85,12 @@
   },
   {
     "id": 8,
-    "question": "NOI DUNG NAO THE HIEN TINH TAT YEU CUA CONG NGHIEP HOA, HIEN DAI HOA DAT nước?",
+    "question": "Nội dung nào thể hiện tính tất yếu của công nghiệp hóa, hiện đại hóa đất nước?",
     "options": [
-      "DO YEU CAU HOI NHAP QUOC TE",
-      "DO YEU CAU XAY DUNG CO SO VAT CHAT - KY THUAT CUA CHU NGHIA XA HOI",
-      "DO YEU CAU XAY DUNG KHOI LIEN MINH CONG - NONG - TRI NGAY CANG CHAT chẽ",
-      "DO YEU CAU XAY DUNG NEN KINH TE TRI THUC"
+      "Do yêu cầu hội nhập quốc tế",
+      "Do yêu cầu xây dựng cơ sở vật chất - kỹ thuật của chủ nghĩa xã hội",
+      "Do yêu cầu xây dựng khối liên minh công - nông - trí ngày càng chặt chẽ",
+      "Do yêu cầu xây dựng nền kinh tế tri thức"
     ],
     "correctAnswerIndices": [
       1
@@ -99,12 +99,12 @@
   },
   {
     "id": 9,
-    "question": "CAC HINH THUC CHU YEU CUA DAU TU TRUC TIEP NUOC NGOAI VAO VIET NAM hiện nay:",
+    "question": "Các hình thức chủ yếu của đầu tư trực tiếp nước ngoài vào Việt Nam hiện nay:",
     "options": [
-      "HOP DONG HOP TAC KINH DOANH",
+      "Hợp đồng hợp tác kinh doanh",
       "BOT, BTO, BT",
-      "DOANH NGHIEP 100% VON NUOC NGOAI",
-      "LIEN DOANH"
+      "Doanh nghiệp 100% vốn nước ngoài",
+      "Liên doanh"
     ],
     "correctAnswerIndices": [
       2
@@ -113,12 +113,12 @@
   },
   {
     "id": 10,
-    "question": "NHAN DINH NAO SAU DAY SAI KHI NOI VE TU BAN KHA BIEN",
+    "question": "Nhận định nào sau đây sai khi nói về tư bản khả biến",
     "options": [
-      "KHI SU DUNG, TRONG SAN XUAT NO TAO RA LUONG GIA TRI MOI BANG GIA BAN thân nó và giá trị tăng thêm",
-      "KHI SU DUNG, TRONG SAN XUAT NO TAO RA GIA TRI MOI BANG GIA TRI LAO DONG quá khứ và sức lao động",
-      "TRONG QUA TRINH SAN XUAT, GIA TRI CUA NO CHUYEN HET VAO SAN PHAM VA thu hồi ngay sau khi bán hàng.",
-      "TU BAN KHA BIEN CHINH LA SO VON DUNG DE MAU SUC LAO DONG"
+      "Khi sử dụng, trong sản xuất nó tạo ra lượng giá trị mới bằng giá bản thân nó và giá trị tăng thêm",
+      "Khi sử dụng, trong sản xuất nó tạo ra giá trị mới bằng giá trị lao động quá khứ và sức lao động",
+      "Trong quá trình sản xuất, giá trị của nó chuyển hết vào sản phẩm và thu hồi ngay sau khi bán hàng.",
+      "Tư bản khả biến chính là số vốn dùng để mau sức lao động"
     ],
     "correctAnswerIndices": [
       0
@@ -127,12 +127,12 @@
   },
   {
     "id": 12,
-    "question": "SAN PHAM LA HANG HOA DEM RA THI TRUONG DE TRAO DOI, MUA BAN NO CO thể:",
+    "question": "Sản phẩm là hàng hóa đem ra thị trường để trao đổi , mua bán nó có thể :",
     "options": [
-      "THOA MAN NHU CAU CUA NGUOI TIEU DUNG, SAN XUAT, NHA NUOC",
-      "THOA MAN NHU CAU CUA CON NGUOI",
-      "THOA MAN NHU CAU NAO DO CUA CON NGUOI",
-      "THOA MAN TOI DA MOI NHU CAU CUA XA HOI"
+      "Thỏa mãn nhu cầu của người tiêu dùng, sản xuất , nhà nước",
+      "Thỏa mãn nhu cầu của con người",
+      "Thỏa mãn nhu cầu nào đó của con người",
+      "Thỏa mãn tối đa mọi nhu cầu của xã hội"
     ],
     "correctAnswerIndices": [
       2
@@ -141,12 +141,12 @@
   },
   {
     "id": 13,
-    "question": "TRONG HAI MAT CUA LAO DONG CUA LAO DONG SAN XUAT HANG HOA, LAO DONG nào là đồng nhất về chất:",
+    "question": "Trong hai mặt của lao động của lao động sản xuất hàng hóa, lao động nào là đồng nhất về chất:",
     "options": [
-      "LAO DONG CA THE",
-      "LAO DONG TRUU TUONG",
-      "LAO DONG TAP THE",
-      "LAO DONG CU THE"
+      "Lao động cá thể",
+      "Lao động trừu tượng",
+      "Lao động tập thể",
+      "Lao động cụ thể"
     ],
     "correctAnswerIndices": [
       1
@@ -155,7 +155,7 @@
   },
   {
     "id": 14,
-    "question": "CO SO VON K LA 100.000 USD, TRONG DO 80.000 USD DUNG DE MUA TU liệu sản xuất, trình độ bóc lột là 200%. Vậy lượng giá trị mới do lao động tạo ra là:",
+    "question": "có số  vốn k  là 100.000 USD, trong đó 80.000 USD dùng để mua tư liệu sản xuất, trình độ bóc lột là 200% . Vậy lượng giá trị mới do lao động tạo ra là :",
     "options": [
       "60.000",
       "20.000",
@@ -169,12 +169,12 @@
   },
   {
     "id": 15,
-    "question": "VAI TRO MOI CUA NGAN HANG TRONG GIAI DOAN CHU NGHIA TU BAN DOC QUYEN",
+    "question": "Vai trò mới của ngân hàng trong giai đoạn chủ nghĩa tư bản độc quyền",
     "options": [
-      "PHAT HANH, THANH TOAN VA QUAN LY TIEN TE",
-      "CHUC NANG KIEM SOAT, GIAM SAT, DIEU TIET HOAT DONG CUA NEN KINH TE TU bản",
-      "CHUC NANG GIAM SAT CAC HOAT DONG KINH TE",
-      "CHUC NANG KIEM SOAT CAC HOAT DONG KINH TE"
+      "Phát hành, thanh toán và quản lý tiền tệ",
+      "Chức năng kiểm soát, giám sát, điều tiết hoạt động của nền kinh tế tư bản",
+      "Chức năng giám sát các hoạt động kinh tế",
+      "Chức năng kiểm soát các hoạt động kinh tế"
     ],
     "correctAnswerIndices": [
       1
@@ -183,12 +183,12 @@
   },
   {
     "id": 16,
-    "question": "KHI NANG SUAT LAO DONG TANG LEN:",
+    "question": "Khi năng suất lao động tăng lên :",
     "options": [
-      "GIA TRI SAN PHAM TANG LEN",
-      "GIA TRI SAN PHAM GIU NGUYEN",
-      "GIA TRI SAN PHAM CO THE TANG HOAC GIAM",
-      "GIA THI SAN PHAM GIAM XUONG"
+      "Giá trị sản phẩm tăng lên",
+      "Giá trị sản phẩm giữ nguyên",
+      "Giá trị sản phẩm có thể tăng hoặc giảm",
+      "Giá thị sản phẩm giảm xuống"
     ],
     "correctAnswerIndices": [
       3
@@ -197,12 +197,12 @@
   },
   {
     "id": 17,
-    "question": "NHAN DINH NAO SAI KHI NOI VE TI SUAT LOI NHUAN",
+    "question": "Nhận định nào sai khi nói về tỉ suất lợi nhuận",
     "options": [
-      "P` NOI LEN MUC DO LAM VIEC NANG NHOC HAY NHAN NHA",
-      "P` NOI LEN HIEU QUA DAU TU CUA TU BAN",
-      "TIET KIEM CHI PHI TU BAN LAM CHO P` TANG LEN",
-      "P` LA TI LE PHAN TRAM GIUA GIA TRI THANG DU VOI CHI PHI TU BAN"
+      "P` nói lên mức độ làm việc nặng nhọc hay nhàn nhã",
+      "P` nói lên hiệu quả đầu tư của tư bản",
+      "Tiết kiệm chi phí tư bản làm cho p` tăng lên",
+      "P` là tỉ lệ phần trăm giữa giá trị thặng dư với chi phí tư bản"
     ],
     "correctAnswerIndices": [
       0
@@ -211,12 +211,12 @@
   },
   {
     "id": 19,
-    "question": "TRONG NEN KINH TE DINH HUONG XA HOI CN O VN HIEN NAY, THANH PHAN NAO giữ vai trò chủ đạo",
+    "question": "Trong nen kinh te đinh huong xa hoi CN o VN hien nay, thanh phan nao giữ vai trò chủ đạo",
     "options": [
-      "THANH PHAN KINH TE NHA NUOC",
-      "THANH PHAN KINH TE TAP THE",
-      "THANH PHAN KINH TE TU NHAN",
-      "THANH PHAN KINH TE CO VON DAU TU NUOC NGOAI"
+      "Thành phần kinh tế nhà nước",
+      "Thành phần kinh tế tập thể",
+      "Thành phần kinh tế tư nhân",
+      "Thành phần kinh tế có vốn đầu tư nước ngoài"
     ],
     "correctAnswerIndices": [
       0
@@ -225,12 +225,12 @@
   },
   {
     "id": 20,
-    "question": "NHAN DINH NAO SAU DAY DUNG VE LOI NHUAN",
+    "question": "Nhận định nào sau đây đúng về lợi nhuận",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "DO THOI GIAN LAO DONG CONG NHAN TAO RA",
-      "LOI NHUAN LA HINH THAI BIEU HIEN BANG TIEN CUA GIA TRI THANG DU",
-      "MOT SO TIEN MA NGUOI SAN XUAT THU DUOC KHI LAY DOANH THU BAN HANG TRU đi chi phí sản xuất"
+      "Các đáp án đều đúng",
+      "Do thời gian lao động công nhân tạo ra",
+      "Lợi nhuận là hình thái biểu hiện bằng tiền của giá trị thặng dư",
+      "Một số tiền mà người sản xuất thu được khi lấy doanh thu bán hàng trừ đi chi phí sản xuất"
     ],
     "correctAnswerIndices": [
       0
@@ -239,12 +239,12 @@
   },
   {
     "id": 21,
-    "question": "1 TRONG NHUNG NOI DUNG CO BAN CUA CONG NGHIEP HOA HIEN DAI HOA O VN là:",
+    "question": "1 trong những nội dung cơ bản của công nghiệp hóa hiện đại hóa ở VN là :",
     "options": [
-      "XAY DUNG CO SO VAT CHAT XA HOI CHU NGHIA",
-      "PHAT TRIEN MANH ME LUC LUONG SAN XUAT TREN NHUNG THANH TUU KHOA HOC, kĩ thuật, công nghệ mới, hiện đại",
-      "RUT NGAN KHOANG CACH LAC HAU SO VOI CAC NUOC PHAT TRIEN",
-      "TAO RA NANG SUAT LAO DONG CAO"
+      "Xây dựng cơ sở vật chất xã hội chủ nghĩa",
+      "Phát triển mạnh mẽ lực lượng sản xuất trên những thành tựu khoa học, kĩ thuật, công nghệ mới , hiện đại",
+      "Rút ngắn khoảng cách lạc hậu so với các nước phát triển",
+      "Tạo ra năng suất lao động cao"
     ],
     "correctAnswerIndices": [
       1
@@ -253,12 +253,12 @@
   },
   {
     "id": 22,
-    "question": "TRONG QUAN HE LOI ICH GIUA NHUNG NGUOI SU DUNG LAO DONG VOI NHAU, SU thống nhất và mâu thuẫn về lợi ích kinh tế được biểu hiện qua yếu tố:",
+    "question": "Trong quan hệ lợi ích giữa những người sử dụng lao động với nhau, sự thống nhất và mâu thuẫn về lợi ích kinh tế được biểu hiện qua yếu tố:",
     "options": [
-      "THUONG HIEU",
-      "LOI NHUAN BINH QUAN",
-      "CHI PHI SAN XUAT",
-      "GIA CA"
+      "Thương hiệu",
+      "Lợi nhuận bình quân",
+      "Chi phí sản xuất",
+      "Giá cả"
     ],
     "correctAnswerIndices": [
       1
@@ -267,12 +267,12 @@
   },
   {
     "id": 23,
-    "question": "CUOC CACH MANG CONG NGHIEP LAN THU I DIEN RA O QUOC GIA NAO:",
+    "question": "cuộc cách mạng công nghiệp lần thứ I diễn ra ở quốc gia nào:",
     "options": [
-      "ANH",
-      "PHAP",
-      "MI",
-      "NHAT."
+      "Anh",
+      "Pháp",
+      "Mĩ",
+      "Nhật."
     ],
     "correctAnswerIndices": [
       0
@@ -281,12 +281,12 @@
   },
   {
     "id": 24,
-    "question": "DE VUON RA THI TRUONG THE GIOI VA THICH UNG VOI QUA TRINH TOAN CAU HOA dòng tiền, các tập đoàn tài chính đã có những chính sách:",
+    "question": "Để vươn ra thị trường thế giới và thích ứng với quá trình toàn cầu hóa dòng tiền, các tập đoàn tài chính đã có những chính sách:",
     "options": [
-      "DIEU TIET CONCEN,CONGLOMERATE XAM NHAP VAO CAC NEN KINH TE QUOC GIA khác",
-      "THANH LAP NGAN HANG DA QUOC GIA",
-      "THANH LAP CAC NGAN HANG XUYEN QUOC GIA",
-      "TAT CA CAC Y TREN"
+      "Điều tiết concen,conglomerate xâm nhập vào các nền kinh tế quốc gia khác",
+      "Thành lập ngân hàng đa quốc gia",
+      "Thành lập các ngân hàng xuyên quốc gia",
+      "Tất cả các ý trên"
     ],
     "correctAnswerIndices": [
       3
@@ -295,14 +295,12 @@
   },
   {
     "id": 25,
-    "question": "YEU TO CAU THANH CO BAN CUA NEN KINH TE THI TRUONG DINH HUONG XA HOI chủ nghĩa",
+    "question": "Yếu tố cấu thành cơ bản của nền kinh tế thị trường định hướng xã hội chủ nghĩa",
     "options": [
       "",
       "",
-      "HE THONG PHAP LUAT QUY TAC CHE DINH",
-      "HE THONG PHAP LUAT",
-      "LUAT DOANH NGHIEP",
-      "LUAT DAU TU"
+      "Hệ thống pháp luật quy tắc chế định",
+      "Hệ thống pháp luật E. Luật doanh nghiệp F. Luật đầu tư"
     ],
     "correctAnswerIndices": [
       2
@@ -311,11 +309,11 @@
   },
   {
     "id": 26,
-    "question": "NHAN DINH NAO SAU DAY LA SAI:",
+    "question": "nhận định nào sau đây là sai:",
     "options": [
-      "TICH LUY TU BAN LA SU DUNG 1 PHAN GIA TRI THANG DU SANG LAM TU BAN PHU thêm",
-      "TICH LUY TU BAN LA SU DUNG TOAN BO GIA TRI THANG DU SANG LAM TU BAN PHU thêm",
-      "TICH LUY TU BAN GAN LIEN VOI TAI SAN SUAT MO RONG QUY MO TU BAN"
+      "Tích lũy tư bản là sử dụng 1 phần giá trị thặng dư sang làm tư bản phụ thêm",
+      "Tích lũy tư bản là sử dụng toàn bộ giá trị thặng dư sang làm tư bản phụ thêm",
+      "Tích lũy tư bản gắn liền với tái sản suất mở rộng quy mô tư bản"
     ],
     "correctAnswerIndices": [
       1
@@ -324,12 +322,12 @@
   },
   {
     "id": 27,
-    "question": "BO PHAN CHU DAO TRONG THANH PHAN KINH TE NHA NUOC LA:",
+    "question": "Bộ phận chủ đạo trong thành phần kinh tế nhà nước là:",
     "options": [
-      "TAI NGUYEN QUOC GIA",
-      "CAC QUY DAU TU QUOC GIA",
-      "DOANH NGHIEP NHA NUOC",
-      "NGAN SACH NHA NUOC"
+      "Tài nguyên quốc gia",
+      "Các quỹ đầu tư quốc gia",
+      "Doanh nghiệp nhà nước",
+      "Ngân sách nhà nước"
     ],
     "correctAnswerIndices": [
       2
@@ -338,12 +336,12 @@
   },
   {
     "id": 28,
-    "question": "NHAN DINH NAO SAU DAY DUNG:GIA CUNG HANG HOA LA GIA:",
+    "question": "nhận định nào sau đây đúng:Giá cung hàng hóa là giá:",
     "options": [
-      "NGUOI SAN XUAT THU DUOC TU VIEC BAN HANG CHO DAI LY TIEU THU",
-      "DO NHA NUOC DUA RA CHINH SACH GIA CA",
-      "NGUOI BAN HANG THU DUOC THONG QUA VIEC BAN HANG CHO NGUOI TIEU dùng",
-      "NGUOI BAN HANG BAN BANG GIA TRI HANG HOA"
+      "NGười sản xuất thu được từ việc bán hàng cho đại lý tiêu thụ",
+      "Do nhà nước đưa ra chính sách giá cả",
+      "Người bán hàng thu được thông qua việc bán hàng cho người tiêu dùng",
+      "Người bán hàng bán bằng giá trị hàng hóa"
     ],
     "correctAnswerIndices": [
       0
@@ -352,12 +350,12 @@
   },
   {
     "id": 29,
-    "question": "TRONG CAC LOAI LAO DONG NAO SAU DAY, LAO DONG NAO DONG VAI TRO LA CO SO để trao đổi hàng hóa",
+    "question": "trong các loại lao dộng nào sau đây , lao động nào đóng vai trò là cơ sở để trao đổi hàng hóa",
     "options": [
-      "LAO DONG TU NHAN",
-      "LAO DONG CA BIET",
-      "LAO DONG TRUU TUONG",
-      "LAO DONG CA THE"
+      "Lao động tư nhân",
+      "Lao động cá biệt",
+      "Lao động trừu tượng",
+      "Lao động cá thể"
     ],
     "correctAnswerIndices": [
       2
@@ -366,12 +364,12 @@
   },
   {
     "id": 30,
-    "question": "CHU NGHIA TRONG THUONG XUAT HIEN O CAC NUOC TAY AU DAU TIEN VOA NHUNG năm:",
+    "question": "chủ nghĩa trọng thương xuất hiện ở các nước tây âu đầu tiên vòa những năm:",
     "options": [
-      "XV DEN CUOI XVI",
-      "XV DEN CUOI THE KIVII",
-      "XV DEN CUOI THE KI XVIII",
-      "XV DEN CUOI THE KI XIX"
+      "XV đến cuối XVI",
+      "XV đến cuối thế kĩVII",
+      "XV đến cuối thế kỉ XVIII",
+      "XV dến cuối thể kỉ XIX"
     ],
     "correctAnswerIndices": [
       1
@@ -380,12 +378,12 @@
   },
   {
     "id": 31,
-    "question": "CHAT CUA HANG HOA LA:",
+    "question": "Chất của hàng hóa là :",
     "options": [
-      "THOI GIAN LAO DONG TRUU TUONG CUA CON NGUOI SAN XUAT KET TINH TRONG hàng hóa",
-      "CAC DAP AN DEU DUNG",
-      "THOI GIAN LAO DONG CA BIET CUA NGUOI SAN XUAT KET TINH TRONG HANG HOA",
-      "THOI GIAN LAO DONG CU THE CUA NGUOI SAN XUAT KET TINH TRONG HANG HOA"
+      "Thời gian lao động trừu tượng của con người sản xuất kết tinh trong hàng hóa",
+      "Các đáp án đều đúng",
+      "Thời gian lao động cá biệt của người sản xuất kết tinh trong hàng hoá",
+      "Thời gian lao động cụ thể của người sản xuất kết tinh trong hàng hóa"
     ],
     "correctAnswerIndices": [
       0
@@ -394,12 +392,12 @@
   },
   {
     "id": 32,
-    "question": "TAC DONG TIEU CUC CUA DOC QUYEN KINH TE LA:",
+    "question": "",
     "options": [
-      "GIA TANG PHAN HOA GIAU NGHEO",
-      "LAM CHO CANH TRANH KHONG HOAN HAO",
-      "CAC DAP AN DEU DUNG",
-      "KIM HAM TIEN BO KI THUAT"
+      "Gia tăng phân hóa giàu nghèo",
+      "Làm cho cạnh tranh không hoàn hảo",
+      "Các đáp án đều đúng",
+      "Kìm hãm tiến bộ kĩ thuật"
     ],
     "correctAnswerIndices": [
       2
@@ -408,12 +406,12 @@
   },
   {
     "id": 33,
-    "question": "TRONG QUAN HE LOI ICH VOI NGUOI LAO DONG, LOI ICH KINH TE CHU YEU CUA người lao động là:",
+    "question": "Trong quan hệ lợi ích với người Lao động, lợi ích kinh tế chủ yếu của người lao động là :",
     "options": [
-      "SU TRUNG THANH CUA NGUOI LAO DONG",
-      "SU CONG HIEN CUA NGUOI LAO DONG",
-      "SU TON TRONG CUA NGUOI LAO DONG",
-      "LOI NHUAN THU DUOC TRONG QUA TRINH SAN XUAT KINH DOANH"
+      "Sự trung thành của người lao động",
+      "Sự cống hiến của người lao động",
+      "Sự tôn trọng của người lao động",
+      "Lợi nhuận thu được trong quá trình sản xuất kinh doanh"
     ],
     "correctAnswerIndices": [
       3
@@ -422,12 +420,12 @@
   },
   {
     "id": 34,
-    "question": "MOT CONG TI MUA O TO CHO KHACH VOI GIA 5 TY. XE O TO DUOC SU DUNG trong 20 năm và hết khấu hao. Vậy sau 20 năm số tiền bỏ ra mua xe sẽ:",
+    "question": "Một công ti mua ô tô chở khách với giá 5 tỷ. Xe ô tô được sử dụng trong 20 năm và hết khấu hao. Vậy sau 20 năm số tiền bỏ ra mua xe sẽ :",
     "options": [
-      "BI HAO MON VO HINH",
-      "BI MAT DI",
-      "CHI DUOC THU HOI 1 PHAN",
-      "DUOC THU HOI"
+      "Bị hao mòn vô hình",
+      "Bị mất đi",
+      "Chỉ được thu hồi 1 phần",
+      "Được thu hồi"
     ],
     "correctAnswerIndices": [
       0
@@ -436,12 +434,12 @@
   },
   {
     "id": 35,
-    "question": "QUA TRINH HOI NHAP KINH TE QUOC TE, VIET NAM CAN XAY DUNG NEN KINH TE độc lập tự chủ là do:",
+    "question": "Quá trình hội nhập kinh tế quốc tế, Việt Nam cần xây dựng nền kinh tế độc lập tự chủ là do:",
     "options": [
-      "CO DOC LAP TU CHU MOI CO THE DAY MANH HOI NHAP QUOC TE",
-      "CO DOC LAP TU CHU MOI DAM BOA HOI NHAP KINH TE QUOC TE CO HIEU QUA",
-      "CAC DAP AN DEU DUNG",
-      "CO DOC LAP TU CHU CON LA CO SO DE GIU GIN BAN SAC VAN HOA DAN TOC"
+      "Có độc lập tự chủ mới có thể đẩy mạnh hội nhập quốc tế",
+      "Có độc lập tự chủ mới đảm bỏa hội nhập kinh tế quốc tế có hiệu quả",
+      "Các đáp án đều đúng",
+      "Có độc lập tự chủ còn là cơ sở để giữ gìn bản sắc văn hóa dân tộc"
     ],
     "correctAnswerIndices": [
       2
@@ -450,12 +448,12 @@
   },
   {
     "id": 36,
-    "question": "TRONG GIAI DOAN HIEN NAY, LUONG XUUAT KHAU TU BAN CHU YEU CHAY QUA LAI giữa:",
+    "question": "Trong giai đoạn hiện nay, luồng xuuất khẩu tư bản chủ yếu chảy qua lại giữa :",
     "options": [
-      "CAC NUOC DANG PHAT TRIEN SANG CAC NUOC PHAT TRIEN",
-      "CAC NUOC TU BAN PHAT TRIEN SANG CAC NUOC DANG PHAT TRIEN",
-      "CAC NUOC TU BAN PHAT TRIEN VOI NHAU",
-      "CAC NUOC DANG PHAT TRIEN VOI NHAU"
+      "Các nước đang phát triển sang các nước phát triển",
+      "Các nước tư bản phát triển sang các nước đang phát triển",
+      "Các nước tư bản phát triển với nhau",
+      "Các nước đang phát triển với nhau"
     ],
     "correctAnswerIndices": [
       1
@@ -464,12 +462,12 @@
   },
   {
     "id": 37,
-    "question": "TICH LUY TU BAN LAM CHO CAU TAO HUU CO CUA TU BAN TANG LEN LA NGUYEN nhân:",
+    "question": "Tích lũy tư bản làm cho cấu tạo hữu cơ của tư bản tăng lên là nguyên nhân :",
     "options": [
-      "CHU YEU DAN DEN NAN THAT NGHIEP",
-      "SAU XA GAY NAN THAT NGHIEP",
-      "GIAN TIEP DAN DEN NAN THAT NGHIEP",
-      "TRUC TIEP GAY RA NAN THAT NGHIEP"
+      "Chủ yếu dẫn đến nạn thât nghiệp",
+      "Sâu xa gây nạn thất nghiệp",
+      "Gián tiếp dẫn đến nạn thất nghiệp",
+      "Trực tiếp gây ra nạn thất nghiệp"
     ],
     "correctAnswerIndices": [
       3
@@ -478,12 +476,12 @@
   },
   {
     "id": 38,
-    "question": "NGUOI SAN XUAT CAN BAN VOI MUC GIA NHU THE NAO THI THU DUOC LOI NHUAN",
+    "question": "Người sản xuất cần bán với mức giá như thế nào thì thu được lợi nhuận",
     "options": [
-      "BAN HANG VOI GIA CAO HON GIA TRI HANG HOA",
-      "BAN HANG VOI GIA CAO HON CHI PHI SAN XUAT",
-      "BAN HANG VOI GIA BANG GIA TRI HANG HOA",
-      "BAN HANG VOI GIA BANG CHI PHI SAN XUAT"
+      "Bán hàng với giá cao hơn giá trị hàng hóa",
+      "Bán hàng với giá cao hơn chi phí sản xuất",
+      "Bán hàng với giá bằng giá trị hàng hóa",
+      "Bán hàng với giá bằng chi phí sản xuất"
     ],
     "correctAnswerIndices": [
       1
@@ -492,12 +490,12 @@
   },
   {
     "id": 39,
-    "question": "TRONG CAC TRUONG HOP SAU TRUONG HOP NAO TU SAN THU DUOC LOI NHUAN",
+    "question": "Trong cac truong hop sau truong hop nao tu san thu đuoc loi nhuan",
     "options": [
-      "TAT CA CAC TRUONG HOP NAY",
-      "TU BAN BAN VOI GIA THAP HON CHI PHI SAN XUAT",
-      "TU BAN BAN VOI GIA BANG HON CHI PHI SAN XUAT",
-      "TU BAN BAN VOI GIA CAO HON CHI PHI SAN XUAT"
+      "Tất cả các trường hợp này",
+      "Tư bản bán với giá thấp hơn chi phí sản xuất",
+      "Tư bản bán với giá bằng hơn chi phí sản xuất",
+      "Tư bản bán với giá cao hơn chi phí sản xuất"
     ],
     "correctAnswerIndices": [
       3
@@ -506,12 +504,12 @@
   },
   {
     "id": 40,
-    "question": "NHAN DINH NAO SAU DAY DUNG: GIA CUNG HANG HOA LA GIA:",
+    "question": "Giá cung hàng hóa là giá:",
     "options": [
-      "NGUOI SAN XUAT THU DUOC TU VIEC BAN HANG CHO DIA LY TIEU THU",
-      "NGUOI BAN HANG THU DUOC QUA VIEC BAN HANG CHO NGUOI TIEU DUNG",
-      "DO NHA NUOC DUA VOA CHINH SACH GIA CA",
-      "NGUOI BAN, BAN BANG GIA TRI HANG HOA"
+      "Người sản xuất thu được từ việc bán hàng cho địa lý tiêu thụ",
+      "Người bán hàng thu được qua việc bán hàng cho người tiêu dùng",
+      "Do nhà nước đưa vòa chính sách giá cả",
+      "Người bán, bán bằng giá trị hàng hóa"
     ],
     "correctAnswerIndices": [
       0
@@ -520,12 +518,12 @@
   },
   {
     "id": 41,
-    "question": "XUAT KHAU TU BAN LA DAC DIEM KINH TE CO BAN CUA:",
+    "question": "Xuất khẩu tư bản là đặc điểm kinh tế cơ bản của :",
     "options": [
-      "SAN XUAT HANG HOA GIAN DON",
-      "CHU NGHIA TU BAN DOC QUYEN",
-      "CHU NGHIA TU BAN TU DO CANH TRANH",
-      "CHU NGHIA TRONG THUONG."
+      "Sản xuất hàng hóa giản đơn",
+      "Chủ nghĩa tư bản độc quyền",
+      "Chủ nghĩa tư bản tự do cạnh tranh",
+      "Chủ nghĩa trọng thương."
     ],
     "correctAnswerIndices": [
       1
@@ -534,12 +532,12 @@
   },
   {
     "id": 42,
-    "question": "DUOI GOC DO LOI ICH DOANH NGHIEP, QUA TRINH HOI NHAP KINH TE QUOC TE O Việt Nam có tác động tích cực nào:",
+    "question": "Dưới góc độ lợi ích doanh nghiệp , quá trình hội nhập kinh tế quốc tế ở Việt Nam có tác động tích cực nào :",
     "options": [
-      "TIEP CAN CAC PHUONG THUC QUAN TRI PHAT TRIEN DE NANG CAO NANG LUC cạnh tranh quốc tế",
-      "TANG KHA NANG CANH TRANH VE GIA CA",
-      "TAT CA CAC DAP AN DEU DUNG",
-      "TANG CO HOI CHO CAC DOANH NGHIEP TIEP CAN QUOC TE, LA NGUON TIN DUNG"
+      "Tiếp cận các phương thức quản trị phát triển để nâng cao năng lực cạnh tranh quốc tế",
+      "Tăng khả năng cạnh tranh về giá cả",
+      "Tất cả các đáp án đều đúng",
+      "Tăng cơ hội cho các doanh nghiệp tiếp cận quốc tế, là nguồn tín dụng"
     ],
     "correctAnswerIndices": [
       2
@@ -548,12 +546,12 @@
   },
   {
     "id": 43,
-    "question": "HIEN NAY TREN THE GIOI TON TAI NHUNG MO HINH KINH TE THI TRUONG CHU YEU nào:",
+    "question": "Hiện nay trên thế giới tồn tại những mô hình kinh tế thị trường chủ yếu nào:",
     "options": [
-      "KINH TE THI TRUONG XA HOI",
-      "KINH TE THI TRUONG XA HOI CHU NGHIA",
-      "CAC DAP AN DEU DUNG",
-      "KINH TE THI TRUONG TU DO"
+      "Kinh tế thị trường xã hội",
+      "Kinh tế thị trường xã hội chủ nghĩa",
+      "Các đáp án đều đúng",
+      "Kinh tế thị trường tự do"
     ],
     "correctAnswerIndices": [
       2
@@ -562,12 +560,12 @@
   },
   {
     "id": 44,
-    "question": "DAI HOI XII(2016), CUA DCSVN DA XAC DINH NEN KINH TE THI TRUONG DINH hướng xã hội chủ nghĩa là nền kinh tế",
+    "question": "Đại hội XII(2016), của DCSVN đã xác định nền kinh tế thị trường định hướng xã hội chủ nghĩa là nền kinh tế",
     "options": [
-      "HIEN DAI VA HOI NHAP QUOC TE",
-      "CAC DAP AN DEU DUNG",
-      "VAN HANH DAY DU, DONG BO THEO CAC QUY LUAT CUA NEN KINH TE THI TRUONG đảm bảo định hướng xã hội chủ nghĩa phug hợp vào từng giai đoạn phát triển của đất nước",
-      "CO SU QUAN LY CUA NHA NUOC PHAP QUYEN XA HOI CHU NGHIA, DO DCSVN lãnh đạo, Nhằm mục tiêu: Dân giàu nước mạnh, văn minh."
+      "Hiện đại và hội nhập quốc tế",
+      "Các đáp án đều đúng",
+      "Vận hành đầy đủ, đồng bộ theo các quy luật của nền kinh tế thị trường đảm bảo định hướng xã hội chủ nghĩa phug hợp vào từng giai đoạn phát triển của đất nước",
+      "Có sự quản lý của nhà nước pháp quyền xã hội chủ nghĩa , do DCSVN lãnh đạo, Nhằm mục tiêu : Dân giàu nước mạnh , văn minh."
     ],
     "correctAnswerIndices": [
       1
@@ -576,12 +574,12 @@
   },
   {
     "id": 45,
-    "question": "NHAN DINH NAO SAU DAY DUNG:",
+    "question": "",
     "options": [
-      "LAO DONG CU THE TAO RA GIA TRI",
-      "LAO DONG CU THE GIONG NHAU VE CHAT",
-      "LAO DONG TRUU TUONG GIONG NHAU VE CHAT",
-      "LAO DONG TRUU TUONG KHAC NHAU VE CHAT"
+      "Lao động cụ thể tạo ra giá trị",
+      "Lao động cụ thể giống nhau về chất",
+      "Lao động trừu tượng giống nhau về chất",
+      "Lao động trừu tượng khác nhau về chất"
     ],
     "correctAnswerIndices": [
       2
@@ -590,12 +588,12 @@
   },
   {
     "id": 46,
-    "question": "MOT NGANH KINH TE DUOC COI LA DA TRO THANH NGANH KINH TE TRI THUC KHI:",
+    "question": "Một ngành kinh tế được coi là đã trở thành ngành kinh tế tri thức khi :",
     "options": [
-      "GIA TRI DO TRI THUC TAO RA CHIEM 50% TRONG TONG SO GIA TRI CUA NGANH",
-      "GIA TRI DO TRI THUC TAO RA CHIEM 60% TRONG TONG SO GIA TRI CUA NGANH",
-      "GIA TRI DO TRI THUC TAO RA CHIEM 40% TRONG TONG SO GIA TRI CUA NGANH",
-      "GIA TRI DO TRI THUC TAO RA CHIEM 70% TRONG TONG SO GIA TRI CUA NGANH"
+      "Giá trị do tri thức tạo ra chiếm 50% trong tổng số giá trị của ngành",
+      "Giá trị do tri thức tạo ra chiếm 60% trong tổng số giá trị của ngành",
+      "Giá trị do tri thức tạo ra chiếm 40% trong tổng số giá trị của ngành",
+      "Giá trị do tri thức tạo ra chiếm 70% trong tổng số giá trị của ngành"
     ],
     "correctAnswerIndices": [
       3
@@ -604,12 +602,12 @@
   },
   {
     "id": 47,
-    "question": "NHAN DINH NAO SAU DAY LA DUNG:",
+    "question": "Nhận định nào sau đây là đúng :",
     "options": [
-      "XET VE THUOC TINH GIA TRI, CAC HANG HOA GIONG NHAU VE CHAT",
-      "XET VE THUOC TINH GIA TRI, CAC HANG HOA DEU DO LAO DONG CA BIET TAO RA",
-      "XET VE THUOC TINH GIA TRI, CAC HANG HOA DEU DO LAO DONG CU THE TAO RA",
-      "XET VE THUOC TINH GIA TRI, CAC HANG HOA DEU KHAC NHAU VE CHAT"
+      "Xét về thuộc tính giá trị , các hàng hóa giống nhau về chất",
+      "Xét về thuộc tính giá trị, các hàng hóa đều do lao động cá biệt tạo ra",
+      "Xét về thuộc tính giá trị, các hàng hóa đều do lao động cụ thể tạo ra",
+      "Xét về thuộc tính giá trị, các hàng hóa đều khác nhau về chất"
     ],
     "correctAnswerIndices": [
       0
@@ -618,12 +616,12 @@
   },
   {
     "id": 48,
-    "question": "BIEU HIEN CHU YEU CUA CHU NGHIA DOC QUYEN NHA NUOC LA:",
+    "question": "Biểu hiện chủ yếu của chủ nghĩa độc quyền nhà nước là :",
     "options": [
-      "SU HINH THANH VA PHAT TRIEN SO HUU TU BAN DOC QUYEN NHA NUOC",
-      "CAC DAP AN DEU DUNG",
-      "SU DIEU TIET KINH TE VI MO CUA NHA NUOC TU SAN",
-      "SU KET HOP VE NHAN SU GIUA CAC TO CHUC DOC QUYEN VA NHA NUOC."
+      "Sự hình thành và phát triển sở hữu tư bản độc quyền nhà nước",
+      "Các đáp án đều đúng",
+      "Sự điều tiết kinh tế vĩ mô của nhà nước tư sản",
+      "Sự kết hợp về nhân sự giữa các tổ chức độc quyền và nhà nước."
     ],
     "correctAnswerIndices": [
       1
@@ -632,12 +630,12 @@
   },
   {
     "id": 49,
-    "question": "TRONG NEN KINH TE THI TRUONG DINH HUONG XA HOI CHU NGHIA O VIET NAM, sở hữu tư nhân về tư liệu sản xuất:",
+    "question": "Trong nền kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam, sở hữu tư nhân về tư liệu sản xuất :",
     "options": [
-      "BI BO QUA HOAN TOAN",
-      "TON TAI KHACH QUAN CUNG CAC HINH THUC SO HUU KHAC",
-      "LA HINH THUC SO HUU THONG TRI",
-      "BI HAN CHE"
+      "Bị bỏ qua hoàn toàn",
+      "Tồn tại khách quan cùng các hình thức sở hữu khác",
+      "Là hình thức sở hữu thống trị",
+      "Bị hạn chế"
     ],
     "correctAnswerIndices": [
       1
@@ -646,12 +644,12 @@
   },
   {
     "id": 50,
-    "question": "HAY CHON DAP AN SAI DUOI DAY:",
+    "question": "Hãy chọn đáp án sai dưới đây:",
     "options": [
-      "LAO DONG TAO THANH GIA TRI HANG HOA LA DONG NHAT",
-      "LUONG GIA TRI HANG HOA DUOC DO BANG LUONG THOI GIAN LAO DONG XA HOI CAN thiết",
-      "GIA TRI HANG HOA DO BANG THOI GIAN LAO DONG CA BIET CUA NGUOI SAN XUAT KET tinh trong hàng hóa.",
-      "GIA TRI HANG HOA LA PHAM TRU LICH SU"
+      "Lao động tạo thành giá trị hàng hóa là đồng nhất",
+      "Lượng giá trị hàng hóa được đo bằng lượng thời gian lao động xã hội cần thiết",
+      "Giá trị hàng hóa đo bằng thời gian lao động cá biệt của người sản xuất kết tinh trong hàng hóa.",
+      "Giá trị hàng hóa là phạm trù lịch sử"
     ],
     "correctAnswerIndices": [
       2
@@ -660,12 +658,12 @@
   },
   {
     "id": 51,
-    "question": "QUAN HE CUNG CAU DIEU TIET:",
+    "question": "Quan hệ cung cầu điều tiết :",
     "options": [
-      "HANH VI NGUOI TIEU DUNG",
-      "HANH VI CHINH PHU",
-      "CAC DAP AN DEU DUNG",
-      "HANH VI NGUOI SAN XUAT"
+      "Hành vi người tiêu dùng",
+      "Hành vi chính phủ",
+      "Các đáp án đều đúng",
+      "Hành vi người sản xuất"
     ],
     "correctAnswerIndices": [
       2
@@ -674,12 +672,12 @@
   },
   {
     "id": 52,
-    "question": "SUC LAO DONG LA:",
+    "question": "",
     "options": [
-      "TON TAI TRONG CON NGUOI, DUOC NGUOI DO SU DUNG VAO SAN XUAT",
-      "CAC DAP AN DEU DUNG",
-      "TOAN BO NANG LUC THE CHAT",
-      "NANG LUC TINH THAN"
+      "Tồn tại trong con người , được người đó sử dụng vào sản xuất",
+      "Các đáp án đều đúng",
+      "Toàn bộ năng lực thể chất",
+      "Năng lực tinh thần"
     ],
     "correctAnswerIndices": [
       1
@@ -688,12 +686,12 @@
   },
   {
     "id": 53,
-    "question": "DAC DIEM CUA LIEN MINH KINH TE - TIEN TE TRONG HOI NHAP QUOC TE LA",
+    "question": "Đặc điểm của liên minh kinh tế - tiền tệ trong hội nhập quốc tế là",
     "options": [
-      "TAO RA 1 THI TRUONG CHUNG, KHONG CO RAO CAN KINH TE",
-      "THONG NHAT CHUNG CAC CHINH SACH QUAN LY KINH TE XA HOI",
-      "SU DUNG 1 DONG TIEN CHUNG",
-      "CAC DAP AN DEU DUNG"
+      "Tạo ra 1 thị trường chung, không có rào cản kinh tế",
+      "Thống nhất chung các chính sách quản lý kinh tế xã hội",
+      "Sử dụng 1 đồng tiền chung",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       3
@@ -702,12 +700,12 @@
   },
   {
     "id": 54,
-    "question": "NHAN DINH NAO SAU DAY SAI KHI NOI VE TI SUAT GIA TRI THANG DU:",
+    "question": "Nhận định nào sau đây sai khi nói về tỉ suất giá trị thặng dư:",
     "options": [
-      "M` CANG CAO THI TIEN LUONG CUA CONG NHAN CANG THAP",
-      "PHAN ANH MUC DO LAO DONG NANG NHOC CUA CONG NHAN",
-      "SO TU BAN CANG LON THI M` CANG LON",
-      "PHAN ANH GIUA 2 PHAN LAO DONG CUA CONG NHAN CHO TU BAN"
+      "m` càng cao thì tiền lương của công nhân càng thấp",
+      "Phản ánh mức độ lao động nặng nhọc của công nhân",
+      "Số tư bản càng lớn thì m` càng lớn",
+      "Phản ánh giữa 2 phần lao động  của công nhân cho tư bản"
     ],
     "correctAnswerIndices": [
       0
@@ -716,12 +714,12 @@
   },
   {
     "id": 55,
-    "question": "CO CHE DIEU TIET KINH TE CUA CHU NGHIA TU BAN DOC DOC QUYEN NHA NUOC là:",
+    "question": "cơ chế điều tiết kinh tế của chủ nghĩa  tư bản độc độc quyền nhà nước là :",
     "options": [
-      "CO CHE THI TRUONG",
-      "CO CHE DOC QUYEN",
-      "DIEU TIET CUA NHA NUOC TU SAN",
-      "CO CHE THI TRUONG CO SU DIEU TIET CUA NHA NUOC TU SAN"
+      "Cơ chế thị trường",
+      "Cơ chế độc quyền",
+      "Điều tiết của nhà nước tư sản",
+      "Cơ chế thị trường có sự điều tiết của nhà nước tư sản"
     ],
     "correctAnswerIndices": [
       3
@@ -730,12 +728,12 @@
   },
   {
     "id": 56,
-    "question": "TRONG CAC HANG HOA SAU DAY, HANG HOA NAO KHONG PHAI HANG HOA DAC BIET",
+    "question": "trong các hàng hóa sau đây, hàng hóa nào không phải hàng hóa đặc biệt",
     "options": [
-      "TIEN TE",
-      "DAT DAI",
-      "SUC LAO DONG",
-      "DICH VU"
+      "Tiền tệ",
+      "Đất đai",
+      "Sức lao động",
+      "Dịch vụ"
     ],
     "correctAnswerIndices": [
       1
@@ -744,12 +742,12 @@
   },
   {
     "id": 57,
-    "question": "YEU TO DUOC NHA NUOC SU DUNG LAM CONG CU CHU YEU DE DIEU TIET NEN kinh tế thị trường ở nước ta hiện nay:",
+    "question": "Yếu tố được nhà nước sử dụng làm công cụ chủ yếu để điều tiết nền kinh tế thị trường ở nước ta hiện nay :",
     "options": [
-      "DIEU UOC QUOC TE",
-      "PHAP LUAT KINH TE",
-      "CHINH SACH KINH TE",
-      "HE THONG PHAP LUAT"
+      "Điều ước quốc tế",
+      "Pháp luật kinh tế",
+      "Chính sách kinh tế",
+      "Hệ thống pháp luật"
     ],
     "correctAnswerIndices": [
       2
@@ -758,12 +756,12 @@
   },
   {
     "id": 58,
-    "question": "CAN CU THUC HIEN PHAN PHOI THEO LAO DONG KINH TE THI TRUONG DINH hướng xã hội chủ nghĩa:",
+    "question": "căn cứ thực hiện phân phối theo lao động kinh tế  thị trường định hướng xã hội chủ nghĩa :",
     "options": [
-      "DIEU KIEN VA MOI TRUONG LAO DONG",
-      "SO LUONG LAO DONG, TRINH DO THANH THAO LAO DONG VA CHAT LUONG SAN PHAM",
-      "TINH CHAT CUA LAO DONG VA CAC NGANH NGHE CAN DUOC KHUYEN KHICH",
-      "CAC DAP AN DEU DUNG"
+      "Điều kiện và môi trường lao động",
+      "Số lượng lao động, trình độ thành thạo lao động và chất lượng sản phẩm",
+      "Tính chất của lao động và các ngành nghề cần được khuyến khích",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       3
@@ -772,12 +770,12 @@
   },
   {
     "id": 60,
-    "question": "CHAT CUA HANG HOA LA:",
+    "question": "chất của hàng hóa là :",
     "options": [
-      "THOI GIAN LAO DONG TRUU TUONG CUA NGUOI SAN XUAT KET TINH TRONG HANG HOA",
-      "CAC DAP AN DEU DUNG",
-      "THOI GIAN LAO DONG CA BIET CUA NGUOI SAN XUAT KET TINH TRONG HANG HOA",
-      "THOI GIAN LAO DONG CU THE CU NGUOI SAN XUAT KET TINH TRONG HANG HOA"
+      "Thời gian lao động trừu tượng của người sản xuất kết tinh trong hàng hóa",
+      "Các đáp án đều đúng",
+      "Thời gian lao động cá biệt của người sản xuất kết tinh trong hàng hóa",
+      "Thời gian lao động cụ thể củ người sản xuất kết tinh trong hàng hóa"
     ],
     "correctAnswerIndices": [
       0
@@ -786,12 +784,12 @@
   },
   {
     "id": 61,
-    "question": "DAC TRUNG CO BAN CUA CUOC CACH MANG CONG NGHIEP LAN THU 3 LA:",
+    "question": "Đặc trưng cơ bản của cuộc cách mạng công nghiệp lần thứ 3 là :",
     "options": [
-      "SU DUNG CONG NGHE THONG TIN,TU DONG HOA SAN XUAT",
-      "CHUYEN TU LAO DONG THU CONG SANG LAO DONG MAY MOC",
-      "UNG DUNG CONG NGHE MOI CO TINH DOT PHA VE CHAT: AI, BIG DATA",
-      "SU DUNG DIEN VA DONG CO DIEN"
+      "Sử dụng công nghệ thông tin ,tự động hóa sản xuất",
+      "Chuyển từ lao động thủ công sang lao động máy móc",
+      "ứng dụng công nghệ mới có tính đột phá về chất : AI , Big data",
+      "sử dụng điện và động cơ điện"
     ],
     "correctAnswerIndices": [
       0
@@ -800,12 +798,12 @@
   },
   {
     "id": 62,
-    "question": "TRONG NEN KINH TE THI TRUONG DINH HUONG XA HOI CHU NGHIA, MOI QUAN HE giữa kinh tế nhà nước với các ngành kinh tế khác là:",
+    "question": "Trong nền kinh tế thị trường định hướng xã hội chủ nghĩa , mối quan hệ giữa kinh tế nhà nước với các ngành kinh tế khác là :",
     "options": [
-      "CANH TRANH",
-      "BINH DANG",
-      "BINH DANG VA CANH TRANH",
-      "BINH DANG VA CANH TRANH THOE PHAP LUAT"
+      "cạnh tranh",
+      "bình đẳng",
+      "bình đẳng và cạnh tranh",
+      "bình đẳng và cạnh tranh thoe pháp luật"
     ],
     "correctAnswerIndices": [
       3
@@ -814,12 +812,12 @@
   },
   {
     "id": 63,
-    "question": "DIEM KHAC NHAU GIUA KINH TE THI TRUONG DINH HUONG XHCN VA KINH TE thị trường định hướng Tư bản khác nhau ở:",
+    "question": "điểm khác nhau giữa kinh tế thị trường định hướng XHCN và Kinh tế thị trường định hướng Tư  bản khác nhau ở:",
     "options": [
-      "MUC TIEU PHAT TRIEN CUA NEN KINH TE THI TRUONG",
-      "THUC HIEN HINH THUC PHAN PHOI LAO DONG THEO YEU CAU",
-      "CAC DAP AN DEU DUNG",
-      "QUAN LY NEN KINH TE LA NHA NUOC PHAP QUYEN XHCN VA KINH TE NHA NUOC giữ vai trò chủ đạo"
+      "Mục tiêu phát triển của nền kinh tế thị trường",
+      "Thực hiện hình thức phân phối lao động theo yêu cầu",
+      "Các đáp án đều đúng",
+      "Quản lý nền kinh tế là nhà nước pháp quyền XHCN và kinh tế nhà nước giữ vai trò chủ đạo"
     ],
     "correctAnswerIndices": [
       2
@@ -828,12 +826,12 @@
   },
   {
     "id": 64,
-    "question": "NGUON GOC GIA TRI MOI DO:",
+    "question": "Nguồn gốc giá trị mới do :",
     "options": [
-      "SO TU BAN DAU TU MANG LAI CHO TU BAN",
-      "GIA TRI THANG DU CHUYEN HOA THANH",
-      "LAO DONG SONG CUA CONG NHAN TAO RA",
-      "LOI NHUAN CHUYEN HOA THANH"
+      "Số tư bản đầu tư mang lại cho tư bản",
+      "Giá trị thặng du chuyển hóa thành",
+      "Lao động sống của công nhân tạo ra",
+      "Lợi nhuận chuyển hóa thành"
     ],
     "correctAnswerIndices": [
       2
@@ -842,12 +840,12 @@
   },
   {
     "id": 65,
-    "question": "TRONG CAC LAO DONG SAU DAY, LAO DONG NAO DONG VAI TRO CO SO DE TRAO đổi hàng hóa:",
+    "question": "Trong các lao động sau đây , lao động nào đóng vai trò cơ sở để trao đổi hàng hóa:",
     "options": [
-      "LAO DONG TRUU TUONG",
-      "LAO DONG CA BIET",
-      "LAO DONG TU NHAN",
-      "LAO DONG CU THE"
+      "Lao động trừu tượng",
+      "Lao động cá biệt",
+      "Lao động tư nhân",
+      "Lao động cụ thể"
     ],
     "correctAnswerIndices": [
       0
@@ -856,12 +854,12 @@
   },
   {
     "id": 66,
-    "question": "NHAN DINH NAO SAU DAY SAI KHI NOI VE CHI PHI SAN XUAT TU BAN CHU NGHIA",
+    "question": "Nhận định nào sau đây sai khi nói về chi phí sản xuất tư bản chủ nghĩa",
     "options": [
-      "GOM CO CHI PHI LAO DONG QUA KHU VA TU BAN KHA BIEN",
-      "NO DUOC BAO TON TRONG QUA TRINH SAN XUAT",
-      "LA CHI PHI VE LAO DONG",
-      "LA CHI PHI VE TU BAN"
+      "Gồm có chi phí lao động quá khứ và tư bản khả biến",
+      "Nó được bảo tồn trong quá trình sản xuất",
+      "Là chi phí về lao động",
+      "Là chi phí về tư bản"
     ],
     "correctAnswerIndices": [
       3
@@ -870,12 +868,12 @@
   },
   {
     "id": 67,
-    "question": "NGUON GOC CO BAN CUA MOI XUNG DOT BAT NGUON TU:",
+    "question": "Nguồn gốc cơ bản của mọi xung đột bắt nguồn từ :",
     "options": [
-      "MAU THUAN LOI ICH KINH TE",
-      "MAU THUAN TON GIAO",
-      "MAU THUAN CHINH TRI",
-      "MAU THUAN SAC TOC"
+      "Mâu thuẫn lợi ích kinh tế",
+      "Mâu thuẫn tôn giáo",
+      "Mâu thuẫn chính trị",
+      "Mâu thuẫn săc tộc"
     ],
     "correctAnswerIndices": [
       0
@@ -884,12 +882,12 @@
   },
   {
     "id": 68,
-    "question": "NHA NUOC SU DUNG CO CHE KE HOACH HOA KET HOP VOI CO CHE THI TRUONG trong quản lý nền kinh tế VN hiện nay là do:",
+    "question": "Nhà nước sử dụng cơ chế kế hoạch hóa kết hợp với cơ chế thị trường trong quản lý nền kinh tế VN hiện nay là do:",
     "options": [
-      "DE NHA NUOC CAN THIEP TRUC TIEP VAO NEN KINH TE",
-      "KIEM SOAT NEN KINH TE THI TRUONG",
-      "DAM BAO TINH DINH HUONG XHCN",
-      "UU DIEM CO CHE KE HOACH VA MAT HAN CHE CUA CO CHE THI TRUONG"
+      "Để nhà nước can thiệp trực tiếp vào nền kinh tế",
+      "Kiểm soát nền kinh tế thị trường",
+      "Đảm bảo tính định hướng XHCN",
+      "Ưu điểm cơ chế kế hoạch và mặt hạn chế của cơ chế thị trường"
     ],
     "correctAnswerIndices": [
       2
@@ -898,12 +896,12 @@
   },
   {
     "id": 69,
-    "question": "KHI CAU TAO HUU CO CUA TU BAN TANG LEN THI TY SUAT LOI NHUAN SE:",
+    "question": "Khi cấu tạo hữu cơ của tư bản tăng lên thì tỷ suất lợi nhuận sẽ :",
     "options": [
-      "GIAM XUONG",
-      "KHONG THAY DOI",
-      "CAC TRUONG HOP DEU CO THE XAY RA",
-      "TANG LEN"
+      "Giảm xuống",
+      "Không thay đổi",
+      "Các trường hợp đều có thể xảy ra",
+      "Tăng lên"
     ],
     "correctAnswerIndices": [
       0
@@ -912,12 +910,12 @@
   },
   {
     "id": 70,
-    "question": "PHUONG PHAP HOI NHAP KINH TE QUOC TE,DCSVN LUON NHAN MANH CAN phải xây dựng nền kinh tế nước ta:",
+    "question": "phương pháp hội nhập kinh tế quốc tế ,DCSVN  luôn nhấn mạnh cần phải xây dựng nền kinh tế nước ta :",
     "options": [
-      "CO CO CAU KINH TE HIEN DAI",
-      "DOC LAP TU CHU",
-      "TANG TRUONG CAO",
-      "PHAT TRIEN BEN VUNG"
+      "Có cơ cấu kinh tế hiện đại",
+      "Độc lập tự chủ",
+      "Tăng trưởng cao",
+      "Phát triển bền vững"
     ],
     "correctAnswerIndices": [
       1
@@ -926,12 +924,12 @@
   },
   {
     "id": 71,
-    "question": "HINH THUC BIEU HIEN LOI ICH NEN KINH TE NHA NUOC:",
+    "question": "Hình thức biểu hiện lợi ích nền kinh tế nhà nước :",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "CAC KHOAN THU KHAC",
-      "LE PHI",
-      "THUE"
+      "Các đáp án đều đúng",
+      "Các khoản thu khác",
+      "Lệ phí",
+      "Thuế"
     ],
     "correctAnswerIndices": [
       3
@@ -940,12 +938,12 @@
   },
   {
     "id": 72,
-    "question": "HIEU THE NAO VE CAU TAO HUU CO CUA TU BAN: CHON DAP AN DUNG",
+    "question": "Hiểu thế nào về cấu tạo hữu cơ của tư bản: Chọn đáp án đúng",
     "options": [
-      "GOM CAU TAO KI THUAT VA CAU TAO GIA TRI CUA TU BAN",
-      "LA CAU TAO GIA TRI CUA TU BAN DUOC QUYET DINH BOI CAU TAO KI THUAT",
-      "CAC DAP AN DEU DUNG",
-      "LA TI LE GIUA SO LUONG TU LIEU SAN XUAT VA SO LUONG SUC LAO DONG"
+      "Gồm cấu tạo kĩ thuật và cấu tạo giá trị của tư bản",
+      "Là cấu tạo giá trị của tư bản được quyết định bởi cấu tạo kĩ thuật",
+      "Các đáp án đều đúng",
+      "Là tỉ lệ giữa số lượng tư liệu sản xuất và số lượng sức lao động"
     ],
     "correctAnswerIndices": [
       1
@@ -954,12 +952,12 @@
   },
   {
     "id": 73,
-    "question": "CHE DO THAM DU CUA TU BAN TAI CHINH TRONG CHU NGHIA TU BAN DOC QUYEN được tạo lập do:",
+    "question": "Chế độ tham dự của tư bản tài chính trong chủ nghĩa tư bản độc quyền được tạo lập do :",
     "options": [
-      "NAM DUOC SO CO PHIEU KHONG CHE O CONG TI ME, CON,CHAU",
-      "QUYET DINH CUA NHA NUOC TU SAN",
-      "YEU CAU CUA CAC TO CHUC DOC QUYEN CONG NGHIEP",
-      "YEU CAU CUA NHUNG NHA TU BAN TAI PHIET"
+      "Nắm được số cổ phiếu khống chế ở công ti mẹ, con ,cháu",
+      "Quyết định của nhà nước tư sản",
+      "Yêu cầu của các tổ chức độc quyền công nghiệp",
+      "Yêu cầu của những nhà tư bản tài phiệt"
     ],
     "correctAnswerIndices": [
       0
@@ -968,12 +966,12 @@
   },
   {
     "id": 74,
-    "question": "XET VE BAN CHAT, TOAN CAU HOA KINH TE LA:",
+    "question": "",
     "options": [
-      "Y MUON CHU QUAN CUA CHU NGHIA TU BAN",
-      "XU HUONG KHACH QUAN TRONG TIEN HANH LUC LUONG SAN XUAT",
-      "QUA TRINH LICH SU DUOC BAT DAU TU CHU NGHIA TU BAN TU DO CANH TRANH",
-      "QUAN HE, GAN BO CHAT CHE GIUA CAC QUOC GIA TREN THE GIOI TREN CO SO PHAN công lao động và những quy tắc thống nhất toàn cầu."
+      "Ý muốn chủ quan của chủ nghĩa tư bản",
+      "Xu hướng khách quan trong tiến hành lực lượng sản xuất",
+      "Quá trình lịch sử được bắt đầu từ chủ nghĩa tư bản tự do cạnh tranh",
+      "Quan hệ , gắn bó chặt chẽ giữa các quốc gia trên thế giới trên cơ sở phân công lao động và những quy tắc thống nhất toàn cầu."
     ],
     "correctAnswerIndices": [
       3
@@ -982,12 +980,12 @@
   },
   {
     "id": 75,
-    "question": "SAU CHIEN TRANH THE GIOI THU 2, XUAT HIEN HINH THUC PHAN CHIA THE GIOI kinh tế trong chủ nghĩa độc quyền là:",
+    "question": "sau chien tranh the gioi thu 2 , xuat hien hinh thuc phan chia the gioi kinh tế trong chủ nghĩa độc quyền là :",
     "options": [
-      "LIEN MINH QUOC TE CAC NHA TU BAN",
-      "LIEN MINH QUOC TE CAC DOC QUYEN",
-      "LIEN MINH QUOC TE CAC NHA TAI PHIET",
-      "LIEN MINH QUOC TE CAC TU BAN DOC QUYEN NHA NUOC"
+      "Liên minh quốc tế các nhà tư bản",
+      "Liên minh quốc tế các độc quyền",
+      "Liên minh quốc tế các nhà tài phiệt",
+      "Liên minh quốc tế các tư bản độc quyền nhà nước"
     ],
     "correctAnswerIndices": [
       3
@@ -996,12 +994,12 @@
   },
   {
     "id": 76,
-    "question": "LUONG GIA TRI HANG HOA DUOC TINH THEO CONG THUC C+V+M. NHAN DINH nào sau đây đúng",
+    "question": "Lượng giá trị hàng hóa được tính theo công thúc c+v+m.  Nhận định nào sau đây đúng",
     "options": [
-      "C LA CHI PHI LAO DONG, V LA CHI PHI TBKB, M LA GTRI THANG DU",
-      "C LA CHI PHI TU BAN LUU DONG,V LA TIEN CONG,M LA GTRI THANG DU",
-      "C LA LAO DONG QUA KHU, V A GTRI LAO DONG MOI",
-      "C LA CHI PHI TU BAN CO DINH, V LA CHI PHI TBKB,M LA GIA TRI TANG THEM"
+      "C là chi phí lao động, v là chi phí TBKB , m là gtri thặng dư",
+      "C là chi phí tư bản lưu động ,v là tiền công ,m là gtri thặng dư",
+      "C là lao động quá khứ , v à gtri lao động mới",
+      "C là chi phí tư bản cố định,  v là chi phí TBKB ,m là giá trị tăng thêm"
     ],
     "correctAnswerIndices": [
       3
@@ -1010,12 +1008,12 @@
   },
   {
     "id": 77,
-    "question": "BIEU HIEN CHU YEU CUA CHU NGHIA TU BAN DOC QUYEN NHA NUOC LA:",
+    "question": "Biểu hiện chủ yếu của chủ nghĩa tư bản độc quyền nhà nước là :",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "SU DIEU TIET KINH TE VI MO CUA CAC NHA TU SAN",
-      "SU HINH THANH VA PHAT TRIEN SO HUU TU BAN DOC QUYEN NHA NUOC",
-      "SU KET HOP VE NHAN SU GIUA CAC TO CHUC DOC QUYEN NHA NUOC"
+      "Các đáp án đều đúng",
+      "Sự điều tiết kinh tế vĩ mô của các nhà tư sản",
+      "Sự hình thành và phát triển sở hữu tư bản độc quyền nhà nước",
+      "Sự kết hợp về nhân sự giữa các tổ chức độc quyền nhà nước"
     ],
     "correctAnswerIndices": [
       0
@@ -1024,12 +1022,12 @@
   },
   {
     "id": 78,
-    "question": "DIEM KHAC BIET CUA MO HINH CONG NGHIEP HOA KIEU LIEN XO VA CAC nước XHCN Đông Âu với các quy mô công nghiệp hóa khác:",
+    "question": "Điểm khác biệt của mô hình công nghiệp hóa  kiểu Liên xô Và các nước XHCN Đông Âu   với các quy mô công nghiệp hóa khác :",
     "options": [
-      "DAY MANH XUAT KHAU, PHAT TRIEN SAN XUAT TRONG NUOC DE THAY THE SNHAAPJ khẩu",
-      "CONG NGHIEP HOA VOI THOI GIAN NGAN",
-      "UU TIEN PHAT TRIEN CONG NGHIEP NANGJ, SU DUNG CO CHE KE HOACH HOA TAP chung",
-      "THUC HIEN TUAN TU TUNG BUOC VA TON NHIEU THOI GIAN MOI CONG NGHIEP HOA thành công."
+      "Đẩy mạnh xuất khẩu , phát triển sản xuất trong nước để thay thê snhaapj khẩu",
+      "Công nghiệp hóa với thời gian ngắn",
+      "Ưu tiên phát triển công nghiệp năngj, sử dụng cơ chế kế hoạch hóa tập chung",
+      "Thực hiện tuần tự từng bước và tốn nhiều thời gian mới công nghiệp hóa thành công."
     ],
     "correctAnswerIndices": [
       2
@@ -1038,12 +1036,12 @@
   },
   {
     "id": 79,
-    "question": "TRONG NEN KINH TE THI TRUONG DINH HUONG XHCN O VIET NAM, THNAFH phần kinh tế nào được đnáh giá là động lực quan trọng trong nền kinh tế quốc dân:",
+    "question": "trong nền kinh tế thị trường định hướng XHCN ở Việt nam, thnafh phần kinh tế nào được đnáh giá là động lực quan trọng trong nền kinh tế quốc dân :",
     "options": [
-      "THANH PHAN KINH TE TU NHAN",
-      "THANH PHAN KINH TE CO VON DAU TU NUOC NGOAI",
-      "THANH PHAN KINH TE TAP THE",
-      "THANH PHAN KINH TE NHA NUOC"
+      "Thành phần kinh tế tư nhân",
+      "Thành phần kinh tế có vốn đầu tư nước ngoài",
+      "Thành phần kinh tế tập thể",
+      "Thành phần kinh tế nhà nước"
     ],
     "correctAnswerIndices": [
       0
@@ -1052,12 +1050,12 @@
   },
   {
     "id": 80,
-    "question": "TRONG CAC NHAN TO SAU, NHAN TO NAO LAM TANG QUY MO TICH LUY:",
+    "question": "Trong các nhân tố sau , nhân tố nào làm tăng quy mô tích lũy :",
     "options": [
-      "GIA TANG VON TU BAN BAT BIEN",
-      "TI SUAT GIA TRI THANG DU TANG",
-      "TANG CAU TAO HUU CO CUA TU BAN",
-      "CAC DAP AN DEU DUNG"
+      "Gia tăng vốn tư bản bất biến",
+      "Ti suất giá trị thặng dư tăng",
+      "Tăng cấu tạo hữu cơ của tư bản",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       3
@@ -1066,12 +1064,12 @@
   },
   {
     "id": 81,
-    "question": "QUAN HE LOI ICH KINH TE GIUA CAC CHU THE LA:",
+    "question": "quan hệ lợi ích kinh tế giữa các chủ thể là :",
     "options": [
-      "BINH DANG NHU NHAU",
-      "THONG NHAT VOI NHAU",
-      "MAU THUAN VOI NHAU",
-      "THONG NHAT VA MAU THUAN VOI NHAU"
+      "Bình đẳng như nhau",
+      "Thống nhất với nhau",
+      "Mâu thuẫn với nhau",
+      "Thống nhất và mâu thuẫn với nhau"
     ],
     "correctAnswerIndices": [
       3
@@ -1080,12 +1078,12 @@
   },
   {
     "id": 82,
-    "question": "MOT CHINH SACH KINH TE MOI BAN HANH:",
+    "question": "Một chính sách kinh tế mới ban hành :",
     "options": [
-      "QUYET DINH DEN CAC LOI ICH KINH TE",
-      "CO TAC DONG DEN CAC QUAN HE LOI ICH KINH TE",
-      "QUY DINH CAC QUAN HE LOI ICH KINH TE",
-      "CAC DAP AN DEU DUNG"
+      "Quyết định đến các lợi ích kinh tế",
+      "Có tác động đến các quan hệ lợi ích kinh tế",
+      "Quy định các quan hệ lợi ích kinh tế",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       3
@@ -1094,12 +1092,12 @@
   },
   {
     "id": 83,
-    "question": "GIA TRI HANG HOA CAO HAY THAP LA DO:",
+    "question": "Giá trị hàng hóa cao hay thấp là do:",
     "options": [
-      "THOI GIAN LAO DONG CU THE CAN THIET SAN XUAT RA HANG HOA QUY DINH",
-      "THOI GIAN LAO DONG CA BIET CAN THIET SAN XUAT RA HANG HOA QUY DINH",
-      "CAC DAP AN DEU DUNG",
-      "THOI GIAN LAO DONG CAN THIET SAN XUAT RA HANG HOA QUY DINH"
+      "Thời gian lao động cụ thể cần thiết sản xuất ra hàng hóa quy định",
+      "Thời gian lao động cá biệt cần thiết sản xuất ra hàng hóa quy định",
+      "Các đáp án đều đúng",
+      "Thời gian lao động cần thiết sản xuất ra hàng hóa quy định"
     ],
     "correctAnswerIndices": [
       1
@@ -1108,12 +1106,12 @@
   },
   {
     "id": 84,
-    "question": "CO CHE THONG TRI CHU YEU CUA TU BAN TAI CHINH TRONG CHU NGHIA TU BAN DOC quyền là:",
+    "question": "Cơ chế thống trị chủ yếu của tư bản tài chính trong chủ nghĩa tư bản độc quyền là:",
     "options": [
-      "DAU CO CHUNG KHOAN O CAC SO GIAO DICH",
-      "DAU CO RUONG DAT",
-      "LAP CONG TY MOI, PHAT HANH TRAI PHIEU",
-      "CHE DO THAM DU"
+      "Đầu cơ chứng khoán ở các sở giao dịch",
+      "Đầu cơ ruộng đất",
+      "Lập công ty mới, phát hành trái phiếu",
+      "Chế độ tham dự"
     ],
     "correctAnswerIndices": [
       3
@@ -1122,12 +1120,12 @@
   },
   {
     "id": 85,
-    "question": "DIEM GIONG NHAU GIUA CASCTEN VA XANHDICAC",
+    "question": "Điem giong nhau giua cascten va xanhdicac",
     "options": [
-      "VIEC MUA BAN DO 1 BAN QUAN TRI CHUNG DAM NHAN",
-      "DOC LAP VE SAN XUAT",
-      "DOC LAP CA VE SAN XUAT LAN LUU THONG",
-      "DOC LAP VE LUU THONG"
+      "Việc mua bán do 1 ban quản trị chung đảm nhận",
+      "Độc lập về sản xuất",
+      "Độc lập cả về sản xuất lẫn lưu thông",
+      "Độc lập về lưu thông"
     ],
     "correctAnswerIndices": [
       1
@@ -1136,12 +1134,12 @@
   },
   {
     "id": 86,
-    "question": "CHU NGHIA TU BAN DOC QUYEN NHA NUOC LA:",
+    "question": "Chủ nghĩa tư bản độc quyền nhà nước là :",
     "options": [
-      "MOT HINH THAI KINH TE XA HOI MOI.",
-      "MOT PHUONG THUC SAN XUAT MOI",
-      "SU THUT LUI CUA CHU NGHIA TU BAN DOC QUYEN",
-      "NAC THANG PHAT TRIEN MOI CUA CHU NGHIA TU BAN DOC QUYEN"
+      "Một hình thái kinh tế xã hội mới .",
+      "Một phương thức sản xuất mới",
+      "Sự thụt lùi của chủ nghĩa tư bản độc quyền",
+      "Nấc thang phát triển mới  của chủ nghĩa tư bản độc quyền"
     ],
     "correctAnswerIndices": [
       3
@@ -1150,12 +1148,12 @@
   },
   {
     "id": 87,
-    "question": "TY SUAT LOI NHUAN DUOC HIEU LA:",
+    "question": "Tỷ suất lợi nhuận được hiểu là:",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "TI LE PHAN TRAM GIUA LOI NHAN VA CHI PHI SAN XUAT",
-      "TI LE PHAN TRAM GIUA GIA TRI THANG DU VA TU BAN UNG TRUOC",
-      "TI LE PHAN TRAM GIUA LOI NHUAN VA TU BAN UNG TRUOC"
+      "Các đáp án đều đúng",
+      "Tỉ lệ phần trăm giữa lợi nhận và chi phí sản xuất",
+      "Tỉ lệ phần trăm giữa giá trị thặng dư và tư bản ứng trước",
+      "Tỉ lệ phần trăm giữa lợi nhuận và tư bản ứng trước"
     ],
     "correctAnswerIndices": [
       1
@@ -1164,12 +1162,12 @@
   },
   {
     "id": 88,
-    "question": "CAC LOAI LAO DONG CU THE TUY KHAC NHAU NHUNG GIUA CHUNG CO DIEM giống nhau là:",
+    "question": "Các loại lao động cụ thể tuy khác nhau nhưng giữa chúng có điểm giống nhau là :",
     "options": [
-      "DEU LA TIEU HAO THAN KINH CON NGUOI",
-      "DEU TIEU HOA SUC LAO DONG",
-      "DEU TIEU HAO SUC LUC CO BAT",
-      "TAT CA DEU DUNG"
+      "Đều là tiêu hao thần kinh con người",
+      "Đều tiêu hoa sức lao động",
+      "Đều tiêu hao sức lực cơ bắt",
+      "Tất cả đều đúng"
     ],
     "correctAnswerIndices": [
       1
@@ -1178,12 +1176,12 @@
   },
   {
     "id": 89,
-    "question": "MUC DO CAO NHAT CUA HOI NHAP KINH TE QUOC TE HIEN NAY LA:",
+    "question": "Mức độ cao nhất của hội nhập kinh tế quốc tế hiện nay là :",
     "options": [
-      "LIEN MINH KINH TE TIEN TE",
-      "LIEN MINH THUE QUAN",
-      "THI TRUONG CHUNG",
-      "KHU VUC MAU DICH TU DO"
+      "Liên minh kinh tế tiền tẹ",
+      "Liên minh thuế quan",
+      "Thị trường chung",
+      "Khu vực mậu dịch tự do"
     ],
     "correctAnswerIndices": [
       0
@@ -1192,12 +1190,12 @@
   },
   {
     "id": 90,
-    "question": "NOI DUNG NAO SAU DAY THE HIEN TRACH NHIEM CUA SINH VIEN DOI VOI SU nghiệp hóa, công nghiệp hóa của đất nước:",
+    "question": "Nội dung nào sau đây thể hiện trách nhiệm của sinh viên đối với sự nghiệp hóa , công nghiệp hóa của đất nước :",
     "options": [
-      "COI TRONG DUNG VAI TRO CUA HANG HOA VA SAN XUAT HANG HOA",
-      "UNG DUNG NHUNG THANH TUU KHOA HOC CONG NGHE HIEN DAI VAO SAN XUAT",
-      "PHE PHAN DAU TRANH NHUNG HANH DONG KHONG CHUAN VE DAO DUC LOI SONG",
-      "HOC TAP, NGHIEN CUU, TIEP THU VA UNG DUNG NHUNG THANH TUU KHOA HOC công nghệ vào sản xuất."
+      "Coi trọng đúng vai trò của hàng hóa và sản xuất hàng hóa",
+      "ứng dụng những thành tựu khoa học công nghệ hiện đại vào sản xuất",
+      "phê phán đấu tranh những hành động không chuẩn về đạo đức lối sống",
+      "học tập , nghiên cứu , tiếp thu và ứng dụng những thành tựu khoa học công nghệ vào sản xuất."
     ],
     "correctAnswerIndices": [
       3
@@ -1206,12 +1204,12 @@
   },
   {
     "id": 91,
-    "question": "DOI VOI NHUNG NUOC DANG VA KEM PHAT TRIEN, HOI NHAP KINH TE QUOC TE có vai trò:",
+    "question": "đối với những nước đang và kém phát triển , hội nhập kinh tế quốc tế có vai trò :",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "TAO CO HOI DE TIEP CAN VA SU DUNG CAC NGUON LUC TU BEN NGOAI",
-      "TAC DONG TICH CUC DEN VIEC ON DINH KINH TE VI MO, TAO NHIEU VIEC LAM VA nâng cao thu nhập cho tầng lớp dân cư",
-      "TAO THOI CO PHAT TRIEN, RUT NGAN, THU HEP KHOANG CACH VOI CAC NUOC TIEN tiến, khắc phục nguy cơ tụt hậu"
+      "các đáp án đều đúng",
+      "Tạo cơ hội để tiếp cận và sử dụng các nguồn lực từ bên ngoài",
+      "Tác dộng tích cực đến việc ổn định kinh tế vĩ mô, tạo nhiều việc làm và nâng cao thu nhập cho tầng lớp dân cư",
+      "Tạo thời cơ phát triển , rút ngắn , thu hẹp khoảng cách với các nước tiên tiến, khắc phục nguy cơ tụt hậu"
     ],
     "correctAnswerIndices": [
       0
@@ -1220,12 +1218,12 @@
   },
   {
     "id": 92,
-    "question": "GIA CA CUA HANG HOA TREN THI TRUONG DUOC QUY DINH BOI",
+    "question": "Gia ca cua hang hoa tren thi truong đuoc quy đinh boi",
     "options": [
-      "GIA TRI CUA TIEN TE TRONG LUU THONG",
-      "GIA TRI CUA HANG HOA",
-      "QUAN HE CUNG CAU",
-      "CAC DAP AN DEU DUNG"
+      "Giá trị của tiền tệ trong lưu thông",
+      "Giá trị của hàng hóa",
+      "Quan hệ cung cầu",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       1
@@ -1234,12 +1232,12 @@
   },
   {
     "id": 93,
-    "question": "NHAN DINH NAO SAU DAY LA DUNG VE BAN CHAT LOI ICH KINH TE? LOI ICH KINH tế phản ánh xã hội:",
+    "question": "Nhận định nào sau đây là đúng về bản chất lợi ích kinh tế ? lợi ích kinh tế phản ánh xã hội :",
     "options": [
-      "GIUA CAC THANH VIEN TRONG XA HOI VOI NHAU THONG QUA HOAT DONG SAN XUAT",
-      "GIUA CAC THANH VIEN TRONG XA HOI VOI NHAU THONG QUA HOAT DONG KINH TE",
-      "GIUA CAC THANH VIEN TRONG XA HOI VOI NHAU THONG QUA HOAT DONG DICH VU",
-      "GIUA CAC THANH VIEN TRONG XA HOI VOI NHAU THONG QUA HOAT DONG THUONG mại"
+      "Giữa các thành viên trong xã hội với nhau thông qua hoạt động sản xuất",
+      "Giữa các thành viên trong xã hội với nhau thông qua hoạt động kinh tế",
+      "Giữa các thành viên trong xã hội với nhau thông qua hoạt động dịch vụ",
+      "Giữa các thành viên trong xã hội với nhau thông qua hoạt động thương mại"
     ],
     "correctAnswerIndices": [
       1
@@ -1248,12 +1246,12 @@
   },
   {
     "id": 94,
-    "question": "HANG HOA NAO SAU DAY CHI CO 1 THUOC TINH:",
+    "question": "Hàng hóa nào sau đây chỉ có 1 thuộc tính :",
     "options": [
-      "QUYEN SU DUNG DAT",
-      "SUC LAO DONG",
-      "TIEN TE",
-      "CAC DAP AN DEU DUNG"
+      "Quyền sử dụng đất",
+      "Sức lao động",
+      "Tiền tệ",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       0
@@ -1262,12 +1260,12 @@
   },
   {
     "id": 95,
-    "question": "TBKB LA CHIA KHOA GIAI THICH MAU THUAN CONG THUC CHUNG CU TU BAN VI:",
+    "question": "TBKB là chìa khóa giải thích mâu thuẫn công thức chung củ tư bản vì :",
     "options": [
-      "KHI SU DUNG TRONG SAN XUAT,GIA TRI NO TIEU HAO",
-      "KHI SU DUNG TRONG SAN XUAT, NO TAO RA GIA TRI BANG GIA TRI BAN THAN NO",
-      "KHI SU DUNG NO TRONG SAN XUAT NO TAO RA GIA TRI MOI LON HON GIA TRI BAN thân nó",
-      "CAC DAP AN DEU DUNG"
+      "Khi sử dụng trong sản xuất ,giá trị nó tiêu hao",
+      "Khi sử dụng trong sản xuất, nó tạo ra giá trị bằng giá trị bản thân nó",
+      "Khi sử dụng nó trong sản xuất nó tạo ra giá trị mới lớn hơn giá trị bản thân nó",
+      "Các đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       2
@@ -1276,12 +1274,12 @@
   },
   {
     "id": 96,
-    "question": "VAI TRO QUAN LY CUA NHA NUOC TRONG NEN KINH TE THI TRUONG DINH HUONG XHCN là:",
+    "question": "Vai tro quan ly cua Nha nuoc trong nen kinh te thi truong đinh huong XHCN là :",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "DAM BAO CONG BANG XA HOI, TAO LAP KHUON KHO PHAP LY CHO HOAT DONG KINH tế",
-      "BAO DAM NEN KINH TE THI TRUONG PHAT TRIEN ON DINH VA BEN VUNG",
-      "KHAC PHUC NHUNG MAT TIEU CUC CUA KINH TE THI TRUONG"
+      "Các đáp án đều đúng",
+      "Đảm bảo công bằng xã hội, tạo lập khuôn khổ pháp lý cho hoạt động kinh tế",
+      "Bảo đảm nền kinh tế thì trường phát triển ổn định và bền vững",
+      "Khắc phục những mặt tiêu cực của kinh tế thị trường"
     ],
     "correctAnswerIndices": [
       0
@@ -1290,12 +1288,12 @@
   },
   {
     "id": 97,
-    "question": "NHAN DINH NAO SAU DAY SAI:",
+    "question": "",
     "options": [
-      "MUON THU DUOC GIA TRI THANG DU SIEU NGACH, TU BAN PHAI AP DUNG TIEN BO KI thuật",
-      "GIA TRI THANG DU SIEU NGACH THU DUOC DO TANG NANG SUAT LAO DONG CA BIET",
-      "GIA TRI THANG DU SIEU NGACH THU DUOC DO GIA TRI CA BIET CUA HANG HOA THAP hơn giá trị xã hội",
-      "GIA TRI THANG DU SIEU NGACH DO TANG NANG SUAT LAO DONG"
+      "Muốn thu được giá trị thặng dư siêu ngạch, tu bản phải áp dụng tiến bộ kĩ thuật",
+      "Giá trị thặng dư siêu ngạch thu được do tăng năng suất lao động cá biệt",
+      "Giá trị thặng dư siêu ngạch thu được do giá trị cá biệt của hàng hóa thấp hơn giá trị xã hội",
+      "Giá trị thặng dư siêu ngạch do tăng năng suất lao động"
     ],
     "correctAnswerIndices": [
       3
@@ -1304,12 +1302,12 @@
   },
   {
     "id": 98,
-    "question": "HINH THUC PHAN PHOI DUOC THUC HIEN TRONG THANH PHAN KINH TE NHA NUOC ta hiện nay là:",
+    "question": "Hình thức phân phối được thực hiện trong thành phần kinh tế nhà nước ta hiện nay là :",
     "options": [
-      "THEO HIEU QUA SAN XUAT KINH DOANH",
-      "CAC DAP AN DEU DUNG",
-      "THEO LAO DONG",
-      "THONG QUA CAC QUY PHUC LOI VA TAP THE"
+      "Theo hiệu quả sản xuất kinh doanh",
+      "Các đáp án đều đúng",
+      "Theo lao động",
+      "Thông qua các quỹ phúc lợi và tập thể"
     ],
     "correctAnswerIndices": [
       2
@@ -1318,12 +1316,12 @@
   },
   {
     "id": 99,
-    "question": "CHU THE THAM GIA HOI NHAP KINH TE QUOC TE O VN HIEN NAY LA",
+    "question": "Chủ thể tham gia hội nhập kinh tế quốc tế ở VN hiện nay là",
     "options": [
-      "DOANH NGHIEP",
-      "NHAN DAN",
-      "CAC DAP AN DEU DUNG",
-      "NHA NUOC"
+      "Doạnh nghiệp",
+      "Nhân dân",
+      "Các đáp án đều đúng",
+      "Nhà nước"
     ],
     "correctAnswerIndices": [
       0
@@ -1332,12 +1330,12 @@
   },
   {
     "id": 100,
-    "question": "GIA TRI MOI DO LAO DONG HIEN TAI TAO RA GOM CO:",
+    "question": "Giá trị mới do lao động hiện tại tạo ra gồm có :",
     "options": [
-      "CAC DAP AN DEU DUNG",
-      "GIA TRI LAO DONG QUA KHU VA GIA TRI TANG THEM",
-      "GIA TRI LAO DONG MOI VA GIA TRI THANG DU",
-      "GIA TRI SUC LAO DONG VA GIA TRI TANG THEM"
+      "Các đáp án đều đúng",
+      "Giá trị lao động quá khứ và giá trị tăng thêm",
+      "Giá trị lao động mới và giá trị thặng dư",
+      "Giá trị sức lao động và giá trị tăng thêm"
     ],
     "correctAnswerIndices": [
       2
@@ -1346,12 +1344,12 @@
   },
   {
     "id": 101,
-    "question": "KINH TE TRI THUC LA:",
+    "question": "",
     "options": [
-      "NEN KINH TE CONG NGHIEP",
-      "NEN KINH TE CHI DUA TREN CO SO KHAI THAC VA SU DUNG CHI THUC, THONG TIN",
-      "NEN KINH TE MA VAI TRO CUA TRI THUC,P, THONG TIN VA LAO DONG TRI TUE LA CHU đạo",
-      "NEN KINH TE KHONG SU DUNG CAC YEU TO VAT CHAT LA CAC TAI NGUYEN HUU HINH và hữu hạn"
+      "Nền kinh tế công nghiệp",
+      "Nền kinh tế chỉ dựa trên cơ sở khai thác và sử dụng chi thức , thông tin",
+      "Nền kinh tế mà vai trò của tri thức ,p , thông tin và lao động trí tuệ là chủ đạo",
+      "Nền kinh tế không sử dụng các yếu tố vật chất là các tài nguyên hữu hình và hữu hạn"
     ],
     "correctAnswerIndices": [
       2
@@ -1360,12 +1358,12 @@
   },
   {
     "id": 102,
-    "question": "TRONG VIEC TIEP CAN VOI CONG NGHE TIEN TIEN CUA PHUONG TAY DE TIEN HANH công nghiệp hóa, Nhật bản đã thực hiện theo phương châm:",
+    "question": "Trong viec tiep can voi cong nghe tien tien cua phuong tay đe tien hanh công nghiệp hóa, Nhật bản đã thực hiện theo phương châm :",
     "options": [
-      "RAP KHUON NGUYEN MAU KI THUAT TIEN TIEN CUA PHUONG TAY",
-      "KHONG BAT CHUOC NGUYEN MAU CUA PHUONG TAY MA TIM CACH CAI TIEN CONG nghệ nhập khẩu",
-      "CAC DAP AN DEU DUNG",
-      "TIM TOI NGHIEN CUU CAC CONG NGHE MOI TREN CO SO NGHIEN CUU KI THUAT phương Tây."
+      "Rập khuôn nguyên mẫu kĩ thuật tiên tiến của phương tây",
+      "Không bắt chước nguyên mẫu của phương Tây mà tìm cách cải tiến công nghệ nhập khẩu",
+      "Các đáp án đều đúng",
+      "Tìm tòi nghiên cứu các công nghệ mới trên cơ sở nghiên cữu kĩ thuật phương Tây."
     ],
     "correctAnswerIndices": [
       1
@@ -1374,12 +1372,12 @@
   },
   {
     "id": 103,
-    "question": "QUA TRINH XAY DUNG NEN KINH TE TRI THUC O VIET NAM HIEN NAY CAN DUOC thực hiện theo phương châm:",
+    "question": "Quá trình xây dựng nền kinh tế tri thức ở Việt Nam hiện nay cần được thực hiện theo phương châm :",
     "options": [
-      "BO QUA 1 SO THE HE CONG NGHE TRUNG GIAN,DI THANG VAO CONG NGHE CAO VA công nghệ mới",
-      "GIAM THIEU TAI NGUYEN VA LAO DONG",
-      "VAN DUNG TRI THUC MOI VAO TAT CA CAC NGANH KINH TE, LAM TANG NHANH GIA TRI của sản phẩm",
-      "KHOCAC DAP AN DEU DUNG"
+      "Bỏ qua 1 số thế hệ công nghệ trung gian ,đi thẳng vào công nghệ cao và công nghệ mới",
+      "Giảm thiểu tải nguyên và lao động",
+      "Vận dụng tri thức mới vào tất cả các ngành kinh tế, làm tăng nhanh giá trị của sản phẩm",
+      "khoCác đáp án đều đúng"
     ],
     "correctAnswerIndices": [
       2

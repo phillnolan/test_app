@@ -105,8 +105,6 @@ Repo co hai phan chinh:
 ## Documentation map
 
 - [Project Standardization Mindmap](./project-standardization-mindmap.md)
-- [Source Tree Analysis](./source-tree-analysis.md)
-- [Feature-First Target Tree](./feature-first-target-tree.md)
 - [Architecture - Mobile App](./architecture-mobile-app.md)
 - [Architecture - Worker API](./architecture-worker-api.md)
 - [Integration Architecture](./integration-architecture.md)
@@ -133,4 +131,3 @@ npm run dev
 `sinhvien-app` da chuyen sang huong feature-first + Riverpod o phan mobile,
 co backend Cloudflare Worker rieng, va cac tai lieu chinh trong `docs/` da
 duoc don lai de phuc vu codebase hien tai thay vi cac tai lieu MVC/scan cu.
-

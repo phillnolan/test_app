@@ -120,11 +120,8 @@ mindmap
 ## Tai lieu lien quan
 
 - [Project Overview](./project-overview.md)
-- [Source Tree Analysis](./source-tree-analysis.md)
-- [Feature-First Target Tree](./feature-first-target-tree.md)
 
 ---
 
 _Mindmap nay da duoc cap nhat de phan anh trang thai feature-first + Riverpod
 hien tai cua repo._
-

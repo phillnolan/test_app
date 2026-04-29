@@ -47,39 +47,14 @@ This project consists of 2 parts:
 - **Entry:** `cloudflare-worker/src/index.ts`
 - **Pattern:** single-file REST worker voi JWT verification
 
-## Generated Documentation
+## Core Documentation
 
-### Core Documentation
-
-- [Project Standardization Mindmap](./project-standardization-mindmap.md) - Mindmap chuan hoa cau truc, sync flow, test va standards
 - [Project Overview](./project-overview.md) - Executive summary va phan loai repo
-- [Source Tree Analysis](./source-tree-analysis.md) - Cay thu muc co chu giai
-- [Feature-First Target Tree](./feature-first-target-tree.md) - Cay muc tieu va trang thai migration hien tai
-
-### Part-Specific Documentation
-
-#### mobile-app
-
-- [Architecture](./architecture-mobile-app.md) - Kien truc app Flutter
-- [Components](./component-inventory-mobile-app.md) - Inventory man hinh va widget chinh
-- [Development Guide](./development-guide-mobile-app.md) - Setup, run, test app Flutter
-- [API Contracts](./api-contracts-mobile-app.md) - Cac API ma app tieu thu
-- [Data Models](./data-models-mobile-app.md) - Model du lieu va local cache
-
-#### worker-api
-
-- [Architecture](./architecture-worker-api.md) - Kien truc backend Worker
-- [Development Guide](./development-guide-worker-api.md) - Setup, dev, deploy Worker
-- [API Contracts](./api-contracts-worker-api.md) - REST endpoints cua Worker
-- [Data Models](./data-models-worker-api.md) - D1/KV/R2 data model
-
-### Integration
-
+- [Project Standardization Mindmap](./project-standardization-mindmap.md) - Mindmap chuan hoa cau truc, sync flow, test va standards
+- [Architecture - mobile-app](./architecture-mobile-app.md) - Kien truc app Flutter
+- [Architecture - worker-api](./architecture-worker-api.md) - Kien truc backend Worker
 - [Integration Architecture](./integration-architecture.md) - Cach cac part va he ngoai giao tiep
-
-### Optional Documentation
-
-- [Deployment Guide](./deployment-guide.md) - Quy trinh cau hinh va deploy hien tai
+- [Flutter API Optimization Methods](./flutter_api_optimization_methods.md) - Cach toi uu cac luong goi API cham
 
 ## Existing Documentation
 
@@ -118,16 +93,16 @@ This documentation was generated specifically to enable AI agents to understand 
 ### When Planning New Features
 
 **UI-only features:**  
-→ Reference: `architecture-mobile-app.md`, `component-inventory-mobile-app.md`
+→ Reference: `architecture-mobile-app.md`, `project-overview.md`
 
 **API/Backend features:**  
-→ Reference: `architecture-worker-api.md`, `api-contracts-worker-api.md`, `data-models-worker-api.md`
+→ Reference: `architecture-worker-api.md`, `integration-architecture.md`
 
 **Full-stack features:**  
-→ Reference: tat ca tai lieu kien truc + `integration-architecture.md`
+→ Reference: `project-overview.md`, `project-standardization-mindmap.md`, `integration-architecture.md`
 
 **Deployment changes:**  
-→ Reference: `deployment-guide.md`
+→ Reference: [README goc](../README.md), [Cloudflare Worker README](../cloudflare-worker/README.md)
 
 ---
 

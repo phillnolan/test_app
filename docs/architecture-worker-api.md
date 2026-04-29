@@ -99,7 +99,7 @@ Worker đang bật:
 - `POST /attachments/upload`
 - `GET /attachments/download?key=...`
 
-Chi tiết request/response xem tại [api-contracts-worker-api.md](./api-contracts-worker-api.md).
+Chi tiết request/response xem trực tiếp trong `cloudflare-worker/src/index.ts`.
 
 ## Bindings và cấu hình
 
