@@ -7,16 +7,24 @@ import '../data/quiz_models.dart';
 import 'quiz_controller.dart';
 
 /// Quiz feature landing page.
-class QuizPage extends ConsumerWidget {
+class QuizPage extends ConsumerStatefulWidget {
   const QuizPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<QuizPage> createState() => _QuizPageState();
+}
+
+final class _QuizPageState extends ConsumerState<QuizPage> {
+  String? _selectedBankId;
+
+  @override
+  Widget build(BuildContext context) {
     final catalogAsync = ref.watch(quizCatalogProvider);
     final quizState = ref.watch(quizControllerProvider);
     final banks = catalogAsync.asData?.value ?? const <QuizBankMetadata>[];
-    final totals = _QuizCatalogTotals.fromBanks(banks);
     final activeSession = quizState.session;
+    final totals = _QuizCatalogTotals.fromBanks(banks);
+    final selectedBank = banks.isEmpty ? null : _resolveSelectedBank(banks);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -24,6 +32,7 @@ class QuizPage extends ConsumerWidget {
         _QuizHeroCard(
           bankCount: totals.bankCount,
           questionCount: totals.questionCount,
+          practiceSetCount: totals.practiceSetCount,
           skippedQuestionCount: totals.skippedQuestionCount,
           isLoading: catalogAsync.isLoading,
           hasActiveSession: activeSession != null,
@@ -79,30 +88,62 @@ class QuizPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
         ],
-        _QuizCatalogSection(
-          banks: banks,
-          isLoading: catalogAsync.isLoading && banks.isEmpty,
-          isBusy: quizState.isStarting,
-          hasActiveSession: activeSession != null,
-          onBankTap: (bank) {
-            unawaited(
-              _handleBankTap(
-                context: context,
-                ref: ref,
-                bank: bank,
-                activeSession: activeSession,
-              ),
-            );
-          },
-        ),
+        if (banks.isEmpty)
+          const _InlineMessageCard(
+            icon: Icons.quiz_outlined,
+            title: 'Chưa có môn nào',
+            description: 'Không tìm thấy bộ quiz nào trong manifest hiện tại.',
+            tintColor: null,
+          )
+        else ...[
+          _QuizSubjectSection(
+            banks: banks,
+            selectedBankId: selectedBank!.id,
+            isBusy: quizState.isStarting,
+            onSubjectTap: (bank) {
+              setState(() {
+                _selectedBankId = bank.id;
+              });
+            },
+          ),
+          const SizedBox(height: 16),
+          _QuizPracticeSetSection(
+            bank: selectedBank,
+            isBusy: quizState.isStarting,
+            hasActiveSession: activeSession != null,
+            onPracticeSetTap: (setNumber) {
+              unawaited(
+                _handlePracticeSetTap(
+                  context: context,
+                  bank: selectedBank,
+                  setNumber: setNumber,
+                  activeSession: activeSession,
+                ),
+              );
+            },
+          ),
+        ],
       ],
     );
   }
 
-  Future<void> _handleBankTap({
+  QuizBankMetadata _resolveSelectedBank(List<QuizBankMetadata> banks) {
+    final selectedBankId = _selectedBankId;
+    if (selectedBankId != null) {
+      for (final bank in banks) {
+        if (bank.id == selectedBankId) {
+          return bank;
+        }
+      }
+    }
+
+    return banks.first;
+  }
+
+  Future<void> _handlePracticeSetTap({
     required BuildContext context,
-    required WidgetRef ref,
     required QuizBankMetadata bank,
+    required int setNumber,
     required QuizSession? activeSession,
   }) async {
     if (activeSession != null && !activeSession.isCompleted) {
@@ -130,48 +171,13 @@ class QuizPage extends ConsumerWidget {
       }
     }
 
-    final selectedQuestionCount = await _showQuestionCountDialog(
-      context: context,
-      bank: bank,
-    );
-    if (selectedQuestionCount == null || !context.mounted) {
-      return;
-    }
-
     await ref
         .read(quizControllerProvider.notifier)
-        .startQuiz(bank, questionCount: selectedQuestionCount);
-  }
-
-  Future<int?> _showQuestionCountDialog({
-    required BuildContext context,
-    required QuizBankMetadata bank,
-  }) {
-    final questionCounts = _buildQuestionCountOptions(bank.questionCount);
-    return showDialog<int>(
-      context: context,
-      builder: (dialogContext) => SimpleDialog(
-        title: Text('Chọn số câu - ${bank.code}'),
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
-            child: Text(
-              'Bộ đề sẽ được xáo trộn ngẫu nhiên trước khi bắt đầu.',
-              style: Theme.of(dialogContext).textTheme.bodyMedium,
-            ),
-          ),
-          for (final count in questionCounts)
-            SimpleDialogOption(
-              onPressed: () => Navigator.of(dialogContext).pop(count),
-              child: Text(
-                count == bank.questionCount
-                    ? 'Làm toàn bộ ${_formatCount(count)} câu'
-                    : 'Làm ngẫu nhiên ${_formatCount(count)} câu',
-              ),
-            ),
-        ],
-      ),
-    );
+        .startQuiz(
+          bank,
+          questionCount: quizPracticeDeckSize,
+          setNumber: setNumber,
+        );
   }
 }
 
@@ -179,6 +185,7 @@ class _QuizHeroCard extends StatelessWidget {
   const _QuizHeroCard({
     required this.bankCount,
     required this.questionCount,
+    required this.practiceSetCount,
     required this.skippedQuestionCount,
     required this.isLoading,
     required this.hasActiveSession,
@@ -187,6 +194,7 @@ class _QuizHeroCard extends StatelessWidget {
 
   final int bankCount;
   final int questionCount;
+  final int practiceSetCount;
   final int skippedQuestionCount;
   final bool isLoading;
   final bool hasActiveSession;
@@ -226,7 +234,7 @@ class _QuizHeroCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Quiz',
+                      'Quiz theo môn',
                       style: Theme.of(context).textTheme.headlineMedium
                           ?.copyWith(
                             fontWeight: FontWeight.w800,
@@ -235,7 +243,7 @@ class _QuizHeroCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Luyện tập từ ngân hàng câu hỏi data-quiz, làm bài ngắn hoặc ôn trọn bộ theo từng môn.',
+                      'Chọn môn, mở từng đề 50 câu và ôn đi ôn lại nhiều lần để nhớ sâu hơn.',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         height: 1.35,
                         color: foregroundColor.withValues(alpha: 0.86),
@@ -254,7 +262,7 @@ class _QuizHeroCard extends StatelessWidget {
             runSpacing: 10,
             children: [
               _HeroMetric(
-                label: 'Bộ đề',
+                label: 'Môn học',
                 value: isLoading ? '...' : _formatCount(bankCount),
                 icon: Icons.view_list_outlined,
               ),
@@ -262,6 +270,11 @@ class _QuizHeroCard extends StatelessWidget {
                 label: 'Câu khả dụng',
                 value: isLoading ? '...' : _formatCount(questionCount),
                 icon: Icons.help_outline,
+              ),
+              _HeroMetric(
+                label: 'Đề 50 câu',
+                value: isLoading ? '...' : _formatCount(practiceSetCount),
+                icon: Icons.grid_view_rounded,
               ),
               if (skippedQuestionCount > 0)
                 _HeroMetric(
@@ -416,173 +429,187 @@ class _InlineMessageCard extends StatelessWidget {
   }
 }
 
-class _QuizCatalogSection extends StatelessWidget {
-  const _QuizCatalogSection({
+class _QuizSubjectSection extends StatelessWidget {
+  const _QuizSubjectSection({
     required this.banks,
-    required this.isLoading,
+    required this.selectedBankId,
     required this.isBusy,
-    required this.hasActiveSession,
-    required this.onBankTap,
+    required this.onSubjectTap,
   });
 
   final List<QuizBankMetadata> banks;
-  final bool isLoading;
+  final String selectedBankId;
   final bool isBusy;
-  final bool hasActiveSession;
-  final ValueChanged<QuizBankMetadata> onBankTap;
+  final ValueChanged<QuizBankMetadata> onSubjectTap;
 
   @override
   Widget build(BuildContext context) {
-    final title = hasActiveSession ? 'Đổi bộ đề' : 'Chọn bộ đề';
-    final subtitle = hasActiveSession
-        ? 'Chạm vào một bộ đề để đổi phiên làm bài hoặc mở một bộ mới.'
-        : 'Chạm vào một bộ đề để chọn số câu và bắt đầu ôn luyện.';
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(title: title, subtitle: subtitle),
+        const _SectionHeader(
+          title: 'Môn học',
+          subtitle:
+              'Mỗi môn được hiển thị dưới dạng card. Chọn một môn để mở các đề 50 câu tương ứng.',
+        ),
         const SizedBox(height: 12),
-        if (isLoading)
-          const _InlineMessageCard(
-            icon: Icons.download_outlined,
-            title: 'Đang tải danh sách bộ đề',
-            description:
-                'Vui lòng đợi một chút trong khi app đọc manifest quiz.',
-            tintColor: null,
-            showProgress: true,
-          )
-        else if (banks.isEmpty)
-          const _InlineMessageCard(
-            icon: Icons.quiz_outlined,
-            title: 'Chưa có bộ đề nào',
-            description: 'Không tìm thấy bộ quiz nào trong manifest hiện tại.',
-            tintColor: null,
-          )
-        else
-          ...banks.map(
-            (bank) => Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _QuizBankCard(
-                bank: bank,
-                isBusy: isBusy,
-                onTap: () => onBankTap(bank),
-              ),
-            ),
-          ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final cardWidth = _gridCardWidth(constraints.maxWidth);
+            return Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                for (final bank in banks)
+                  SizedBox(
+                    width: cardWidth,
+                    child: _QuizSubjectCard(
+                      bank: bank,
+                      isBusy: isBusy,
+                      isSelected: bank.id == selectedBankId,
+                      onTap: () => onSubjectTap(bank),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
       ],
     );
   }
 }
 
-class _QuizBankCard extends StatelessWidget {
-  const _QuizBankCard({
+class _QuizSubjectCard extends StatelessWidget {
+  const _QuizSubjectCard({
     required this.bank,
     required this.isBusy,
+    required this.isSelected,
     required this.onTap,
   });
 
   final QuizBankMetadata bank;
   final bool isBusy;
+  final bool isSelected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final visual = _bankVisual(bank);
     final colorScheme = Theme.of(context).colorScheme;
     final accent = Color(bank.accentColor);
-    final countLabel = '${_formatCount(bank.questionCount)} câu khả dụng';
+    final visual = _bankVisual(bank);
+    final backgroundColor = isSelected
+        ? colorScheme.primaryContainer
+        : colorScheme.surfaceContainerLow;
+    final borderColor = isSelected
+        ? colorScheme.primary
+        : colorScheme.outlineVariant;
 
     return Material(
-      color: colorScheme.surfaceContainerLow,
-      borderRadius: BorderRadius.circular(26),
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(28),
       child: InkWell(
         onTap: isBusy ? null : onTap,
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(28),
         child: Container(
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(26),
-            border: Border.all(color: colorScheme.outlineVariant),
+            borderRadius: BorderRadius.circular(28),
+            border: Border.all(
+              color: borderColor,
+              width: isSelected ? 1.6 : 1.0,
+            ),
           ),
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 54,
-                height: 54,
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.16),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Icon(visual.icon, color: accent),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            bank.title,
-                            style: Theme.of(context).textTheme.titleLarge
-                                ?.copyWith(fontWeight: FontWeight.w800),
-                          ),
-                        ),
-                        if (bank.hasSkippedQuestions)
-                          _MiniBadge(
-                            icon: Icons.info_outline,
-                            label: 'Lọc câu trống',
-                            tintColor: colorScheme.tertiaryContainer,
-                          ),
-                      ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(18),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      bank.description,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        height: 1.35,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                    child: Icon(visual.icon, color: accent),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _MiniBadge(
-                          icon: Icons.library_books_outlined,
-                          label: countLabel,
-                          tintColor: accent.withValues(alpha: 0.12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                bank.title,
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.w800),
+                              ),
+                            ),
+                            if (isSelected)
+                              Icon(
+                                Icons.check_circle,
+                                color: colorScheme.primary,
+                                size: 20,
+                              ),
+                          ],
                         ),
+                        const SizedBox(height: 4),
                         _MiniBadge(
-                          icon: Icons.shuffle_outlined,
-                          label: 'Xáo trộn khi bắt đầu',
-                          tintColor: colorScheme.surface.withValues(alpha: 0.7),
+                          icon: Icons.code,
+                          label: bank.code,
+                          tintColor: colorScheme.surface.withValues(
+                            alpha: 0.72,
+                          ),
                         ),
                       ],
                     ),
-                    if (bank.hasSkippedQuestions) ...[
-                      const SizedBox(height: 10),
-                      Text(
-                        'Bộ gốc có ${_formatCount(bank.sourceQuestionCount)} câu, '
-                        'app đã lọc ${_formatCount(bank.skippedQuestionCount)} câu chưa có đáp án.',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          height: 1.35,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                bank.description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  height: 1.35,
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
-              const SizedBox(width: 12),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: colorScheme.onSurfaceVariant,
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _MiniBadge(
+                    icon: Icons.library_books_outlined,
+                    label: '${_formatCount(quizPracticeDeckSize)} câu/đề',
+                    tintColor: accent.withValues(alpha: 0.12),
+                  ),
+                  _MiniBadge(
+                    icon: Icons.collections_bookmark_outlined,
+                    label: '${_formatCount(_practiceSetCountFor(bank))} đề',
+                    tintColor: colorScheme.surface.withValues(alpha: 0.72),
+                  ),
+                  _MiniBadge(
+                    icon: Icons.quiz_outlined,
+                    label: '${_formatCount(bank.questionCount)} câu',
+                    tintColor: colorScheme.surface.withValues(alpha: 0.72),
+                  ),
+                ],
               ),
+              if (bank.hasSkippedQuestions) ...[
+                const SizedBox(height: 10),
+                Text(
+                  'Bộ gốc có ${_formatCount(bank.sourceQuestionCount)} câu, '
+                  'app đã lọc ${_formatCount(bank.skippedQuestionCount)} câu chưa có đáp án.',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    height: 1.35,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -591,38 +618,165 @@ class _QuizBankCard extends StatelessWidget {
   }
 }
 
-class _MiniBadge extends StatelessWidget {
-  const _MiniBadge({
-    required this.icon,
-    required this.label,
-    required this.tintColor,
+class _QuizPracticeSetSection extends StatelessWidget {
+  const _QuizPracticeSetSection({
+    required this.bank,
+    required this.isBusy,
+    required this.hasActiveSession,
+    required this.onPracticeSetTap,
   });
 
-  final IconData icon;
-  final String label;
-  final Color tintColor;
+  final QuizBankMetadata bank;
+  final bool isBusy;
+  final bool hasActiveSession;
+  final ValueChanged<int> onPracticeSetTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final practiceSetCount = _practiceSetCountFor(bank);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _SectionHeader(
+          title: 'Các đề của ${bank.title}',
+          subtitle: hasActiveSession
+              ? 'Đang có một phiên làm bài mở. Chọn đề mới sẽ thay thế tiến độ hiện tại.'
+              : 'Mỗi đề có đúng ${_formatCount(quizPracticeDeckSize)} câu và được xáo trộn riêng để bạn ôn đi ôn lại nhiều lần.',
+        ),
+        const SizedBox(height: 12),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final cardWidth = _gridCardWidth(constraints.maxWidth);
+            return Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: [
+                for (final setNumber in _practiceSetNumbers(practiceSetCount))
+                  SizedBox(
+                    width: cardWidth,
+                    child: _QuizPracticeSetCard(
+                      bank: bank,
+                      setNumber: setNumber,
+                      isBusy: isBusy,
+                      onTap: () => onPracticeSetTap(setNumber),
+                    ),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _QuizPracticeSetCard extends StatelessWidget {
+  const _QuizPracticeSetCard({
+    required this.bank,
+    required this.setNumber,
+    required this.isBusy,
+    required this.onTap,
+  });
+
+  final QuizBankMetadata bank;
+  final int setNumber;
+  final bool isBusy;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: tintColor,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 16, color: colorScheme.onSurfaceVariant),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
+    final accent = Color(bank.accentColor);
+
+    return Material(
+      color: colorScheme.surfaceContainerLow,
+      borderRadius: BorderRadius.circular(24),
+      child: InkWell(
+        onTap: isBusy ? null : onTap,
+        borderRadius: BorderRadius.circular(24),
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(color: colorScheme.outlineVariant),
           ),
-        ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: accent.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      _formatCount(setNumber),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: accent,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Đề $setNumber',
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          bank.title,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(color: colorScheme.onSurfaceVariant),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                'Ôn lại bằng ${_formatCount(quizPracticeDeckSize)} câu cố định. '
+                'Làm xong có thể vào lại để làm cùng đề hoặc chọn đề khác.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  height: 1.35,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _MiniBadge(
+                    icon: Icons.replay_outlined,
+                    label: 'Ôn lặp lại',
+                    tintColor: colorScheme.surface.withValues(alpha: 0.72),
+                  ),
+                  _MiniBadge(
+                    icon: Icons.grid_view_rounded,
+                    label: '${_formatCount(quizPracticeDeckSize)} câu',
+                    tintColor: accent.withValues(alpha: 0.12),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -657,7 +811,7 @@ class _QuizSessionSection extends StatelessWidget {
         _SectionHeader(
           title: session.isCompleted ? 'Kết quả bài làm' : 'Bài đang làm',
           subtitle: session.isCompleted
-              ? 'Bạn có thể xem lại từng câu, sửa phiên mới hoặc đổi sang bộ đề khác.'
+              ? 'Bạn có thể xem lại từng câu, làm lại đề này hoặc đổi sang đề khác.'
               : 'Hoàn thành từng câu, sau đó lướt lại để ôn những câu đã làm.',
         ),
         const SizedBox(height: 12),
@@ -730,13 +884,25 @@ class _QuizSummaryCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 6),
-                    Text(
-                      '${_formatCount(session.correctCount)}/${_formatCount(session.questionCount)} câu đúng',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onPrimaryContainer.withValues(
-                          alpha: 0.88,
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _MiniBadge(
+                          icon: Icons.view_list_outlined,
+                          label: 'Đề ${session.practiceSetNumber}',
+                          tintColor: colorScheme.surface.withValues(
+                            alpha: 0.44,
+                          ),
                         ),
-                      ),
+                        _MiniBadge(
+                          icon: Icons.grid_view_rounded,
+                          label: '${_formatCount(session.questionCount)} câu',
+                          tintColor: colorScheme.surface.withValues(
+                            alpha: 0.44,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -1192,6 +1358,43 @@ class _QuizOptionTile extends StatelessWidget {
   }
 }
 
+class _MiniBadge extends StatelessWidget {
+  const _MiniBadge({
+    required this.icon,
+    required this.label,
+    required this.tintColor,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color tintColor;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: tintColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: colorScheme.onSurfaceVariant),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SectionHeader extends StatelessWidget {
   const _SectionHeader({required this.title, required this.subtitle});
 
@@ -1282,15 +1485,23 @@ String _answerLetters(Set<int> indices) {
   return labels.map(_optionLabel).join(', ');
 }
 
-List<int> _buildQuestionCountOptions(int questionCount) {
-  final counts = <int>{};
-  for (final count in [5, 10, 20, 30]) {
-    if (count < questionCount) {
-      counts.add(count);
-    }
+int _practiceSetCountFor(QuizBankMetadata bank) {
+  final derived = (bank.questionCount / quizPracticeDeckSize).ceil();
+  return derived.clamp(3, 12);
+}
+
+List<int> _practiceSetNumbers(int count) {
+  return List<int>.generate(count, (index) => index + 1, growable: false);
+}
+
+double _gridCardWidth(double maxWidth) {
+  if (maxWidth >= 1120) {
+    return (maxWidth - 24) / 3;
   }
-  counts.add(questionCount);
-  return counts.toList(growable: false);
+  if (maxWidth >= 720) {
+    return (maxWidth - 12) / 2;
+  }
+  return maxWidth;
 }
 
 String _formatCount(int value) {
@@ -1314,12 +1525,12 @@ String _formatDuration(Duration duration) {
   final seconds = totalSeconds % 60;
 
   if (hours > 0) {
-    return '${hours}g ${minutes}p ${seconds}s';
+    return '$hours giờ $minutes phút $seconds giây';
   }
   if (minutes > 0) {
-    return '${minutes}p ${seconds}s';
+    return '$minutes phút $seconds giây';
   }
-  return '${seconds}s';
+  return '$seconds giây';
 }
 
 final class _QuizBankVisual {
@@ -1332,6 +1543,7 @@ final class _QuizCatalogTotals {
   const _QuizCatalogTotals({
     required this.bankCount,
     required this.questionCount,
+    required this.practiceSetCount,
     required this.skippedQuestionCount,
   });
 
@@ -1342,6 +1554,10 @@ final class _QuizCatalogTotals {
         0,
         (sum, bank) => sum + bank.questionCount,
       ),
+      practiceSetCount: banks.fold<int>(
+        0,
+        (sum, bank) => sum + _practiceSetCountFor(bank),
+      ),
       skippedQuestionCount: banks.fold<int>(
         0,
         (sum, bank) => sum + bank.skippedQuestionCount,
@@ -1351,5 +1567,6 @@ final class _QuizCatalogTotals {
 
   final int bankCount;
   final int questionCount;
+  final int practiceSetCount;
   final int skippedQuestionCount;
 }

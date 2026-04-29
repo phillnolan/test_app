@@ -23,12 +23,10 @@ final quizControllerProvider = NotifierProvider<QuizController, QuizState>(
 
 /// Controls the active quiz session.
 final class QuizController extends Notifier<QuizState> {
-  QuizController({QuizRepository? repository, Random? random})
-    : _repository = repository ?? AssetQuizRepository(),
-      _random = random ?? Random();
+  QuizController({QuizRepository? repository})
+    : _repository = repository ?? AssetQuizRepository();
 
   final QuizRepository _repository;
-  final Random _random;
 
   @override
   QuizState build() {
@@ -43,23 +41,24 @@ final class QuizController extends Notifier<QuizState> {
   /// Starts a quiz for [metadata].
   Future<void> startQuiz(
     QuizBankMetadata metadata, {
-    int questionCount = 10,
+    int questionCount = quizPracticeDeckSize,
+    int setNumber = 1,
   }) async {
     state = state.copyWith(isStarting: true, errorMessage: null);
 
     try {
       final bank = await _repository.loadBank(metadata);
-      final questions = bank.questions.toList()..shuffle(_random);
+      final questions = _buildPracticeQuestions(
+        questions: bank.questions,
+        questionCount: questionCount,
+        bankId: bank.metadata.id,
+        setNumber: setNumber,
+      );
       if (questions.isEmpty) {
         throw StateError('Bank has no playable questions.');
       }
-
-      final limit = questionCount <= 0 || questionCount >= questions.length
-          ? questions.length
-          : questionCount;
-      final selectedQuestions = questions.take(limit).toList(growable: false);
       final attempts = List<QuizQuestionAttempt>.generate(
-        selectedQuestions.length,
+        questions.length,
         (_) => QuizQuestionAttempt(),
         growable: false,
       );
@@ -67,8 +66,9 @@ final class QuizController extends Notifier<QuizState> {
       state = QuizState(
         session: QuizSession(
           bank: bank.metadata,
-          questions: selectedQuestions,
+          questions: questions,
           attempts: attempts,
+          practiceSetNumber: setNumber < 1 ? 1 : setNumber,
           currentIndex: 0,
           startedAt: DateTime.now(),
         ),
@@ -91,7 +91,22 @@ final class QuizController extends Notifier<QuizState> {
       return;
     }
 
-    await startQuiz(session.bank, questionCount: session.questions.length);
+    final attempts = List<QuizQuestionAttempt>.generate(
+      session.questions.length,
+      (_) => QuizQuestionAttempt(),
+      growable: false,
+    );
+    state = state.copyWith(
+      session: QuizSession(
+        bank: session.bank,
+        questions: session.questions,
+        attempts: attempts,
+        practiceSetNumber: session.practiceSetNumber,
+        currentIndex: 0,
+        startedAt: DateTime.now(),
+      ),
+      errorMessage: null,
+    );
   }
 
   /// Selects or toggles an option for the current question.
@@ -206,5 +221,44 @@ final class QuizController extends Notifier<QuizState> {
     final attempts = session.attempts.toList();
     attempts[session.currentIndex] = attempt;
     state = state.copyWith(session: session.copyWith(attempts: attempts));
+  }
+
+  List<QuizQuestion> _buildPracticeQuestions({
+    required List<QuizQuestion> questions,
+    required int questionCount,
+    required String bankId,
+    required int setNumber,
+  }) {
+    if (questions.isEmpty) {
+      return const <QuizQuestion>[];
+    }
+
+    final normalizedCount = questionCount <= 0
+        ? quizPracticeDeckSize
+        : questionCount;
+    final normalizedSetNumber = setNumber < 1 ? 1 : setNumber;
+    final shuffled = questions.toList()
+      ..shuffle(
+        Random(_stableSeed(bankId: bankId, setNumber: normalizedSetNumber)),
+      );
+
+    if (normalizedCount <= shuffled.length) {
+      return shuffled.take(normalizedCount).toList(growable: false);
+    }
+
+    final selected = <QuizQuestion>[];
+    while (selected.length < normalizedCount) {
+      selected.addAll(shuffled);
+    }
+    return selected.take(normalizedCount).toList(growable: false);
+  }
+
+  int _stableSeed({required String bankId, required int setNumber}) {
+    var seed = 17;
+    for (final unit in bankId.codeUnits) {
+      seed = 37 * seed + unit;
+    }
+    seed = 37 * seed + setNumber;
+    return seed & 0x7fffffff;
   }
 }

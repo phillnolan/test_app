@@ -2,6 +2,9 @@
 
 const Object _unset = Object();
 
+/// The standard number of questions in each practice set.
+const int quizPracticeDeckSize = 50;
+
 /// Describes one quiz bank available in the app.
 final class QuizBankMetadata {
   QuizBankMetadata({
@@ -158,6 +161,7 @@ final class QuizSession {
     required this.bank,
     required List<QuizQuestion> questions,
     required List<QuizQuestionAttempt> attempts,
+    required this.practiceSetNumber,
     required this.currentIndex,
     required this.startedAt,
     this.completedAt,
@@ -167,6 +171,7 @@ final class QuizSession {
   final QuizBankMetadata bank;
   final List<QuizQuestion> questions;
   final List<QuizQuestionAttempt> attempts;
+  final int practiceSetNumber;
   final int currentIndex;
   final DateTime startedAt;
   final DateTime? completedAt;
@@ -198,6 +203,7 @@ final class QuizSession {
     QuizBankMetadata? bank,
     List<QuizQuestion>? questions,
     List<QuizQuestionAttempt>? attempts,
+    int? practiceSetNumber,
     int? currentIndex,
     Object? completedAt = _unset,
   }) {
@@ -205,6 +211,7 @@ final class QuizSession {
       bank: bank ?? this.bank,
       questions: questions ?? this.questions,
       attempts: attempts ?? this.attempts,
+      practiceSetNumber: practiceSetNumber ?? this.practiceSetNumber,
       currentIndex: currentIndex ?? this.currentIndex,
       startedAt: startedAt,
       completedAt: completedAt == _unset

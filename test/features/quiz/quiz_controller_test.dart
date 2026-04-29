@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sinhvien_app/features/quiz/data/quiz_models.dart';
@@ -13,7 +11,7 @@ void main() {
     final repository = AssetQuizRepository();
     final catalog = await repository.loadCatalog();
 
-    expect(catalog, hasLength(5));
+    expect(catalog, hasLength(9));
     expect(catalog.any((bank) => bank.id == 'mmt'), isTrue);
     expect(
       catalog.firstWhere((bank) => bank.id == 'mmt').skippedQuestionCount,
@@ -85,7 +83,7 @@ void main() {
       overrides: [
         quizRepositoryProvider.overrideWithValue(repository),
         quizControllerProvider.overrideWith(
-          () => QuizController(repository: repository, random: Random(0)),
+          () => QuizController(repository: repository),
         ),
       ],
     );
@@ -96,9 +94,10 @@ void main() {
     expect(catalog.single.title, 'Sample Bank');
 
     final controller = container.read(quizControllerProvider.notifier);
-    await controller.startQuiz(catalog.single, questionCount: 2);
+    await controller.startQuiz(catalog.single, questionCount: 2, setNumber: 1);
     expect(controller.state.session, isNotNull);
     expect(controller.state.session!.questionCount, 2);
+    expect(controller.state.session!.practiceSetNumber, 1);
 
     _answerCurrentQuestion(controller);
     controller.goToNextQuestion();
@@ -107,6 +106,60 @@ void main() {
     expect(controller.state.session!.isCompleted, isTrue);
     expect(controller.state.session!.correctCount, 2);
   });
+
+  test(
+    'quiz controller builds a 50-question practice set by default',
+    () async {
+      final repository = FakeQuizRepository(
+        catalog: [
+          QuizBankMetadata(
+            id: 'sample-50',
+            code: 'SAMPLE50',
+            title: 'Sample 50',
+            description: 'Practice bank',
+            questionCount: 60,
+            sourceQuestionCount: 60,
+            skippedQuestionCount: 0,
+            accentColor: 0xff123456,
+            assetPath: 'assets/quiz/banks/sample-50.json',
+          ),
+        ],
+        banks: {
+          'sample-50': QuizBank(
+            metadata: QuizBankMetadata(
+              id: 'sample-50',
+              code: 'SAMPLE50',
+              title: 'Sample 50',
+              description: 'Practice bank',
+              questionCount: 60,
+              sourceQuestionCount: 60,
+              skippedQuestionCount: 0,
+              accentColor: 0xff123456,
+              assetPath: 'assets/quiz/banks/sample-50.json',
+            ),
+            questions: _sampleQuestions(60),
+          ),
+        },
+      );
+      final container = ProviderContainer(
+        overrides: [
+          quizRepositoryProvider.overrideWithValue(repository),
+          quizControllerProvider.overrideWith(
+            () => QuizController(repository: repository),
+          ),
+        ],
+      );
+      addTearDown(container.dispose);
+
+      final catalog = await container.read(quizCatalogProvider.future);
+      final controller = container.read(quizControllerProvider.notifier);
+      await controller.startQuiz(catalog.single, setNumber: 2);
+
+      expect(controller.state.session, isNotNull);
+      expect(controller.state.session!.questionCount, quizPracticeDeckSize);
+      expect(controller.state.session!.practiceSetNumber, 2);
+    },
+  );
 }
 
 void _answerCurrentQuestion(QuizController controller) {
@@ -136,4 +189,18 @@ final class FakeQuizRepository implements QuizRepository {
     }
     return bank;
   }
+}
+
+List<QuizQuestion> _sampleQuestions(int count) {
+  return List<QuizQuestion>.generate(
+    count,
+    (index) => QuizQuestion(
+      sourceId: index,
+      question: 'Question ${index + 1}?',
+      options: const ['A', 'B', 'C', 'D'],
+      correctOptionIndices: const {0},
+      explanation: 'Reason ${index + 1}',
+    ),
+    growable: false,
+  );
 }
