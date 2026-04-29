@@ -84,28 +84,17 @@ final class QuizController extends Notifier<QuizState> {
     }
   }
 
-  /// Restarts the current session with the same bank and question count.
+  /// Restarts the current session with the same bank, deck, and question count.
   Future<void> restartSession() async {
     final session = state.session;
     if (session == null) {
       return;
     }
 
-    final attempts = List<QuizQuestionAttempt>.generate(
-      session.questions.length,
-      (_) => QuizQuestionAttempt(),
-      growable: false,
-    );
-    state = state.copyWith(
-      session: QuizSession(
-        bank: session.bank,
-        questions: session.questions,
-        attempts: attempts,
-        practiceSetNumber: session.practiceSetNumber,
-        currentIndex: 0,
-        startedAt: DateTime.now(),
-      ),
-      errorMessage: null,
+    await startQuiz(
+      session.bank,
+      questionCount: session.questionCount,
+      setNumber: session.practiceSetNumber,
     );
   }
 
@@ -237,20 +226,32 @@ final class QuizController extends Notifier<QuizState> {
         ? quizPracticeDeckSize
         : questionCount;
     final normalizedSetNumber = setNumber < 1 ? 1 : setNumber;
-    final shuffled = questions.toList()
+    final seededQuestions = questions.toList()
       ..shuffle(
         Random(_stableSeed(bankId: bankId, setNumber: normalizedSetNumber)),
       );
 
-    if (normalizedCount <= shuffled.length) {
-      return shuffled.take(normalizedCount).toList(growable: false);
+    final selected = normalizedCount <= seededQuestions.length
+        ? seededQuestions.take(normalizedCount).toList(growable: false)
+        : _repeatQuestions(
+            questions: seededQuestions,
+            questionCount: normalizedCount,
+          );
+
+    selected.shuffle(Random());
+    return selected;
+  }
+
+  List<QuizQuestion> _repeatQuestions({
+    required List<QuizQuestion> questions,
+    required int questionCount,
+  }) {
+    final selected = <QuizQuestion>[];
+    while (selected.length < questionCount) {
+      selected.addAll(questions);
     }
 
-    final selected = <QuizQuestion>[];
-    while (selected.length < normalizedCount) {
-      selected.addAll(shuffled);
-    }
-    return selected.take(normalizedCount).toList(growable: false);
+    return selected.take(questionCount).toList(growable: false);
   }
 
   int _stableSeed({required String bankId, required int setNumber}) {

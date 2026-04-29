@@ -1,1 +1,1 @@
-export '../../../quiz/ui/quiz_page.dart';
+export '../../../quiz/ui/quiz_flow_page.dart';

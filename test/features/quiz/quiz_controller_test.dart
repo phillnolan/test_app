@@ -160,6 +160,65 @@ void main() {
       expect(controller.state.session!.practiceSetNumber, 2);
     },
   );
+
+  test('quiz controller restarts the active deck as a fresh session', () async {
+    final repository = FakeQuizRepository(
+      catalog: [
+        QuizBankMetadata(
+          id: 'sample-restart',
+          code: 'SAMPLE-R',
+          title: 'Sample Restart',
+          description: 'Practice bank',
+          questionCount: 4,
+          sourceQuestionCount: 4,
+          skippedQuestionCount: 0,
+          accentColor: 0xff123456,
+          assetPath: 'assets/quiz/banks/sample-restart.json',
+        ),
+      ],
+      banks: {
+        'sample-restart': QuizBank(
+          metadata: QuizBankMetadata(
+            id: 'sample-restart',
+            code: 'SAMPLE-R',
+            title: 'Sample Restart',
+            description: 'Practice bank',
+            questionCount: 4,
+            sourceQuestionCount: 4,
+            skippedQuestionCount: 0,
+            accentColor: 0xff123456,
+            assetPath: 'assets/quiz/banks/sample-restart.json',
+          ),
+          questions: _sampleQuestions(4),
+        ),
+      },
+    );
+    final container = ProviderContainer(
+      overrides: [
+        quizRepositoryProvider.overrideWithValue(repository),
+        quizControllerProvider.overrideWith(
+          () => QuizController(repository: repository),
+        ),
+      ],
+    );
+    addTearDown(container.dispose);
+
+    final catalog = await container.read(quizCatalogProvider.future);
+    final controller = container.read(quizControllerProvider.notifier);
+    await controller.startQuiz(catalog.single, questionCount: 2, setNumber: 3);
+
+    _answerCurrentQuestion(controller);
+    expect(controller.state.session!.answeredCount, 1);
+
+    await controller.restartSession();
+
+    expect(controller.state.session, isNotNull);
+    expect(controller.state.session!.questionCount, 2);
+    expect(controller.state.session!.practiceSetNumber, 3);
+    expect(controller.state.session!.currentIndex, 0);
+    expect(controller.state.session!.answeredCount, 0);
+    expect(controller.state.isStarting, isFalse);
+  });
 }
 
 void _answerCurrentQuestion(QuizController controller) {
