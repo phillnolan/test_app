@@ -1,0 +1,702 @@
+[
+  {
+    "id": 1,
+    "question": "Theo quan điểm triết học Mác-Lênin, phản ánh là gì?",
+    "options": [
+      "Là sự tác động, chuyển hóa lẫn nhau giữa những dạng vật chất",
+      "Là sự tái tạo những đặc điểm của dạng vật chất này ở dạng vật chất khác thông qua sự tác động lẫn nhau giữa chúng",
+      "Là sự phản ánh trực tiếp thực tại khách quan",
+      "Tất cả các phương án còn lại"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 2,
+    "question": "Thực tiễn là gì? Câu phán đoán đúng",
+    "options": [
+      "Là hoạt động tinh thần của con người",
+      "Là hoạt động vật chất và tinh thần của con người",
+      "Là hoạt động vật chất của con người",
+      "Là hoạt động vật chất có mục đích mang tính lịch sử- xã hội của con người nhằm cải tạo tự nhiên và xã hội"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 3,
+    "question": "Chọn phương án đúng: Công cụ để phản ánh hiện thực khách quan và trao đổi tư tưởng là gì?",
+    "options": [
+      "Cơ quan cảm giác",
+      "Công cụ lao động",
+      "Ngôn ngữ",
+      "Tư liệu sản xuất"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 4,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, nguồn gốc trực tiếp và quan trọng nhất quyết định sự ra đời và phát triển của ý thức là gì?",
+    "options": [
+      "Bộ não người và hoạt động của nó",
+      "Sự tác động của tự nhiên vào bộ óc con người",
+      "Công cụ lao động",
+      "Lao động và thực tiễn xã hội"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 5,
+    "question": "Luận điểm nào sau đây chưa đúng về phép biện chứng duy vật?",
+    "options": [
+      "Chưa thể hiện thông qua hệ thống các quy luật, phạm trù",
+      "Chưa thấy được quy luật vận động nội tại và phát triển của sự vật hiện tượng Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Đã thể hiện hệ thống các quy luật, phạm trù nhưng dựa trên quan điểm duy tâm về thế giới",
+      "Tất cả các phương án"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 6,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng: “Độ” của sự vật là:",
+    "options": [
+      "Trong một phạm vi lượng- chất thống nhất nhau",
+      "Trong một giới hạn, lượng- chất thống nhất nói lên sự vật là nó",
+      "Duy trì mối quan hệ, lượng- chất thống nhất với nhau",
+      "Trong một khoảng lượng- chất thống nhất với nhau"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 7,
+    "question": "Định nghĩa về vật chất của V.I.Lênin khẳng định điều gì?",
+    "options": [
+      "Vật chất là sản phẩm của ý niệm tuyệt đối",
+      "Vật chất là tổng hợp cảm giác",
+      "Vật chất là thực tại khách quan mà con người không thể nhận biết bằng cảm giác",
+      "Vật chất là thực tại khách quan đem lại cho con người trong cảm giác"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 8,
+    "question": "Lựa chọn phương án đúng. Phủ định của phủ định được hình thành qua mấy lần phủ định:",
+    "options": [
+      "Có thể hơn 2 lần nhưng không thể ít hơn 2 lần",
+      "1 lần",
+      "Tất cả các phương án",
+      "2 lần"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 9,
+    "question": "Hạn chế lớn nhất của các quan niệm duy vật thời kỳ cổ đại trong quan niệm về vật chất là gì?",
+    "options": [
+      "Tính ngụy biện",
+      "Tính siêu hình",
+      "Tính chủ quan",
+      "Tính chất phác, ngây thơ"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 10,
+    "question": "Hãy lựa chọn đáp án đúng. Tư duy trừu tượng được thể hiện dưới các hình thức nào?",
+    "options": [
+      "Khái niệm, phán đoán, suy tư",
+      "Khái niệm, phán đoán, suy nghĩ Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Khái niệm, phán đoán, suy diễn",
+      "Khái niệm, phán đoán, suy lý"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 11,
+    "question": "Hãy lựa chọn đáp án đúng. Trực quan sinh động được thể hiện dưới các hình thức nào?",
+    "options": [
+      "Cảm giác, tri giác, biểu ngữ",
+      "Cảm giác, tri giác, biểu tượng",
+      "Cảm giác, tri giác, biểu cảm",
+      "Cảm giác, tri giác, biểu hiện"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 12,
+    "question": "Lựa chọn phương án đúng, theo quan điểm của chủ nghĩa duy vật biện chứng:",
+    "options": [
+      "Phát triển của các sự vật do cảm giác, ý thức con người quyết định",
+      "Phát triển của sự vật do sự tác động lẫn nhau của các mặt đối lập của bản thân sự vật quyết định",
+      "Phát triển của sự sự vật có nguyên nhân tác động từ bên ngoài",
+      "Phát triển của sự vật là sự biểu hiện của sự vận động của ý niệm tuyệt đối"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 13,
+    "question": "Mâu thuẫn nổi lên hàng đầu ở một giai đoạn phát triển của sự vật và chi phối các mâu thuẫn khác trong giai đoạn đó gọi là mâu thuẫn gì?",
+    "options": [
+      "Chủ yếu",
+      "Bên trong",
+      "Đối kháng",
+      "Thứ yếu"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 14,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, luận điểm nào sau là đúng?",
+    "options": [
+      "Tất cả các phương án",
+      "Phát triển của sự vật chỉ bao hàm về mặt lượng",
+      "Quá trình phát triển của sự vật là quá trình chuyển hóa từ sự thay đổi về lượng đến thay đổi về chất và ngược lại",
+      "Phát triển của sự vật chỉ bao hàm mặt chất"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 15,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng: Xét trong mối liên hệ phổ biến, mỗi sự vật: Nguyên Phúc (nkocpk99012@gmail.com)",
+    "options": [
+      "Có thể có nhiều mâu thuẫn với những vai trò khác nhau của chúng",
+      "Có một mâu thuẫn",
+      "Có mâu thuẫn bên trong và bên ngoài",
+      "Không có mâu thuẫn nào"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 16,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, phạm trù nguyên nhân:",
+    "options": [
+      "Tất cả các phương án",
+      "Là sự tác động lẫn nhau giữa các mặt, các yếu tố của sự vật hay giữa các sự vật với nhau trong điều kiện nào đó thì gây ra những biến đổi này hay biến đổi khác của sự vật",
+      "Không gây ra sự biến đổi của sự vật",
+      "Là sự tồn tại của những yếu tố, quá trình đi liền với kết quả nhưng không tham gia vào quá trình tạo nên kết quả"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 17,
+    "question": "Lựa chọn phương án đúng. Biểu tượng là:",
+    "options": [
+      "Phản ánh những đặc điểm bản chất của sự vật để phân biệt nó với sự vật, hiện tượng khác",
+      "Sự tái hiện lại những đặc điểm, thuộc tính bề ngoài khi sự vật không còn tác động trực tiếp vào giác quan của con người",
+      "Khẳng định thuộc tính nào đó thuộc về hay không thuộc về sự vật",
+      "Sự tái hiện lại những đặc điểm, thuộc tính khi sự vật không còn tác động trực tiếp vào giác quan con người"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 18,
+    "question": "Qui luật “Phủ định của phủ định”nói lên đặc tính nào của sự phát triển?",
+    "options": [
+      "Cách thức của sự vận động và phát triển",
+      "Khuynh hướng của sự vận động và phát triển",
+      "Động lực của sự vận động và phát triển",
+      "Nguồn gốc của sự vận động và phát triển"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 19,
+    "question": "Chủ nghĩa Mác-Lênin được cấu thành từ ba bộ phận lý luận cơ bản, có mối quan hệ thống nhất biện chứng với nhau, đó là:",
+    "options": [
+      "Triết học Mác-Lênin, Kinh tế chính trị Mac-Lênin, Chính trị học",
+      "Triết học Mác-Lênin, Kinh tế chính trị Mac-Lênin, Xã hội học Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Triết học Mác-Lênin, Chính trị học, Chủ nghĩa xã hội khoa học",
+      "Triết học Mác-Lênin, Kinh tế chính trị Mac-Lênin, Chủ nghĩa xã hội khoa học"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 20,
+    "question": "Chọn câu trả lời đúng theo quan điểm triết học Mác-Lênin?",
+    "options": [
+      "Ý thức là thuộc tính của mọi dạng vật chất",
+      "Ý thức là sự phản ánh năng động, sáng tạo hiện thực khách quan",
+      "Ý thức là sự phản ánh nguyên xi hiện thực khách quan",
+      "Tất cả các phương án đều sai"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 21,
+    "question": "Hình thức phát triển cao nhất của chủ nghĩa duy vật trong lịch sử là:",
+    "options": [
+      "Chủ nghĩa duy vật chất phác",
+      "Tất cả các phương án còn lại",
+      "Chủ nghĩa duy vật siêu hình",
+      "Chủ nghĩa duy vật biện chứng"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 22,
+    "question": "Lựa chọn phương án đúng. Bước nhảy là phạm trù dùng để chỉ:",
+    "options": [
+      "Không có sự thay đổi gì ở sự vật",
+      "Thay đổi bất kỳ thuộc tính nào của sự vật",
+      "Sự thay đổi về chất của sự vật",
+      "Sự thay đổi về lượng của sự vật"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 23,
+    "question": "Nhà triết học nào cho rằng “Nguyên tử là thực thể đầu tiên của thế giới” và quan điểm đó thuộc lập trường triết học nào?",
+    "options": [
+      "Hêraclit – chủ nghĩa duy vật tự phát",
+      "Đêmôcrit – chủ nghĩa duy vật chất phác",
+      "Aristot – chủ nghĩa duy tâm khách quan",
+      "Platon – chủ nghĩa duy tâm khách quan"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 24,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, sự phát triển hiểu theo nghĩa chung nhất là:",
+    "options": [
+      "Xu hướng vận động làm nảy sinh cái mới",
+      "Xu hướng thống trị của thế giới tiến lên từ đơn giản đến phức tạp, từ thấp đến cao, từ kém hoàn thiện đến hoàn thiện hơn theo những quy luật nhất định Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Xu hướng vận động tiến lên từ thấp đến cao, từ đơn giản đến phức tạp, từ kém hoàn thiện đến hoàn thiện hơn của các sự vật, hiện tượng",
+      "Tất cả các phương án"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 25,
+    "question": "“Phép biện chứng duy vật” bao gồm những nguyên lý cơ bản nào? Chọn câu trả lời đúng.",
+    "options": [
+      "Nguyên lý về mối liên hệ",
+      "Nguyên lý về sự vận động và sự phát triển",
+      "Nguyên lý về mối liên hệ phổ biến, và sự phát triển",
+      "Nguyên lý về tính hệ thống, cấu trúc"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 26,
+    "question": "Theo quan điểm triết học duy vật biện chứng, không gian và thời gian là gì?",
+    "options": [
+      "Không gian là hình thức tồn tại của vật chất, còn thời gian là phương thức tồn tại của vật chất",
+      "Không gian và thời gian là những hình thức tồn tại của vật chất",
+      "Không gian và thời gian là những phương thức cơ bản của tồn tại vật chất",
+      "Không gian là phương thức tồn tại của vật chất, còn thời gian là hình thức tồn tại của vật chất"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 27,
+    "question": "Lựa chọn câu đúng nhất theo quan điểm của chủ nghĩa duy vật biện chứng?",
+    "options": [
+      "Nguồn gốc của sự vận động là do cú hích của Thượng đế",
+      "Nguồn gốc của sự vận động là ở bên ngoài sự vật, hiện tượng do sự tương tác hay do sự tác động",
+      "Nguồn gốc của sự vận động là do ý thức tinh thần tư tưởng quyết định",
+      "Nguồn gốc của sự vận động là ở bên trong bản thân sự vật, hiện tượng, do sự tác động của các mặt, các yếu tố trong sự vật, hiện tượng gây ra"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 28,
+    "question": "Lựa chọn phương án đúng. Tri thức mới được rút ra từ những tri thức làm tiền đề trước đó là hình thức của:",
+    "options": [
+      "Khái niệm",
+      "Phán đoán",
+      "Suy lý Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Tri giác"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 29,
+    "question": "Chọn câu trả lời đúng theo quan điểm triết học Mác-Lênin?",
+    "options": [
+      "Ý thức chỉ có ở con người",
+      "Người máy cũng có ý thức như con người",
+      "Tất cả các phương án đều sai",
+      "Động vật bậc cao cũng có ý thức như con người"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 30,
+    "question": "Lựa chọn đáp án đúng. Hình thức cơ bản của thực tiễn là:",
+    "options": [
+      "Hoạt động biểu diễn nghệ thuật",
+      "Tất cả các phương án",
+      "Hoạt động nghiên cứu khoa học",
+      "Hoạt động sản xuất vật chất"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 31,
+    "question": "Chọn câu trả lời đúng: Chủ nghĩa Mác – Lênin là gì?",
+    "options": [
+      "Là khoa học về sự nghiệp giải phóng giai cấp vô sản, giải phóng nhân dân lao động khỏi chế độ áp bức, bóc lột, tiến tới giải phóng con người",
+      "Tất cả các phương án còn lại",
+      "Là thế giới quan và phương pháp luận phổ biến của nhận thức khoa học và thực tiễn cách mạng",
+      "“Là hệ thống quan điểm và học thuyết” khoa học của C.Mác, Ph.Ăngghen và sự phát triển của V.I.Lênin"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 32,
+    "question": "Theo quan điểm triết học Mác-Lênin, phản ánh là gì?",
+    "options": [
+      "Là sự tái tạo những đặc điểm của dạng vật chất này ở dạng vật chất khác thông qua sự tác động lẫn nhau giữa chúng",
+      "Là sự phản ánh trực tiếp thực tại khách quan",
+      "Là sự tác động, chuyển hóa lẫn nhau giữa những dạng vật chất",
+      "Tất cả các phương án còn lại"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 33,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, luận điểm nào sau đây là sai?",
+    "options": [
+      "Trong giới hạn của độ sự thay đổi của lượng chưa làm cho chất của sự vật biến đổi",
+      "Tất cả các phương án Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Trong giới hạn của độ sự thay đổi của lượng đều đưa đến sự thay đổi về chất của sự vật",
+      "Chỉ khi lượng đạt đến giới hạn của độ mới làm cho chất của sự vật thay đổi"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 34,
+    "question": "Mâu thuẫn đối kháng tồn tại ở đâu?",
+    "options": [
+      "Tự nhiên",
+      "Tự nhiên, xã hội và tư duy",
+      "Xã hội có giai cấp đối kháng",
+      "Tư duy"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 35,
+    "question": "Hãy sắp xếp các hình thức vận động từ thấp đến cao?",
+    "options": [
+      "Vật lý – cơ học – hóa học – sinh học – xã hội",
+      "Sinh học – xã hội – vật lý – cơ học – hóa học",
+      "Cơ học – vật lý – hóa học – sinh học – xã hội",
+      "Vật lý – hóa học – cơ học – xã hội – sinh học"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 36,
+    "question": "Qui luật từ “Sự thay đổi về lượng dẫn đến thay đổi về chất và ngược lại” nói lên đặc tính nào của sự phát triển? Chọn câu trả lời đúng.",
+    "options": [
+      "Cách thức của sự vận động và phát triển",
+      "Nguồn gốc của sự vận động và phát triển",
+      "Động lực của sự vận động và phát triển",
+      "Khuynh hướng của sự vận động và phát triển"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 37,
+    "question": "Về đối tượng, triết học khác khoa học cụ thể ở điểm nào?",
+    "options": [
+      "Triết học nghiên cứu về con người, khoa học cụ thể chỉ nghiên cứu tự nhiên",
+      "Khoa học cụ thể tìm hiểu bản chất của thế giới, còn triết học khám phá ra quy luật của thế giới",
+      "Khoa học cụ thể khám phá ra quy luật của triết học, còn triết học khám phá ra mọi cấp độ bản chất của thế giới",
+      "Khoa học cụ thể chỉ nghiên cứu một mặt của thế giới, còn triết học nghiên cứu toàn bộ thế giới trong tính chỉnh thể của nó"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 38,
+    "question": "Lựa chọn luận điểm đúng, theo quan điểm của chủ nghĩa duy vật biện chứng:",
+    "options": [
+      "Phát triển của sự vật có nguồn gốc sự tác động từ bên ngoài Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Quá trình phát triển của sự vật là quá trình chuyển hóa từ sự thay đổi dần dần về lượng sang sự thay đổi về chất và ngược lại",
+      "Phát triển của sự vật chỉ bao hàm sự thay đổi về lượng",
+      "Phát triển của sự vật chỉ bao hàm biến đổi về chất"
+    ],
+    "correctAnswerIndices": [
+      1
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 39,
+    "question": "Sự khác nhau cơ bản giữa phản ánh ý thức và các hình thức phản ánh khác của thế giới vật chất là ở chỗ nào?",
+    "options": [
+      "Tính sáng tạo, năng động",
+      "Tất cả các phương án còn lại",
+      "Tính quy định bởi vật phản ánh",
+      "Tính đúng đắn, trung thực với vật phản ánh"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 40,
+    "question": "Trong hoạt động thực tiễn cần phải làm gì? Hãy chọn phán đoán sai?",
+    "options": [
+      "Không có phán đoán sai",
+      "Coi trọng cả nhận thức kinh nghiệm và nhận thức lý luận.",
+      "Cần chống “chủ nghĩa giáo điều” và “giáo điều kinh nghiệm”.",
+      "Cần chống “chủ nghĩa kinh nghiệm”."
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 41,
+    "question": "Lựa chọn phương án đúng. Quy luật thống nhất và đấu tranh của các mặt đối lập chỉ ra:",
+    "options": [
+      "Khuynh hướng về sự vận động của sự vật, hiện tượng",
+      "Phương thức phát triển của sự vật, hiện tượng",
+      "Mục đích phát triển của sự vật, hiện tượng",
+      "Nguồn gốc, động lực về sự vận động, phát triển của sự vật"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 42,
+    "question": "Nhà triết học nào cho rằng “Lửa là thực thể đầu tiên của thế giới” và quan điểm đó thuộc lập trường triết học nào?",
+    "options": [
+      "Hêraclit – chủ nghĩa duy vật tự phát",
+      "Platon – chủ nghĩa duy tâm khách quan",
+      "Đêmôcrit – chủ nghĩa duy vật chất phác",
+      "Anaximen – chủ nghĩa duy vật tự phát"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 43,
+    "question": "Vấn đề cơ bản của triết học là gì?",
+    "options": [
+      "Vấn đề mối quan hệ giữa Trời và Đất, người và vật",
+      "Tất cả các phương án còn lại Nguyên Phúc (nkocpk99012@gmail.com)",
+      "Vấn đề mối quan hệ giữa Vật chất và Ý thức",
+      "Vấn đề mối quan hệ giữa tri thức và tình cảm"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 44,
+    "question": "Trong lịch sử triết học, những nhà triết học cho rằng: bản chất thế giới là vật chất; vật chất là tính thứ nhất, ý thức là tính thứ hai, vật chất quyết định ý thức thuộc trường phái triết học:",
+    "options": [
+      "Duy tâm",
+      "Tất cả các phương án còn lại",
+      "Duy vật",
+      "Nhị nguyên"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 45,
+    "question": "Từ nguyên lý về “mối liên hệ phổ biến” của “Phép biện chứng duy vật” chúng ta rút ra những nguyên tắc phương pháp luận nào cho họat động lý luận và thực tiễn?",
+    "options": [
+      "Quan điểm phát triển",
+      "Quan điểm tòan diện",
+      "Quan điểm tòan diện, lịch sử - cụ thể",
+      "Quan điểm lịch sử - cụ thể"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 46,
+    "question": "Lựa chọn phương án đúng. Nhận thức lý tính là:",
+    "options": [
+      "Phản ánh bản chất của sự vật",
+      "Phản ánh đan xen bề ngoài và bản chất của sự vật",
+      "Phản ánh bề ngoài của sự vật",
+      "Là giai đoạn đầu tiên của quá trình nhận thức"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 47,
+    "question": "Hãy chọn phán đóan đúng về mặt đối lập",
+    "options": [
+      "Mọi sự vật, hiện tượng đều được hình thành bởi sự thống nhất của các mặt đối lập, không hề có sự bài trừ lẫn nhau.",
+      "Những mặt nằm chung trong cùng một sự vật đều coi là mặt đối lập.",
+      "Mặt đối lập là những mặt có khuynh hướng biến đổi trái ngược nhau trong cùng một sự vật.",
+      "Những mặt khác nhau đều coi là mặt đối lập."
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 48,
+    "question": "Ba phát minh lớn nhất của khoa học tự nhiên làm tiền đề khoa học tự nhiên cho sự ra đời chủ nghĩa Mác – Lênin là những phát minh nào? Nguyên Phúc (nkocpk99012@gmail.com)",
+    "options": [
+      "Thuyết Mặt trời làm trung tâm vũ trụ của Côpecnic; Định luật bảo toàn khối lượng của Lômônôxôp; Học thuyết tế bào",
+      "Phát hiện ra nguyên tử; Phát hiện ra điện tử; Học thuyết tế bào",
+      "Phát hiện ra nguyên tử; Phát hiện ra điện tử; Định luật bảo toàn và chuyển hóa năng lượng",
+      "Định luật bảo toàn và chuyển hóa năng lượng; Học thuyết tế bào; Thuyết tiến hóa của Đac-uyn"
+    ],
+    "correctAnswerIndices": [
+      3
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 49,
+    "question": "Trong định nghĩa về vật chất của V.I.Lênin, đặc tính nào của mọi dạng vật chất là quan trọng nhất để phân biệt nó với ý thức?",
+    "options": [
+      "Tồn tại khách quan độc lập với ý thức của con người",
+      "Tồn tại",
+      "Có khối lượng và quảng tính",
+      "Luôn vận động và biến đổi"
+    ],
+    "correctAnswerIndices": [
+      0
+    ],
+    "explanation": ""
+  },
+  {
+    "id": 50,
+    "question": "Theo quan điểm của chủ nghĩa duy vật biện chứng, nguồn gốc trực tiếp và quan trọng nhất quyết định sự ra đời và phát triển của ý thức là gì?",
+    "options": [
+      "Sự tác động của tự nhiên vào bộ óc con người",
+      "Công cụ lao động",
+      "Lao động và thực tiễn xã hội",
+      "Bộ não người và hoạt động của nó Nguyên Phúc (nkocpk99012@gmail.com)"
+    ],
+    "correctAnswerIndices": [
+      2
+    ],
+    "explanation": ""
+  }
+]

@@ -1,0 +1,51 @@
+[
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\Triết",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\Triết\\gk-triet-lan1-de-thi-giua-ky-mac-lenin-ve-triet-hoc-bien-chung.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\triet\\gk-triet-lan1-de-thi-giua-ky-mac-lenin-ve-triet-hoc-bien-chung.json",
+    "question_count": 50,
+    "answer_count": 0
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\Triết",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\Triết\\gk-triet-lan2-de-thi-giua-ky-triet-hoc-mac-lenin-2.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\triet\\gk-triet-lan2-de-thi-giua-ky-triet-hoc-mac-lenin-2.json",
+    "question_count": 50,
+    "answer_count": 0
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\Triết",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\Triết\\ngan-hang-cau-hoi-trac-nghiem-triet-hoc-mac-lenin-511-cau-2023.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\triet\\ngan-hang-cau-hoi-trac-nghiem-triet-hoc-mac-lenin-511-cau-2023.json",
+    "question_count": 168,
+    "answer_count": 132
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\KTCT",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\KTCT\\cau-hoi-trac-nghiem-kinh-te-chinh-tri-mac-lenin-mkt101.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\ktct\\cau-hoi-trac-nghiem-kinh-te-chinh-tri-mac-lenin-mkt101.json",
+    "question_count": 689,
+    "answer_count": 0
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\KTCT",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\KTCT\\de-thi-cuoi-ky-kinh-te-chinh-tri-ma-500-thi-online.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\ktct\\de-thi-cuoi-ky-kinh-te-chinh-tri-ma-500-thi-online.json",
+    "question_count": 0,
+    "answer_count": 0
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\KTCT",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\KTCT\\de-thi-kinh-te-chinh-tri-de-1-va-de-2-gv-12345.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\ktct\\de-thi-kinh-te-chinh-tri-de-1-va-de-2-gv-12345.json",
+    "question_count": 31,
+    "answer_count": 0
+  },
+  {
+    "source_dir": "E:\\Thi gk\\sinhvien-app\\KTCT",
+    "source_file": "E:\\Thi gk\\sinhvien-app\\KTCT\\ktct-de-thi-giua-ky-kinh-te-chinh-tri-mac-lenin.pdf",
+    "output_file": "E:\\Thi gk\\sinhvien-app\\preprocessed\\file2quiz\\ktct\\ktct-de-thi-giua-ky-kinh-te-chinh-tri-mac-lenin.json",
+    "question_count": 100,
+    "answer_count": 0
+  }
+]

@@ -12,6 +12,17 @@
       "assetPath": "assets/quiz/banks/cnpm.json"
     },
     {
+      "id": "ktct1",
+      "code": "KTCT1",
+      "title": "KTCT 1",
+      "description": "Đề thi cuối kì kinh tế chính trị Mác - Lênin (KTCT1).",
+      "questionCount": 99,
+      "sourceQuestionCount": 102,
+      "skippedQuestionCount": 3,
+      "accentColor": 4279150057,
+      "assetPath": "assets/quiz/banks/ktct1.json"
+    },
+    {
       "id": "lsd",
       "code": "LSD",
       "title": "Lịch sử Đảng",
@@ -32,6 +43,39 @@
       "skippedQuestionCount": 127,
       "accentColor": 4279150057,
       "assetPath": "assets/quiz/banks/mmt.json"
+    },
+    {
+      "id": "triet",
+      "code": "TRIET",
+      "title": "Triết học Mác - Lênin",
+      "description": "Ngân hàng câu hỏi trắc nghiệm triết học Mác - Lênin.",
+      "questionCount": 508,
+      "sourceQuestionCount": 511,
+      "skippedQuestionCount": 3,
+      "accentColor": 4286331629,
+      "assetPath": "assets/quiz/banks/triet.json"
+    },
+    {
+      "id": "triet-gk1",
+      "code": "TRIETGK1",
+      "title": "Triết GK 1",
+      "description": "Đề giữa kỳ Triết học Mác - Lênin lần 1.",
+      "questionCount": 50,
+      "sourceQuestionCount": 50,
+      "skippedQuestionCount": 0,
+      "accentColor": 4293870660,
+      "assetPath": "assets/quiz/banks/triet-gk1.json"
+    },
+    {
+      "id": "triet-gk2",
+      "code": "TRIETGK2",
+      "title": "Triết GK 2",
+      "description": "Đề giữa kỳ Triết học Mác - Lênin lần 2.",
+      "questionCount": 50,
+      "sourceQuestionCount": 50,
+      "skippedQuestionCount": 0,
+      "accentColor": 4279150057,
+      "assetPath": "assets/quiz/banks/triet-gk2.json"
     },
     {
       "id": "tthcm",
