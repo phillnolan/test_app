@@ -8,6 +8,8 @@ import 'package:sinhvien_app/features/auth/data/auth_service.dart';
 import 'package:sinhvien_app/features/auth/ui/account_auth_controller.dart';
 import 'package:sinhvien_app/features/home/ui/home_controller.dart';
 import 'package:sinhvien_app/features/home/domain/home_flow_models.dart';
+import 'package:sinhvien_app/features/quiz/ui/quiz_controller.dart';
+import 'package:sinhvien_app/features/quiz/data/quiz_repository.dart';
 import 'package:sinhvien_app/features/weather/data/weather_forecast.dart';
 import 'package:sinhvien_app/features/weather/data/weather_service.dart';
 import 'package:sinhvien_app/features/sync/data/cloud_sync_service.dart';
@@ -16,6 +18,7 @@ import 'package:sinhvien_app/features/sync/data/school_api_service.dart';
 import 'package:sinhvien_app/models/event_attachment.dart';
 import 'package:sinhvien_app/models/local_cache_payload.dart';
 import 'package:sinhvien_app/models/school_sync_snapshot.dart';
+import 'package:sinhvien_app/models/program_subject.dart';
 import 'package:sinhvien_app/models/student_event.dart';
 import 'package:sinhvien_app/models/student_profile.dart';
 import 'package:sinhvien_app/features/attachments/data/attachment_storage_service.dart';
@@ -68,6 +71,57 @@ void main() {
 
     await tester.pumpWidget(const SizedBox.shrink());
   });
+
+  testWidgets(
+    'quiz tab shows synced curriculum without app login and maps KTCT1 to the curriculum subject title',
+    (WidgetTester tester) async {
+      final controller = _buildController(
+        localCacheService: FakeLocalCacheService(
+          payload: LocalCachePayload(
+            profile: const StudentProfile(
+              username: 'student-1',
+              displayName: 'Student One',
+            ),
+            curriculumSubjects: const [
+              ProgramSubject(
+                subjectCode: 'KTCT1',
+                subjectName: 'Kinh tế chính trị Mác -Lênin',
+                knowledgeBlock: 'Lý luận chính trị',
+                semesterIndex: 2,
+                credits: 3,
+              ),
+            ],
+            curriculumRawItems: const [],
+            grades: const [],
+            syncedEvents: const [],
+            personalEvents: const [],
+            lastSyncedAt: DateTime(2026, 4, 2, 8, 0),
+          ),
+        ),
+      );
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            homeControllerProvider.overrideWith(() => controller),
+            quizRepositoryProvider.overrideWithValue(AssetQuizRepository()),
+          ],
+          child: const MaterialApp(home: HomeShell()),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(controller.signedInUser, isNull);
+
+      await tester.tap(find.text('Quiz'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Kinh tế chính trị Mác -Lênin'), findsWidgets);
+      expect(find.text('KTCT 1'), findsNothing);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   testWidgets(
     'syncSchoolData clears personal events when syncing another student',

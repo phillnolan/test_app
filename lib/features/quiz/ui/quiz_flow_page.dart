@@ -24,9 +24,7 @@ class QuizPage extends ConsumerWidget {
 
     final curriculumSubjects = homeState.payload.curriculumSubjects;
     final hasSyncedCurriculum =
-        homeState.signedInUser != null &&
-        homeState.payload.profile != null &&
-        curriculumSubjects.isNotEmpty;
+        homeState.payload.profile != null && curriculumSubjects.isNotEmpty;
 
     if (!hasSyncedCurriculum) {
       return const SafeArea(
@@ -35,9 +33,8 @@ class QuizPage extends ConsumerWidget {
           child: Center(
             child: _QuizInlineNotice(
               icon: Icons.sync_problem_outlined,
-              title: 'Cần đồng bộ tài khoản',
-              message:
-                  'Hãy đăng nhập và đồng bộ dữ liệu sinh viên để xem các môn quiz.',
+              title: 'Cần đồng bộ dữ liệu',
+              message: 'Hãy đồng bộ dữ liệu sinh viên để xem các môn quiz.',
             ),
           ),
         ),
@@ -913,10 +910,18 @@ List<_QuizSubjectGroup> _buildQuizSubjects(
           (bank) => bank.id == entry.key,
           orElse: () => subjectBanks.first,
         );
+        final curriculumSubject = _quizMatchedCurriculumSubject(
+          entry.key,
+          subjectBanks,
+          curriculumSubjects,
+        );
+        final curriculumTitle = curriculumSubject?.subjectName.trim();
 
         return _QuizSubjectGroup(
           key: entry.key,
-          title: primary.title,
+          title: curriculumTitle == null || curriculumTitle.isEmpty
+              ? primary.title
+              : curriculumTitle,
           banks: subjectBanks,
         );
       })
@@ -963,39 +968,64 @@ bool _quizSubjectMatchesCurriculum(
   List<QuizBankMetadata> banks,
   List<ProgramSubject> curriculumSubjects,
 ) {
+  return _quizMatchedCurriculumSubject(subjectKey, banks, curriculumSubjects) !=
+      null;
+}
+
+ProgramSubject? _quizMatchedCurriculumSubject(
+  String subjectKey,
+  List<QuizBankMetadata> banks,
+  List<ProgramSubject> curriculumSubjects,
+) {
   final quizTexts = <String>{
     _normalizeQuizText(subjectKey),
     for (final bank in banks) _normalizeQuizText(bank.id),
     for (final bank in banks) _normalizeQuizText(bank.code),
     for (final bank in banks) _normalizeQuizText(bank.title),
+    ..._quizSubjectAliasTexts(subjectKey, banks),
   }.where((value) => value.isNotEmpty).toList(growable: false);
 
   if (quizTexts.isEmpty) {
-    return false;
+    return null;
   }
 
-  final curriculumTexts = <String>{
-    for (final subject in curriculumSubjects) ...[
+  for (final subject in curriculumSubjects) {
+    final curriculumTexts = <String>{
       _normalizeQuizText(subject.subjectCode),
       _normalizeQuizText(subject.subjectName),
       _normalizeQuizText(subject.knowledgeBlock),
       _normalizeQuizText(subject.curriculumGroup),
-    ],
-  }.where((value) => value.isNotEmpty).toList(growable: false);
+    }.where((value) => value.isNotEmpty).toList(growable: false);
 
-  if (curriculumTexts.isEmpty) {
-    return false;
-  }
-
-  for (final quizText in quizTexts) {
-    for (final curriculumText in curriculumTexts) {
-      if (_quizTextMatches(quizText, curriculumText)) {
-        return true;
+    for (final quizText in quizTexts) {
+      for (final curriculumText in curriculumTexts) {
+        if (_quizTextMatches(quizText, curriculumText)) {
+          return subject;
+        }
       }
     }
   }
 
-  return false;
+  return null;
+}
+
+Iterable<String> _quizSubjectAliasTexts(
+  String subjectKey,
+  List<QuizBankMetadata> banks,
+) sync* {
+  final normalizedKey = _normalizeQuizText(subjectKey);
+  final normalizedTexts = <String>{
+    normalizedKey,
+    for (final bank in banks) _normalizeQuizText(bank.id),
+    for (final bank in banks) _normalizeQuizText(bank.code),
+    for (final bank in banks) _normalizeQuizText(bank.title),
+  };
+
+  if (normalizedTexts.any((text) => text.contains('ktct'))) {
+    yield _normalizeQuizText('Kinh tế chính trị Mác -Lênin');
+    yield _normalizeQuizText('Kinh tế chính trị Mác-Lênin');
+    yield _normalizeQuizText('Kinh tế chính trị');
+  }
 }
 
 int _quizPracticeDeckCount(int questionCount) {
