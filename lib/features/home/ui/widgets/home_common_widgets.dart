@@ -58,17 +58,11 @@ class PlaceholderInfoCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.description,
-    this.actionLabel,
-    this.onAction,
-    this.actionIcon,
   });
 
   final IconData icon;
   final String title;
   final String description;
-  final String? actionLabel;
-  final VoidCallback? onAction;
-  final IconData? actionIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -79,41 +73,25 @@ class PlaceholderInfoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(description),
-                  ],
+          Icon(icon, size: 32, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          if (actionLabel != null && onAction != null) ...[
-            const SizedBox(height: 14),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FilledButton.icon(
-                onPressed: onAction,
-                icon: Icon(actionIcon ?? Icons.link_outlined),
-                label: Text(actionLabel!),
-              ),
+                const SizedBox(height: 4),
+                Text(description),
+              ],
             ),
-          ],
+          ),
         ],
       ),
     );

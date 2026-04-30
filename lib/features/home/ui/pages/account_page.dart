@@ -101,14 +101,11 @@ class AccountPage extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         if (!isAuthAvailable)
-          PlaceholderInfoCard(
+          const PlaceholderInfoCard(
             icon: Icons.cloud_off_outlined,
-            title: 'Thiết lập Teledrive',
+            title: 'Chưa liên kết Teledrive',
             description:
-                'Nhập URL Teledrive và access token để bật đồng bộ cho tài khoản này.',
-            actionLabel: 'Nhập URL và token',
-            actionIcon: Icons.link_outlined,
-            onAction: onEmailAuth,
+                'Nhập URL Teldrive và access token để bật đồng bộ Teledrive cho tài khoản này.',
           )
         else if (user == null)
           _SignedOutCard(
