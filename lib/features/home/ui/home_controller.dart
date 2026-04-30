@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -8,7 +9,6 @@ import '../../../models/home_action_result.dart';
 import '../../../models/local_cache_payload.dart';
 import '../../../models/student_event.dart';
 import '../../../models/student_sync_credentials.dart';
-import '../../../services/teldrive_models.dart';
 import '../domain/home_calendar_types.dart';
 import '../../weather/data/weather_forecast.dart';
 import '../../weather/data/weather_service.dart';
@@ -64,7 +64,7 @@ final class HomeState {
   final bool showCloudRestoreWarning;
   final bool showSyncReminder;
   final int currentTab;
-  final TeldriveSessionInfo? signedInUser;
+  final User? signedInUser;
   final String? linkedStudentUsername;
   final StudentSyncCredentials? savedSyncCredentials;
   final int pendingEventSyncVersion;
@@ -167,7 +167,7 @@ final class HomeController extends Notifier<HomeState> {
   bool _showCloudRestoreWarning = false;
   bool _showSyncReminder = true;
   int _currentTab = 2;
-  TeldriveSessionInfo? _signedInUser;
+  User? _signedInUser;
   String? _linkedStudentUsername;
   StudentSyncCredentials? _savedSyncCredentials;
   int _localMutationVersion = 0;
@@ -175,7 +175,7 @@ final class HomeController extends Notifier<HomeState> {
   int _pendingEventSyncVersion = 0;
 
   Timer? _syncReminderTimer;
-  StreamSubscription<TeldriveSessionInfo?>? _authSubscription;
+  StreamSubscription<User?>? _authSubscription;
   Future<void>? _initialCloudRestoreFuture;
   int _cloudRestoreGeneration = 0;
   bool _isDisposed = false;
@@ -215,7 +215,7 @@ final class HomeController extends Notifier<HomeState> {
   bool get showCloudRestoreWarning => _showCloudRestoreWarning;
   bool get showSyncReminder => _showSyncReminder;
   int get currentTab => _currentTab;
-  TeldriveSessionInfo? get signedInUser => _signedInUser;
+  User? get signedInUser => _signedInUser;
   bool get isAuthAvailable => _accountAuthController.isAvailable;
   String? get linkedStudentUsername => _linkedStudentUsername;
   StudentSyncCredentials? get savedSyncCredentials => _savedSyncCredentials;
@@ -268,22 +268,24 @@ final class HomeController extends Notifier<HomeState> {
     unawaited(_loadSavedSyncCredentials());
     unawaited(reloadWeather());
 
-    _updateSignedInUser(_accountAuthController.currentUser);
-    _authSubscription = _accountAuthController.listenAuthState((user) {
-      if (_isDisposed) return;
-      _updateSignedInUser(user);
-      _emit();
-    });
+    if (_accountAuthController.isAvailable) {
+      _updateSignedInUser(_accountAuthController.currentUser);
+      _authSubscription = _accountAuthController.listenAuthState((user) {
+        if (_isDisposed) return;
+        _updateSignedInUser(user);
+        _emit();
+      });
 
-    if (_signedInUser != null) {
-      unawaited(
-        localCacheFuture.whenComplete(() {
-          if (_isDisposed || _signedInUser == null) {
-            return;
-          }
-          _startInitialCloudRestore();
-        }),
-      );
+      if (_signedInUser != null) {
+        unawaited(
+          localCacheFuture.whenComplete(() {
+            if (_isDisposed || _signedInUser == null) {
+              return;
+            }
+            _startInitialCloudRestore();
+          }),
+        );
+      }
     }
   }
 
@@ -1055,9 +1057,9 @@ final class HomeController extends Notifier<HomeState> {
     });
   }
 
-  void _updateSignedInUser(TeldriveSessionInfo? user) {
-    final previousUserId = _signedInUser?.userId;
-    final nextUserId = user?.userId;
+  void _updateSignedInUser(User? user) {
+    final previousUserId = _signedInUser?.uid;
+    final nextUserId = user?.uid;
     if (previousUserId != nextUserId) {
       _cloudRestoreGeneration++;
       _pendingEventSyncs.clear();
@@ -1075,7 +1077,7 @@ final class HomeController extends Notifier<HomeState> {
   }
 
   (int, String) _beginCloudRestoreSession() {
-    final userId = _signedInUser?.userId.toString();
+    final userId = _signedInUser?.uid;
     if (userId == null) {
       return (_cloudRestoreGeneration, '');
     }
@@ -1112,7 +1114,7 @@ final class HomeController extends Notifier<HomeState> {
   }) {
     return _isDisposed ||
         _cloudRestoreGeneration != sessionGeneration ||
-        _signedInUser?.userId.toString() != sessionUserId;
+        _signedInUser?.uid != sessionUserId;
   }
 
   Future<AuthFlowResult> _resolvePostSignIn({

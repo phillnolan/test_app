@@ -1,99 +1,92 @@
-import 'dart:async';
-
-import '../../../services/teldrive_api_client.dart';
-import '../../../services/teldrive_models.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
-  AuthService({TeldriveApiClient? client})
-    : _client = client ?? TeldriveApiClient();
+  static Future<void>? _googleSignInInitialization;
 
-  final TeldriveApiClient _client;
-  static final StreamController<TeldriveSessionInfo?> _sessionController =
-      StreamController<TeldriveSessionInfo?>.broadcast();
+  bool get isAvailable => Firebase.apps.isNotEmpty;
 
-  static TeldriveConnectionConfig? _cachedConfig;
-  static TeldriveSessionInfo? _currentSession;
+  FirebaseAuth? get _auth => isAvailable ? FirebaseAuth.instance : null;
 
-  bool get isAvailable => _cachedConfig != null;
-
-  TeldriveSessionInfo? get currentUser => _currentSession;
-
-  Future<void> initializeConnection() async {
-    _cachedConfig = await _client.loadConfig();
-    if (_cachedConfig == null) {
-      _updateSession(null);
+  /// Initializes the shared Google Sign-In instance once.
+  Future<void> initializeGoogleSignIn() async {
+    if (!isAvailable) {
       return;
     }
 
-    await _refreshSession();
+    final existingInitialization = _googleSignInInitialization;
+    if (existingInitialization != null) {
+      await existingInitialization;
+      return;
+    }
+
+    final initialization = GoogleSignIn.instance.initialize();
+    _googleSignInInitialization = initialization;
+
+    try {
+      await initialization;
+    } catch (_) {
+      _googleSignInInitialization = null;
+      rethrow;
+    }
   }
 
-  Future<void> connect({
-    required String baseUrl,
-    required String accessToken,
+  Stream<User?> authStateChanges() {
+    if (!isAvailable) return const Stream<User?>.empty();
+    return _auth!.authStateChanges();
+  }
+
+  User? get currentUser => _auth?.currentUser;
+
+  Future<UserCredential> signInWithEmail({
+    required String email,
+    required String password,
   }) async {
-    final session = await _client.connect(
-      baseUrl: baseUrl,
-      accessToken: accessToken,
+    _ensureReady();
+    return _auth!.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  Future<UserCredential> registerWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    _ensureReady();
+    return _auth!.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
     );
-    _cachedConfig = await _client.loadConfig();
-    _updateSession(session);
   }
 
-  Stream<TeldriveSessionInfo?> authStateChanges() {
-    return _sessionController.stream;
-  }
-
-  Future<TeldriveSessionInfo?> refreshSession() async {
-    return _refreshSession();
+  Future<UserCredential?> signInWithGoogle() async {
+    _ensureReady();
+    await initializeGoogleSignIn();
+    final googleUser = await GoogleSignIn.instance.authenticate();
+    final googleAuth = googleUser.authentication;
+    final idToken = googleAuth.idToken;
+    if (idToken == null || idToken.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'missing-google-id-token',
+        message: 'Khong the lay ma xac thuc tu Google.',
+      );
+    }
+    final credential = GoogleAuthProvider.credential(idToken: idToken);
+    return _auth!.signInWithCredential(credential);
   }
 
   Future<void> signOut() async {
-    await _client.disconnect();
-    _cachedConfig = null;
-    _updateSession(null);
+    if (!isAvailable) return;
+    await initializeGoogleSignIn();
+    await GoogleSignIn.instance.signOut();
+    await _auth!.signOut();
   }
 
-  Future<TeldriveSessionInfo> signInWithEmail({
-    required String email,
-    required String password,
-  }) async {
-    await connect(baseUrl: email, accessToken: password);
-    final session = _currentSession;
-    if (session == null) {
-      throw TeldriveApiException(
-        'Không thể xác thực với Teledrive. Hãy thử lại.',
+  void _ensureReady() {
+    if (!isAvailable) {
+      throw FirebaseAuthException(
+        code: 'firebase-not-initialized',
+        message: 'Firebase chưa được khởi tạo.',
       );
     }
-    return session;
-  }
-
-  Future<TeldriveSessionInfo> registerWithEmail({
-    required String email,
-    required String password,
-  }) async {
-    return signInWithEmail(email: email, password: password);
-  }
-
-  Future<TeldriveSessionInfo?> signInWithGoogle() async {
-    return refreshSession();
-  }
-
-  void _updateSession(TeldriveSessionInfo? session) {
-    _currentSession = session;
-    if (!_sessionController.isClosed) {
-      _sessionController.add(session);
-    }
-  }
-
-  Future<TeldriveSessionInfo?> _refreshSession() async {
-    final session = await _client.fetchSession();
-    if (session == null) {
-      _updateSession(null);
-      return null;
-    }
-
-    _updateSession(session);
-    return session;
   }
 }

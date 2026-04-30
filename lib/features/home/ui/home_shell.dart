@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -192,9 +192,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       curriculumRawItems: _controller.payload.curriculumRawItems,
       emptyState: EmptyStateCard(
         icon: Icons.school_outlined,
-        title: 'Chưa đồng bộ dữ liệu',
+        title: 'Chưa đông bộ dữ liệu',
         description:
-            'Hãy chuyển sang trang Tài khoản để liên kết Teledrive và đồng bộ dữ liệu mới nhất.',
+            'Hãy chuyển sang trang Tài khoản để đăng nhập và đồng bộ dữ liệu mới nhất.',
         actionLabel: 'Mở tài khoản',
         onAction: () => _controller.setCurrentTab(4),
       ),
@@ -420,7 +420,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
       builder: (context) => AlertDialog(
         title: const Text('Xóa ghi chú cá nhân?'),
         content: Text(
-          'Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và Teledrive.',
+          'Ghi chú "${event.title}" sẽ bị xóa khỏi thiết bị và cloud.',
         ),
         actions: [
           TextButton(
@@ -464,9 +464,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Làm mới kết nối Teledrive?'),
+        title: const Text('Xác nhận đăng nhập Google?'),
         content: const Text(
-          'Bản cài đặt hiện tại sẽ được kiểm tra lại để đồng bộ trạng thái Teledrive và liên kết với tài khoản sinh viên đang dùng.',
+          'Bạn sắp đăng nhập bằng Google để mở dữ liệu cloud và kiểm tra liên kết với tài khoản sinh viên hiện tại.',
         ),
         actions: [
           TextButton(
@@ -493,9 +493,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Ngắt kết nối Teledrive?'),
+        title: const Text('Xác nhận đăng xuất?'),
         content: const Text(
-          'Ứng dụng sẽ ngắt liên kết Teledrive trên máy này. Dữ liệu cục bộ vẫn được giữ lại để bạn có thể kết nối lại sau.',
+          'Bạn sẽ đăng xuất khỏi tài khoản ứng dụng và toàn bộ dữ liệu đang lưu trên thiết bị này sẽ được dọn dẹp.',
         ),
         actions: [
           TextButton(
@@ -504,7 +504,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ),
           FilledButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Ngắt kết nối'),
+            child: const Text('Đăng xuất'),
           ),
         ],
       ),
@@ -561,8 +561,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
     if (decision.action == AccountLinkAction.linkStudent) {
       final content = isSyncFlow
-          ? 'Tài khoản Teledrive này chưa liên kết với sinh viên nào. Bạn có muốn liên kết với "$target" ngay sau lần đồng bộ này không?'
-          : 'Tài khoản Teledrive này chưa liên kết với sinh viên nào. Bạn có muốn liên kết với dữ liệu sinh viên "$target" đang có trên thiết bị không?';
+          ? 'Tài khoản ứng dụng này chưa liên kết với sinh viên nào. Bạn có muốn liên kết với "$target" ngay sau lần đồng bộ này không?'
+          : 'Tài khoản ứng dụng này chưa liên kết với sinh viên nào. Bạn có muốn liên kết với dữ liệu sinh viên "$target" đang có trên thiết bị không?';
       return showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
@@ -584,8 +584,8 @@ class _HomeShellState extends ConsumerState<HomeShell> {
 
     final current = decision.currentLinkedStudentUsername ?? 'sinh viên khác';
     final content = isSyncFlow
-        ? 'Tài khoản Teledrive hiện đang liên kết với "$current". Nếu tiếp tục, toàn bộ ghi chú, ảnh và tệp của sinh viên cũ sẽ bị xóa, sau đó tài khoản sẽ được liên kết với "$target".'
-        : 'Tài khoản Teledrive hiện đang liên kết với "$current". Nếu xác nhận, toàn bộ ghi chú, ảnh và tệp của sinh viên cũ sẽ bị xóa để chuyển sang liên kết với "$target".';
+        ? 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu tiếp tục, toàn bộ ghi chú, ảnh và tập của sinh viên cũ trên cloud sẽ bị xóa, sau đó tài khoản sẽ được liên kết với "$target".'
+        : 'Tài khoản ứng dụng hiện đang liên kết với "$current". Nếu xác nhận, toàn bộ ghi chú, ảnh và tập của sinh viên cũ trên cloud sẽ bị xóa để chuyển sang liên kết với "$target".';
 
     return showDialog<bool>(
       context: context,
@@ -703,4 +703,3 @@ class _HomeShellState extends ConsumerState<HomeShell> {
     );
   }
 }
-
